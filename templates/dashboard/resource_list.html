@@ -1,0 +1,28 @@
+{% extends 'dashboard/base.html' %}
+{% load dash_extras %}
+{% block title %}{{ res.plural }}{% endblock %}
+{% block heading %}<h1>{{ res.plural }}</h1><p class="muted">{{ res.blurb }}</p>{% endblock %}
+{% block tools %}<a class="btn btn-primary" href="{% url 'dashboard:resource_new' res.key %}"><svg class="ic"><use href="#i-plus"/></svg>Add {{ res.label|lower }}</a>{% endblock %}
+{% block content %}
+<div class="card flush">
+  <div class="table-wrap"><table class="tbl" id="sortable" data-reorder="{% url 'dashboard:resource_reorder' res.key %}">
+    <thead><tr><th class="grip-col"></th>{% for h, _ in res.columns %}<th>{{ h }}</th>{% endfor %}{% if res.toggles %}<th>Visibility</th>{% endif %}<th class="num">Actions</th></tr></thead>
+    <tbody>
+    {% for row in rows %}
+      <tr data-id="{{ row.obj.pk }}" {% if res.reorder %}draggable="true"{% endif %} class="{% if row.flags.published is False %}dim{% endif %}">
+        <td class="grip-col">{% if res.reorder %}<span class="grip" title="Drag to reorder"><svg class="ic"><use href="#i-drag"/></svg></span>{% endif %}</td>
+        {% for c in row.cells %}<td>{% if forloop.first %}<a href="{% url 'dashboard:resource_edit' res.key row.obj.pk %}"><b>{{ c }}</b></a>{% else %}<span class="cell-sub">{{ c|truncatechars:70 }}</span>{% endif %}</td>{% endfor %}
+        {% if res.toggles %}<td class="toggles">
+          {% for f, val in row.flags.items %}<button type="button" class="chip-toggle {% if val %}on{% endif %}" data-toggle="{% url 'dashboard:resource_toggle' res.key row.obj.pk f %}" aria-pressed="{{ val|yesno:'true,false' }}">{{ f|capfirst }}</button>{% endfor %}
+        </td>{% endif %}
+        <td class="num actions">
+          {% if row.public %}<a class="icon-btn" href="{{ row.public }}" target="_blank" rel="noopener" title="View on site" aria-label="View on site"><svg class="ic"><use href="#i-ext"/></svg></a>{% endif %}
+          <a class="btn btn-sm" href="{% url 'dashboard:resource_edit' res.key row.obj.pk %}">Edit</a>
+          <form method="post" action="{% url 'dashboard:resource_delete' res.key row.obj.pk %}" data-confirm="Delete “{{ row.cells.0|truncatechars:50 }}”? This cannot be undone.">{% csrf_token %}<button class="icon-btn danger" type="submit" aria-label="Delete"><svg class="ic"><use href="#i-trash"/></svg></button></form>
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="9" class="empty">Nothing here yet. Use “Add {{ res.label|lower }}” to create the first one.</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endblock %}

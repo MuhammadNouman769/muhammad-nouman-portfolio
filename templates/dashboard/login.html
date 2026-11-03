@@ -1,0 +1,49 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#050918">
+<title>Sign in | {{ site.owner_name }}</title><link rel="icon" href="{% static 'images/favicon.svg' %}" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap">
+<link rel="stylesheet" href="{% static 'dashboard/dash.css' %}"><link rel="stylesheet" href="{% static 'dashboard/fx.css' %}"></head>
+<body class="login-body">
+<canvas class="l-particles" id="particles" aria-hidden="true"></canvas>
+<main class="login">
+  <div class="login-art">
+    <span class="l-mark" aria-hidden="true">{{ site.brand_short }}</span>
+    <h2 aria-label="Your control room"><span class="w" aria-hidden="true"><span style="--wi:0">Your</span></span> <span class="w" aria-hidden="true"><span style="--wi:1"><em>control</em></span></span> <span class="w" aria-hidden="true"><span style="--wi:2">room.</span></span></h2>
+    <p class="sub">See who visits, read new hiring messages and update projects, blog posts and skills, all in one place.</p>
+    <div class="l-widgets" aria-hidden="true">
+      <div class="l-w" style="--k:0"><small>Visitors</small><span class="l-eq"><i style="--j:0"></i><i style="--j:1"></i><i style="--j:2"></i><i style="--j:3"></i><i style="--j:4"></i><i style="--j:5"></i><i style="--j:6"></i></span></div>
+      <div class="l-w" style="--k:1"><small>Inbox</small><span class="l-ping"><i></i><b>New message</b></span></div>
+      <div class="l-w" style="--k:2"><small>Trend</small><svg class="l-line" viewBox="0 0 120 34"><path d="M2 28 C20 28 22 10 42 14 S68 30 84 16 S104 4 118 6"/></svg></div>
+    </div>
+  </div>
+  <form method="post" class="login-card" id="login-form">{% csrf_token %}
+    <h1 style="--s:0">Sign in</h1>
+    <p class="muted" style="--s:1">Private area for {{ site.owner_name }}.</p>
+    {% if form.errors %}<p class="toast error" style="--s:1">{% if form.non_field_errors %}{{ form.non_field_errors|join:" " }}{% else %}Check your username and password, then try again.{% endif %}</p>{% endif %}
+    <div class="lf" style="--s:2"><input id="id_username" name="username" type="text" placeholder=" " autocomplete="username" autofocus required value="{{ form.username.value|default:'' }}"><label for="id_username">Username</label></div>
+    <div class="lf" style="--s:3"><input id="id_password" name="password" type="password" placeholder=" " autocomplete="current-password" required><label for="id_password">Password</label>
+      <button class="eye" type="button" id="eye" aria-label="Show password" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M2 12s3.600-7 10-7 10 7 10 7-3.600 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="l-go" type="submit" style="--s:4"><span class="lbl2">Sign in</span><span class="spin" aria-hidden="true"></span></button>
+    <p class="back" style="--s:5"><a href="/">Back to the website</a></p>
+  </form>
+</main>
+<script>
+(function(){
+  var f=document.getElementById('login-form'),b=f.querySelector('.l-go'),p=document.getElementById('id_password'),e=document.getElementById('eye');
+  e.addEventListener('click',function(){var s=p.type==='password';p.type=s?'text':'password';e.setAttribute('aria-pressed',s);e.setAttribute('aria-label',s?'Hide password':'Show password');});
+  f.addEventListener('submit',function(){b.classList.add('loading');});
+  var c=document.getElementById('particles');
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var x=c.getContext('2d'),W,H,ps=[],mx=-999,my=-999;
+  function size(){W=c.width=innerWidth;H=c.height=innerHeight;ps=[];var n=Math.min(70,Math.floor(W*H/22000));for(var i=0;i<n;i++)ps.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.6+.6});}
+  size();addEventListener('resize',size);addEventListener('pointermove',function(ev){mx=ev.clientX;my=ev.clientY;});
+  (function draw(){x.clearRect(0,0,W,H);
+    for(var i=0;i<ps.length;i++){var a=ps[i];a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>W)a.vx*=-1;if(a.y<0||a.y>H)a.vy*=-1;
+      x.fillStyle='rgba(160,185,255,.7)';x.beginPath();x.arc(a.x,a.y,a.r,0,6.283);x.fill();
+      for(var j=i+1;j<ps.length;j++){var d=Math.hypot(a.x-ps[j].x,a.y-ps[j].y);if(d<120){x.strokeStyle='rgba(120,150,255,'+(.22*(1-d/120))+')';x.beginPath();x.moveTo(a.x,a.y);x.lineTo(ps[j].x,ps[j].y);x.stroke();}}
+      var dm=Math.hypot(a.x-mx,a.y-my);if(dm<160){x.strokeStyle='rgba(245,182,66,'+(.5*(1-dm/160))+')';x.beginPath();x.moveTo(a.x,a.y);x.lineTo(mx,my);x.stroke();}}
+    requestAnimationFrame(draw);})();
+})();
+</script>
+</body></html>

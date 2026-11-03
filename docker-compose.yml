@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    env_file: .env
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3
+      - ./media:/app/media
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

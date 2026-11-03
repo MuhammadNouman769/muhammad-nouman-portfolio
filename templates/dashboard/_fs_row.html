@@ -1,0 +1,8 @@
+<div class="fs-row">
+  {% for h in form.hidden_fields %}{{ h }}{% endfor %}
+  <div class="fs-fields">{% for f in form.visible_fields %}{% if f.name != 'DELETE' %}<div class="fs-field {% if f.errors %}bad{% endif %}"><label class="sr" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}{% for e in f.errors %}<p class="err">{{ e }}</p>{% endfor %}</div>{% endif %}{% endfor %}</div>
+  <div class="fs-actions">
+    {% if ordered %}<button type="button" class="icon-btn sm fs-up" aria-label="Move up"><svg class="ic"><use href="#i-up"/></svg></button><button type="button" class="icon-btn sm fs-down" aria-label="Move down"><svg class="ic"><use href="#i-down"/></svg></button>{% endif %}
+    <label class="icon-btn sm danger rm" title="Remove" aria-label="Remove">{{ form.DELETE }}<svg class="ic"><use href="#i-trash"/></svg></label>
+  </div>
+</div>

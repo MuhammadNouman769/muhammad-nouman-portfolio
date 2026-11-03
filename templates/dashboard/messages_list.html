@@ -1,0 +1,22 @@
+{% extends 'dashboard/base.html' %}
+{% load dash_extras %}
+{% block title %}Messages{% endblock %}
+{% block heading %}<h1>Messages</h1><p class="muted">Everything sent through the contact form.</p>{% endblock %}
+{% block tools %}<form method="post" action="{% url 'dashboard:messages_mark_all' %}">{% csrf_token %}<button class="btn" type="submit"><svg class="ic"><use href="#i-check"/></svg>Mark all read</button></form>{% endblock %}
+{% block content %}
+<div class="filter-bar card">
+  <div class="seg"><a href="?f=all" class="{% if flt == 'all' %}on{% endif %}">All</a><a href="?f=unread" class="{% if flt == 'unread' %}on{% endif %}">Unread</a><a href="?f=starred" class="{% if flt == 'starred' %}on{% endif %}">Starred</a></div>
+  <form method="get" class="inline"><input type="hidden" name="f" value="{{ flt }}"><input class="inp" name="q" value="{{ q }}" placeholder="Search messages" aria-label="Search messages"></form>
+</div>
+<div class="card flush"><ul class="inbox">
+  {% for m in page %}
+  <li class="{% if not m.is_read %}unread{% endif %}">
+    <form method="post" action="{% url 'dashboard:message_action' m.pk 'star' %}">{% csrf_token %}<input type="hidden" name="next" value="dashboard:messages"><button class="icon-btn sm {% if m.is_starred %}starred{% endif %}" aria-label="Star" aria-pressed="{{ m.is_starred|yesno:'true,false' }}"><svg class="ic"><use href="#i-star"/></svg></button></form>
+    <a class="inbox-main" href="{% url 'dashboard:message_detail' m.pk %}"><b>{{ m.name }}</b><span class="inbox-subj">{{ m.subject|default:"(no subject)" }}</span><span class="inbox-snip">{{ m.message|truncatechars:90 }}</span></a>
+    {% if m.replied %}<span class="pill ok">Replied</span>{% endif %}
+    <time title="{{ m.created_at }}">{{ m.created_at|ago }}</time>
+  </li>
+  {% empty %}<li class="empty">No messages {% if flt != 'all' or q %}match this filter{% else %}yet{% endif %}.</li>{% endfor %}
+</ul></div>
+{% if page.paginator.num_pages > 1 %}<nav class="pager">{% if page.has_previous %}<a class="btn" href="?f={{ flt }}&q={{ q }}&page={{ page.previous_page_number }}">Previous</a>{% endif %}<span class="muted">Page {{ page.number }} of {{ page.paginator.num_pages }}</span>{% if page.has_next %}<a class="btn" href="?f={{ flt }}&q={{ q }}&page={{ page.next_page_number }}">Next</a>{% endif %}</nav>{% endif %}
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}{% if singleton %}{{ res.label }}{% elif obj %}Edit {{ res.label|lower }}{% else %}New {{ res.label|lower }}{% endif %}{% endblock %}
+{% block heading %}<h1>{% if singleton %}{{ res.label }}{% elif obj %}Edit {{ res.label|lower }}{% else %}New {{ res.label|lower }}{% endif %}</h1><p class="muted">{{ res.blurb }}</p>{% endblock %}
+{% block tools %}{% if not singleton %}<a class="btn" href="{% url 'dashboard:resource_list' res.key %}">Back to {{ res.plural|lower }}</a>{% endif %}{% endblock %}
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="editor" id="editor" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<p class="toast error">{{ form.non_field_errors|join:" " }}</p>{% endif %}
+  <div class="editor-main">
+  {% for g in groups %}
+  <fieldset class="card group">
+    <legend><h2>{{ g.title }}</h2>{% if g.hint %}<p class="muted">{{ g.hint }}</p>{% endif %}</legend>
+    <div class="fields">
+    {% for f in g.fields %}
+      <div class="field {% if f.errors %}bad{% endif %} {% if f.field.widget.input_type == 'checkbox' %}is-switch{% endif %} {% if f.name in 'title summary body hero_text meta_description bio_paragraph_1 bio_paragraph_2 bio_paragraph_3 headline hero_heading' %}wide{% endif %}">
+        {% if f.field.widget.input_type == 'checkbox' %}
+          <label class="switch-row" for="{{ f.id_for_label }}">{{ f }}<span class="switch-ui"></span><span><b>{{ f.label }}</b>{% if f.help_text %}<small>{{ f.help_text }}</small>{% endif %}</span></label>
+        {% else %}
+          <label class="lbl" for="{{ f.id_for_label }}">{{ f.label }}{% if not f.field.required %}<span class="opt"> optional</span>{% endif %}</label>
+          {% if f.field.widget.input_type == 'file' and f.value %}<div class="current">{% if f.value.url %}{% if '.pdf' in f.value.url %}<a href="{{ f.value.url }}" target="_blank" rel="noopener">Current file</a>{% else %}<img src="{{ f.value.url }}" alt="Current image">{% endif %}{% endif %}</div>{% endif %}
+          {{ f }}
+          {% if f.help_text %}<small class="help">{{ f.help_text }}</small>{% endif %}
+        {% endif %}
+        {% for e in f.errors %}<p class="err">{{ e }}</p>{% endfor %}
+      </div>
+    {% endfor %}
+    </div>
+  </fieldset>
+  {% endfor %}
+
+  {% for fs in fsets %}
+  <fieldset class="card group fs" data-prefix="{{ fs.rel }}" data-ordered="{{ fs.ordered|yesno:'1,0' }}">
+    <legend><h2>{{ fs.title }}</h2><p class="muted">{{ fs.hint }}</p></legend>
+    {{ fs.set.management_form }}
+    {% if fs.set.non_form_errors %}<p class="err">{{ fs.set.non_form_errors|join:" " }}</p>{% endif %}
+    <div class="fs-rows">
+      {% for form in fs.set.forms %}{% include 'dashboard/_fs_row.html' with form=form ordered=fs.ordered %}{% endfor %}
+    </div>
+    <template class="fs-empty">{% include 'dashboard/_fs_row.html' with form=fs.set.empty_form ordered=fs.ordered %}</template>
+    <button type="button" class="btn btn-sm fs-add"><svg class="ic"><use href="#i-plus"/></svg>Add row</button>
+  </fieldset>
+  {% endfor %}
+  </div>
+
+  <aside class="editor-side">
+    <div class="card sticky">
+      <button class="btn btn-primary btn-block" type="submit">Save{% if singleton %} changes{% endif %}</button>
+      {% if not singleton %}<button class="btn btn-block" type="submit" name="_continue" value="1">Save and keep editing</button>{% endif %}
+      <p class="muted small">Changes appear on the public site as soon as you save.</p>
+    </div>
+    {% if seo_checks %}
+    <div class="card"><h2 class="side-h">Search readiness</h2>
+      <ul class="checks">{% for c in seo_checks %}<li class="{% if c.ok %}ok{% else %}no{% endif %}"><svg class="ic"><use href="#i-{% if c.ok %}check{% else %}plus{% endif %}"/></svg><span>{{ c.label }}{% if c.fix %}<small>{{ c.fix }}</small>{% endif %}</span></li>{% endfor %}</ul>
+      <p class="muted small">Sitemap: <a href="/sitemap.xml" target="_blank" rel="noopener">/sitemap.xml</a><br>Robots: <a href="/robots.txt" target="_blank" rel="noopener">/robots.txt</a></p>
+    </div>{% endif %}
+  </aside>
+</form>
+{% endblock %}

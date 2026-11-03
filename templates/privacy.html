@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Privacy | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}What this website records about visitors, and why.{% endblock %}
+{% block robots %}noindex, follow{% endblock %}
+{% block content %}
+<section class="page-head wrap banner">
+  {% include 'partials/lamp.html' %}<div><h1>Privacy</h1><p class="lede">A short, plain-language description of what this site records.</p></div></section>
+<section class="wrap prose">
+  <h2>What I record</h2>
+  <p>To understand which pages are useful, the site records each page you open: the page address, the time, the site you came from, your browser and device type, an approximate country, and your IP address. A first-party cookie named <code>nv_id</code> (random, no personal data) lets me tell a returning visitor from a new one. It lasts one year.</p>
+  <h2>What I do not do</h2>
+  <p>I do not sell or share this data, run advertising, or load third-party trackers. The only outside request this site makes is to Google Fonts for typefaces.</p>
+  <h2>The contact form</h2>
+  <p>If you send a message, I store your name, email, subject and message so I can reply. I delete messages that are no longer needed.</p>
+  <h2>Questions or deletion requests</h2>
+  <p>{% if site.email %}Email <a href="mailto:{{ site.email }}">{{ site.email }}</a>{% else %}Use the <a href="{% url 'contact:contact' %}">contact form</a>{% endif %} and I will remove what I hold about you.</p>
+</section>
+{% endblock %}

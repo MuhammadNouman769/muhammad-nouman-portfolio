@@ -1,30 +1,15 @@
 {% extends 'base.html' %}
-{% block title %}Skills — {{ OWNER_NAME }}{% endblock %}
+{% block title %}Skills and technology | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}Languages, frameworks, infrastructure and practices {{ site.owner_name }} uses to build backends: Python, Django, DRF, PostgreSQL, Redis, Celery, Docker.{% endblock %}
 {% block content %}
-
-<div class="page-header">
-  <div class="wrap">
-    <span class="mono">05 / skills</span>
-    <h1>Toolbox</h1>
-    <p>What I reach for when designing and shipping backend systems.</p>
-  </div>
-</div>
-
-<section>
-  <div class="wrap">
-    <div class="skill-groups">
-      {% for cat in categories %}
-      <div class="skill-group">
-        <span class="mono">{{ cat.name|lower }}</span>
-        <div class="skill-chips">
-          {% for skill in cat.skills.all %}<span class="chip">{{ skill.name }}</span>{% endfor %}
-        </div>
-      </div>
-      {% empty %}
-      <p style="color:var(--muted);">Run <code>python manage.py seed_data</code> to load skills content.</p>
-      {% endfor %}
-    </div>
-  </div>
+<section class="page-head wrap banner">
+  {% include 'partials/lamp.html' with cord=48 %}<div><h1>Skills</h1><p class="lede">The languages, frameworks and practices I use day to day, grouped by what they are for.</p></div></section>
+<section class="wrap skill-cards">
+  {% for cat in categories %}
+  <section class="skill-card spot" data-reveal style="--i:{{ forloop.counter0 }}">
+    <h2><span>{{ forloop.counter }}</span>{{ cat.name }}</h2>
+    <ul class="tokens">{% for s in cat.skills.all %}<li style="--i:{{ forloop.counter0 }}">{{ s.name }}</li>{% endfor %}</ul>
+  </section>
+  {% empty %}<p class="empty">No skills added yet.</p>{% endfor %}
 </section>
-
 {% endblock %}

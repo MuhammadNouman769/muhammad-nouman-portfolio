@@ -1,0 +1,24 @@
+{% extends 'dashboard/base.html' %}
+{% load dash_extras %}
+{% block title %}Message from {{ m.name }}{% endblock %}
+{% block heading %}<h1>{{ m.subject|default:"(no subject)" }}</h1><p class="muted">From {{ m.name }} · {{ m.created_at|date:"j M Y, H:i" }}</p>{% endblock %}
+{% block tools %}<a class="btn" href="{% url 'dashboard:messages' %}">Back to inbox</a>{% endblock %}
+{% block content %}
+<div class="editor">
+  <article class="card editor-main msg-body">
+    <p class="msg-from"><b>{{ m.name }}</b> <a href="mailto:{{ m.email }}">{{ m.email }}</a></p>
+    <div class="msg-text">{{ m.message|linebreaks }}</div>
+  </article>
+  <aside class="editor-side">
+    <div class="card sticky">
+      {% with re='Re: '|add:m.subject %}<a class="btn btn-primary btn-block" href="mailto:{{ m.email }}?subject={{ re|urlencode }}">Reply by email</a>{% endwith %}
+      <form method="post" action="{% url 'dashboard:message_action' m.pk 'replied' %}">{% csrf_token %}<button class="btn btn-block">{% if m.replied %}Mark as not replied{% else %}Mark as replied{% endif %}</button></form>
+      <form method="post" action="{% url 'dashboard:message_action' m.pk 'star' %}">{% csrf_token %}<button class="btn btn-block">{% if m.is_starred %}Remove star{% else %}Star{% endif %}</button></form>
+      <form method="post" action="{% url 'dashboard:message_action' m.pk 'unread' %}">{% csrf_token %}<button class="btn btn-block">Mark unread</button></form>
+      <form method="post" action="{% url 'dashboard:message_action' m.pk 'delete' %}" data-confirm="Delete this message? This cannot be undone.">{% csrf_token %}<button class="btn btn-danger btn-block">Delete</button></form>
+    </div>
+    {% if others %}<div class="card"><h2 class="side-h">Earlier from this email</h2><ul class="msg-mini">{% for o in others %}<li><a href="{% url 'dashboard:message_detail' o.pk %}"><b>{{ o.subject|default:"(no subject)" }}</b><small>{{ o.created_at|ago }}</small></a></li>{% endfor %}</ul></div>{% endif %}
+    <p class="muted small">{% if m.ip_address %}Sent from {{ m.ip_address }}{% endif %}</p>
+  </aside>
+</div>
+{% endblock %}

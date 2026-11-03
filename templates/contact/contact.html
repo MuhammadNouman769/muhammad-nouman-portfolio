@@ -1,39 +1,50 @@
 {% extends 'base.html' %}
-{% block title %}Contact — {{ OWNER_NAME }}{% endblock %}
+{% block title %}Contact | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}Start a project or ask a question. Message {{ site.owner_name }} directly through the form, email or WhatsApp.{% endblock %}
 {% block content %}
+<section class="page-head wrap banner">
+  {% include 'partials/lamp.html' with cord=48 %}<div><h1>Let’s talk about your project</h1><p class="lede">A few lines about what you are building is enough to start. I reply personally.</p></div></section>
 
-<div class="page-header">
-  <div class="wrap">
-    <span class="mono">06 / contact</span>
-    <h1>Let's build something that scales.</h1>
-    <p>Fill in the form and it lands straight in the database — check it any time from the Django admin.</p>
+<section class="wrap contact-grid">
+  <div class="contact-info">
+    {% if site.email %}<button class="c-card" type="button" data-copy="{{ site.email }}" data-reveal>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg></span>
+      <span class="c-txt"><small>Email · tap to copy</small><b>{{ site.email }}</b></span><span class="copied" aria-live="polite">Copied</span></button>{% endif %}
+    {% if site.whatsapp_url %}<a class="c-card" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener" data-reveal style="--i:1">
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-4.2A8 8 0 1 1 8.4 18.8z"/><path d="M9 9.5c.4 2 2.5 4.1 4.5 4.5l1.3-1-1.6-1.2-.9.6c-.8-.4-1.5-1.1-1.9-1.9l.6-.9L9.8 8z"/></svg></span>
+      <span class="c-txt"><small>WhatsApp</small><b>{{ site.whatsapp|default:site.phone }}</b></span></a>
+    {% elif site.phone %}<div class="c-card" data-reveal style="--i:1"><span class="c-ic"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span><span class="c-txt"><small>Phone</small><b>{{ site.phone }}</b></span></div>{% endif %}
+    {% if site.location %}<div class="c-card" data-reveal style="--i:2"><span class="c-ic"><svg viewBox="0 0 24 24"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span class="c-txt"><small>Based in</small><b>{{ site.location }}</b></span></div>{% endif %}
+    {% if site.github %}<a class="c-card" href="{{ site.github }}" target="_blank" rel="me noopener" data-reveal style="--i:3"><span class="c-ic"><svg viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 6l-3 12"/></svg></span><span class="c-txt"><small>Code</small><b>GitHub</b></span></a>{% endif %}
+    {% if site.linkedin %}<a class="c-card" href="{{ site.linkedin }}" target="_blank" rel="me noopener" data-reveal style="--i:4"><span class="c-ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 11v5M8 8v.01M12 16v-5m0 2c0-1.5 1-2 2-2s2 .8 2 2.2V16"/></svg></span><span class="c-txt"><small>Network</small><b>LinkedIn</b></span></a>{% endif %}
   </div>
-</div>
 
-<section style="padding-top:20px;">
-  <div class="wrap contact-grid">
-    <div>
-      <div class="contact-links">
-        <a href="mailto:{{ OWNER_EMAIL }}"><span class="mono">email</span> {{ OWNER_EMAIL }}</a>
-        <a href="tel:{{ OWNER_PHONE }}"><span class="mono">phone</span> {{ OWNER_PHONE }}</a>
-        <a href="{{ OWNER_LINKEDIN }}" target="_blank" rel="noopener"><span class="mono">linkedin</span> View profile ↗</a>
-        <a href="{{ OWNER_GITHUB }}" target="_blank" rel="noopener"><span class="mono">github</span> View profile ↗</a>
-      </div>
-    </div>
-    <div>
-      <form method="post" class="contact-form">
-        {% csrf_token %}
-        {% for field in form %}
-        <div class="form-field">
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-          {% if field.errors %}<div class="form-errors">{{ field.errors|striptags }}</div>{% endif %}
+  <div class="form-card" data-reveal="right">
+    <form class="form" id="contact-form" method="post" novalidate>
+      {% csrf_token %}
+      <div><h2 class="form-title">Send a message</h2><p class="form-sub">Takes about a minute. No account, no newsletter.</p></div>
+      <div class="form-error" id="form-error" role="alert" hidden></div>
+      <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+      {% for f in form %}{% if f.name != 'website' %}
+      <div class="field{% if f.errors %} bad{% endif %}" data-field="{{ f.name }}">
+        <div class="field-box">
+          {{ f }}
+          <label for="{{ f.id_for_label }}">{{ f.label }}{% if not f.field.required %} <span class="opt">(optional)</span>{% endif %}</label>
+          <span class="f-state" aria-hidden="true"><svg class="i-ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><svg class="i-bad" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+          {% if f.name == 'message' %}<span class="counter" id="counter" aria-hidden="true">0 / 2000</span>{% endif %}
         </div>
-        {% endfor %}
-        <button type="submit" class="btn">Send Message</button>
-      </form>
+        <p class="err" data-err="{{ f.name }}">{% for e in f.errors %}{{ e }}{% endfor %}</p>
+      </div>
+      {% endif %}{% endfor %}
+      <button class="btn btn-solid btn-lg send" type="submit"><span class="s-label">Send message</span><span class="s-spin" aria-hidden="true"></span></button>
+    </form>
+
+    <div class="success" id="success" role="status" tabindex="-1">
+      <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring" cx="60" cy="60" r="54"/><path class="tick" d="M36 62l16 16 32-34"/></svg>
+      <h2>Message sent</h2>
+      <p>Thanks, it reached me. I usually reply within a day.</p>
+      <p class="row-actions" style="justify-content:center"><a class="btn btn-line" href="{% url 'projects:projects' %}">Browse the work</a><button class="btn btn-solid" type="button" id="again">Send another</button></p>
     </div>
   </div>
 </section>
-
 {% endblock %}

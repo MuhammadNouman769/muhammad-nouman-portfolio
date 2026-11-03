@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.title }} | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}{{ post.description }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.description }}{% endblock %}
+{% block og_image %}{% if post.cover_image %}{{ SITE_URL }}{{ post.cover_image.url }}{% else %}{{ DEFAULT_OG_IMAGE }}{% endif %}{% endblock %}
+{% block robots %}{% if is_preview %}noindex{% else %}index, follow, max-image-preview:large{% endif %}{% endblock %}
+{% block jsonld %}
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"BlogPosting","headline":"{{ post.title|escapejs }}","description":"{{ post.description|escapejs }}","datePublished":"{{ post.published_at|date:'c' }}","dateModified":"{{ post.updated_at|date:'c' }}","mainEntityOfPage":"{{ SITE_URL }}{{ post.get_absolute_url }}","author":{"@id":"{{ SITE_URL }}/#person"},"publisher":{"@id":"{{ SITE_URL }}/#person"}{% if post.cover_image %},"image":"{{ SITE_URL }}{{ post.cover_image.url }}"{% endif %},"keywords":"{{ post.tags|escapejs }}"},
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"{{ SITE_URL }}/"},{"@type":"ListItem","position":2,"name":"Blog","item":"{{ SITE_URL }}/blog/"},{"@type":"ListItem","position":3,"name":"{{ post.title|escapejs }}"}]}]}</script>
+{% endblock %}
+{% block content %}
+<article class="art" style="--ac:{{ post.cover_accent }}">
+  {% if is_preview %}<p class="preview-flag">Draft preview. Only you can see this page.</p>{% endif %}
+  <header class="art-head wrap banner">
+    {% include 'partials/lamp.html' with cord=48 %}
+    <div>
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'blog:index' %}">Blog</a>{% if post.category %}<span aria-hidden="true">/</span><a href="{% url 'blog:index' %}?c={{ post.category.slug }}">{{ post.category.name }}</a>{% endif %}</nav>
+      <h1>{{ post.title }}</h1>
+      <p class="lede">{{ post.excerpt }}</p>
+      <p class="byline"><span class="by-av">{% include 'partials/logo.html' %}</span><span><b>{{ site.owner_name }}</b><small>{{ post.published_at|date:"j F Y" }} · {{ post.read_minutes }} min read</small></span></p>
+    </div>
+  </header>
+  <div class="wrap art-grid">
+    <aside class="toc" aria-label="On this page">
+      {% if post.toc %}<p class="toc-t">On this page</p><ol>{% for id, text, level in post.toc %}<li class="l{{ level }}"><a href="#{{ id }}">{{ text }}</a></li>{% endfor %}</ol>{% endif %}
+      <button class="btn btn-line btn-sm" type="button" data-copylink>Copy link</button>
+    </aside>
+    <div class="prose art-body">{{ post.body_html }}</div>
+  </div>
+  <section class="wrap art-cta">
+    <div class="by-av lg">{% include 'partials/logo.html' %}</div>
+    <div><h2>Building something with Django?</h2><p>I am open to remote, on-site and contract roles. If this article is how you think about backends, we should talk.</p></div>
+    <button class="btn btn-amber btn-lg" type="button" data-hire>Hire me</button>
+  </section>
+  {% if related %}
+  <section class="wrap block-sm"><h2 class="mb">Keep reading</h2>
+    <div class="post-grid">{% for r in related %}
+      <a class="post" href="{{ r.get_absolute_url }}" style="--ac:{{ r.cover_accent }}"><span class="post-art" aria-hidden="true"><i></i><b>{{ r.category.name|default:'Article' }}</b></span><span class="mag-meta">{{ r.published_at|date:"j M Y" }} · {{ r.read_minutes }} min read</span><span class="post-title">{{ r.title }}</span><span class="row-sub">{{ r.excerpt }}</span></a>
+    {% endfor %}</div>
+  </section>{% endif %}
+  <nav class="wrap pager" aria-label="More articles">
+    {% if prev_post %}<a href="{{ prev_post.get_absolute_url }}" rel="prev"><span>Older</span>{{ prev_post.title }}</a>{% else %}<span></span>{% endif %}
+    {% if next_post %}<a href="{{ next_post.get_absolute_url }}" rel="next" class="r"><span>Newer</span>{{ next_post.title }}</a>{% endif %}
+  </nav>
+</article>
+{% endblock %}

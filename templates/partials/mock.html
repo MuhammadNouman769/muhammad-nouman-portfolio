@@ -1,0 +1,32 @@
+{# CSS-drawn product mock-up. Needs: kind, accent. Decorative only. #}
+<div class="mock mock-{{ kind|default:'other' }}" style="--ac:{{ accent|default:'#3452e8' }}" aria-hidden="true">
+  <div class="mock-bar"><i></i><i></i><i></i><span></span></div>
+  {% if kind == 'ecommerce' %}
+  <div class="mk-shop">
+    <div class="mk-nav"><b></b><u></u><u></u><u></u><em>3</em></div>
+    <div class="mk-hero"><span></span><span></span></div>
+    <div class="mk-grid"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+  {% elif kind == 'saas' %}
+  <div class="mk-app">
+    <div class="mk-side"><b></b><i></i><i class="on"></i><i></i><i></i></div>
+    <div class="mk-main">
+      <div class="mk-kpis"><i></i><i></i><i></i></div>
+      <div class="mk-chart"><i style="--h:42%"></i><i style="--h:68%"></i><i style="--h:54%"></i><i style="--h:86%"></i><i style="--h:62%"></i><i style="--h:94%"></i><i style="--h:74%"></i></div>
+      <div class="mk-rows"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+  {% elif kind == 'editorial' %}
+  <div class="mk-news">
+    <div class="mk-flow"><span>Draft</span><span>Review</span><span>Approved</span><span class="on">Published</span></div>
+    <div class="mk-story"><i class="img"></i><div><i class="t"></i><i class="t s"></i><i></i><i></i><i class="s"></i></div></div>
+    <div class="mk-story"><i class="img"></i><div><i class="t"></i><i></i><i class="s"></i></div></div>
+  </div>
+  {% else %}
+  <div class="mk-corp">
+    <div class="mk-hero2"><span></span><span></span><b></b></div>
+    <div class="mk-cards"><i></i><i></i><i></i></div>
+    <div class="mk-wa"><span></span></div>
+  </div>
+  {% endif %}
+</div>

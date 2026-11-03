@@ -1,58 +1,61 @@
 {% extends 'base.html' %}
-{% block title %}Projects — {{ OWNER_NAME }}{% endblock %}
+{% block title %}Projects and case studies | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}{{ projects|length }} backend and full-stack projects by {{ site.owner_name }}: marketplaces, POS systems, editorial platforms and APIs built with Django and DRF.{% endblock %}
+{% block jsonld %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Projects by {{ site.owner_name|escapejs }}","itemListElement":[{% for p in projects %}{"@type":"ListItem","position":{{ forloop.counter }},"url":"{{ SITE_URL }}{{ p.get_absolute_url }}","name":"{{ p.short_title|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}]}</script>
+{% endblock %}
 {% block content %}
-
-<div class="page-header">
-  <div class="wrap">
-    <span class="mono">03 / projects</span>
-    <h1>Selected work</h1>
-    <p>Backend-heavy builds — marketplaces, POS systems, editorial platforms, and corporate sites — each shipped end to end.</p>
-  </div>
-</div>
-
-<section>
-  <div class="wrap">
-    <div class="projects">
-      {% for project in projects %}
-      <div class="card">
-        <div class="card-bar">
-          <span class="mono">{{ project.slug }}</span>
-          <span class="status">{{ project.get_status_display|lower }}</span>
-        </div>
-        <div class="card-body">
-
-          <h3 class="project-name">{{ project.title }}</h3>
-          <p>{{ project.summary }}</p>
-
-          {% if project.tags.exists %}
-          <div class="card-section">
-            <span class="card-section-label mono">tech stack</span>
-            <div class="tags">
-              {% for tag in project.tags.all %}<span class="tag">{{ tag.name }}</span>{% endfor %}
-            </div>
-          </div>
-          {% endif %}
-
-          {% if project.features.exists %}
-          <div class="card-section">
-            <span class="card-section-label mono">key features</span>
-            <div class="features-list">
-              {% for f in project.features.all %}<span class="feature-pill">{{ f.text }}</span>{% endfor %}
-            </div>
-          </div>
-          {% endif %}
-
-          <div class="card-links">
-            {% if project.live_url %}<a class="card-link" href="{{ project.live_url }}" target="_blank" rel="noopener">Visit live site →</a>{% endif %}
-            {% if project.github_url %}<a class="card-link" href="{{ project.github_url }}" target="_blank" rel="noopener">View repository →</a>{% endif %}
-          </div>
-        </div>
-      </div>
-      {% empty %}
-      <p style="color:var(--muted);">Run <code>python manage.py seed_data</code> to load project content.</p>
-      {% endfor %}
-    </div>
+<section class="page-head wrap banner">
+  {% include 'partials/lamp.html' with cord=48 %}
+  <div>
+    <h1>Case studies</h1>
+    <p class="lede">Marketplaces, SaaS, editorial platforms and the APIs behind them. Each case study covers the problem, the decisions and the stack.</p>
   </div>
 </section>
 
+{% if case_studies %}
+<section class="wrap cs-grid">
+  {% for p in case_studies %}
+  <a class="cs-tile" href="{{ p.get_absolute_url }}" style="--ac:{{ p.accent }}" data-reveal>
+    <span class="cs-tile-vis" aria-hidden="true">{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}</span>
+    <span class="cs-tile-body">
+      <span class="case-kind"><span class="dot"></span>{{ p.get_kind_display }} · <span class="s-{{ p.status }}">{{ p.get_status_display }}</span></span>
+      <span class="cs-tile-title">{{ p.short_title }}</span>
+      <span class="row-sub">{{ p.subtitle|default:p.summary|truncatechars:110 }}</span>
+      <span class="cs-tile-go">Read case study <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </span>
+  </a>
+  {% endfor %}
+</section>
+{% endif %}
+
+<section class="wrap all-head"><h2>Everything I have built</h2></section>
+
+<section class="wrap">
+  <form class="filters" id="filters" role="search" aria-label="Filter projects" onsubmit="return false">
+    <div class="seg" role="group" aria-label="Status">
+      <button type="button" class="on" data-status="">All</button>
+      {% for key, label in statuses %}<button type="button" data-status="{{ key }}">{{ label }}</button>{% endfor %}
+    </div>
+    <label class="search"><span class="sr">Search projects</span><input type="search" id="q" placeholder="Search by name or tech" autocomplete="off"></label>
+    <label class="select"><span class="sr">Technology</span>
+      <select id="tag"><option value="">Any technology</option>{% for t in all_tags %}<option>{{ t }}</option>{% endfor %}</select>
+    </label>
+  </form>
+  <p class="count" id="count" aria-live="polite">{{ projects|length }} projects</p>
+
+  <ol class="index" id="index">
+    {% for p in projects %}
+    <li class="row" data-status="{{ p.status }}" data-text="{{ p.title|lower }} {% for t in p.tags.all %}{{ t.name|lower }} {% endfor %}" data-tags="{% for t in p.tags.all %}|{{ t.name }}{% endfor %}|">
+      <a class="row-link" href="{{ p.get_absolute_url }}">
+        <span class="row-thumb">{% if p.image %}<img src="{{ p.image.url }}" alt="" loading="lazy" width="320" height="200">{% else %}<span class="mono-tile" aria-hidden="true">{{ p.short_title|slice:":2" }}</span>{% endif %}</span>
+        <span class="row-main"><span class="row-title">{{ p.short_title }}</span><span class="row-sub">{{ p.subtitle|default:p.summary|truncatechars:90 }}</span></span>
+        <span class="row-tags">{% for t in p.tags.all|slice:":4" %}<span>{{ t.name }}</span>{% endfor %}</span>
+        <span class="status s-{{ p.status }}">{{ p.get_status_display }}</span>
+      </a>
+    </li>
+    {% empty %}<li class="empty">No projects are published yet.</li>{% endfor %}
+  </ol>
+  <p class="empty" id="none" hidden>Nothing matches those filters. Clear the search or pick “All”.</p>
+</section>
 {% endblock %}

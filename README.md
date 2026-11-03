@@ -1,105 +1,69 @@
-# Muhammad Nouman — Portfolio (Django)
+# Muhammad Nouman: portfolio (Django 5.2)
 
-A full Django portfolio site for Muhammad Nouman — Backend Engineer / Founder, Xvera Labs.
+A production-ready portfolio with a custom **dashboard** (visitor analytics, content management, inbox) in place of the Django admin.
 
-Home, About, Experience, Projects, Services, and Skills all read their content from the
-database (via each app's models), and Contact saves submitted messages to the database
-so you can review them from the Django admin.
+## What is inside
 
-## Project layout
+| Area | Details |
+| --- | --- |
+| Public site | Home, Work (filterable) with a detail page per project, About, Experience, Skills, Services, Contact, Privacy, custom 404/500. Light and dark theme. |
+| Lamp | Every banner has a pull-cord lamp. Pull it and light spreads from the shade to reveal the page; pull again and the page goes black. State is remembered across pages. Crawlers and no-JS visitors always get the lit page. |
+| Dashboard | `/dashboard/`: overview charts, live visitors, visitor log with filters and CSV export, projects / skills / experience / services / education / about text / site settings, drag-to-reorder, publish and feature toggles, inbox (read, star, reply, delete), password change. |
+| Analytics | Every page view is recorded (page, referrer, UTM, device, browser, OS, country, IP). Bots are flagged and excluded from charts. Staff visits are not counted. |
+| SEO | Unique title and description per page, canonical URLs, Open Graph and Twitter cards, JSON-LD (Person, WebSite, CreativeWork, BreadcrumbList, ItemList), `sitemap.xml`, `robots.txt`, search-readiness checklist in Site settings. |
+| Security | Secure cookies and HSTS when `DEBUG=False`, CSRF, login throttling, honeypot and rate limit on the contact form, dashboard at a configurable URL, Django admin off by default, uploads limited to 5 MB. |
+| Deploy | `Dockerfile`, `docker-compose.yml`, gunicorn config, nginx and systemd examples in `deploy/`. |
 
-```
-nouman_portfolio/
-├── core/                  # settings, root urls, wsgi/asgi
-├── apps/
-│   ├── home/              # landing page (pulls highlights from other apps)
-│   ├── about/              # Profile bio + Education
-│   ├── experience/         # Experience + ExperienceHighlight
-│   ├── projects/           # Project + ProjectTag
-│   ├── services/           # Service (the "Our Services" grid)
-│   ├── skills/              # SkillCategory + Skill
-│   └── contact/             # ContactMessage + form (saved to DB)
-├── templates/               # base.html, partials/, and one folder per app
-├── static/                  # css/, js/, images/ (your photo lives here)
-├── media/                    # uploaded project images (optional, via admin)
-├── requirements.txt
-├── .env                       # already filled in and ready to run
-└── .env.example
-```
-
-## Setup (first time)
+## Run it locally
 
 ```bash
-# 1. Create and activate a virtual environment
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
-
-# 2. Install dependencies
+source venv/bin/activate            # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# 3. Create the database tables
-python manage.py makemigrations
-python manage.py migrate
-
-# 4. Load the real portfolio content (experience, projects, services, skills, education)
-python manage.py seed_data
-
-# 5. Create an admin login for yourself
-python manage.py createsuperuser
-
-# 6. Run it
+python manage.py migrate            # upgrades your existing db.sqlite3 and keeps all data
 python manage.py runserver
 ```
 
-Visit `http://127.0.0.1:8000/` for the site and `http://127.0.0.1:8000/admin/` to manage
-content (edit projects, experience, services, skills, education, and read contact messages).
+Open http://127.0.0.1:8000/ and sign in at http://127.0.0.1:8000/dashboard/ with your existing superuser.
+Starting from an empty database instead? Run `python manage.py seed_data` and `python manage.py createsuperuser`.
 
-> A `.env` file is already included with a generated `SECRET_KEY` and your contact details,
-> so the site runs as-is. `.env.example` is there as a template if you ever need to
-> regenerate it or deploy elsewhere — never commit a real `.env` to a public repo.
+Run the tests: `python manage.py test apps`
 
-## Editing content
+## Go live (VPS with nginx)
 
-Everything shown on the site comes from the database, editable two ways:
+1. Copy `.env.example` to `.env` and fill in `SECRET_KEY`, `ALLOWED_HOSTS`, `SITE_URL` (https), `CSRF_TRUSTED_ORIGINS`. Keep `DEBUG=False`.
+2. `pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput`
+3. Run gunicorn with `deploy/portfolio.service`, put `deploy/nginx.conf` in front, then `certbot --nginx -d yourdomain.com`.
+4. In the dashboard open **Site settings**: fill the SEO fields, upload a 1200x630 share image, then follow the *Search readiness* list. Submit `https://yourdomain.com/sitemap.xml` in Google Search Console.
+5. Optional: schedule `python manage.py prune_analytics` weekly to enforce `ANALYTICS_RETENTION_DAYS`.
 
-1. **Django admin** (`/admin/`) — the easiest way. Add/edit Projects, Experience,
-   Services, Skills, and Education visually, including uploading a project image.
-2. **`apps/home/management/commands/seed_data.py`** — the source of truth for the
-   initial content. Edit this file and re-run `python manage.py seed_data` to reset
-   to your latest version (it's idempotent — safe to re-run).
+Docker: `docker compose up -d --build`.
 
-## Adding a new project
+## Daily use
 
-Easiest: Django admin → Projects → Add Project → fill in title, slug, summary, status,
-GitHub/live URL, tags (inline), and optionally an image.
+* **Add a project**: Dashboard → Projects → Add project. Fill title and summary, add tech tags and capabilities, upload a cover. Untick *Published* to keep it hidden.
+* **Reorder**: drag the handle on any list (projects, skills, experience, services, education).
+* **Change hero text, contact details, social links, portrait, résumé PDF, lamp default**: Dashboard → Site settings. Changes are live instantly.
+* **Lamp default**: *Lamp starts switched on* in Site settings. Off (default) means first-time visitors see a dark page and pull the cord. Their choice is remembered only for that visit, so every new visit starts dark.
+* **Hide the dashboard URL**: set `DASHBOARD_URL=my-secret-path/` in `.env`.
 
-## Contact form
+## Privacy note
 
-Messages submitted on `/contact/` are saved as `ContactMessage` rows — view them under
-Django admin → Contact → Contact messages. No email server is configured; wiring up
-email notifications later just means adding `EMAIL_*` settings and calling `send_mail()`
-in `apps/contact/views.py`.
+Analytics stores IP addresses and a first-party cookie (`nv_id`). Set `ANALYTICS_ANONYMIZE_IP=True` to truncate IPs, or `ANALYTICS_USE_COOKIE=False` for cookie-less counting. The `/privacy/` page already describes this; edit `templates/privacy.html` if you change behaviour.
 
-## Moving to PostgreSQL later
+## Notes
 
-Update `.env`:
+* Fonts load from Google Fonts. To self-host, download Bricolage Grotesque and JetBrains Mono (woff2) into `static/fonts/` and replace the `<link>` in `templates/base.html` and `templates/dashboard/base.html`.
+* Country detection works automatically behind Cloudflare (`CF-IPCountry`). Otherwise add a MaxMind GeoLite2 folder to `GEOIP_PATH` and `pip install geoip2`.
+* Two small data fixes ship as migrations: stray "Date range:" and "Headline:" prefixes in the existing database content are removed.
 
-```env
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=nouman_portfolio
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_HOST=127.0.0.1
-DB_PORT=5432
-```
+## v4: hiring-focused edition
 
-Then `pip install psycopg2-binary`, run `python manage.py migrate` again, and re-run
-`seed_data` (or re-enter content via admin).
+- **Home** is built for CEOs, HR and managers: lamp banner, "Remote / On-site / Contract" hire triptych, stacked case studies, how-I-work sequence, toolbox tabs, blog magazine, git-log experience, services. Every "Hire me" button opens a 30-second dialog that lands in the dashboard inbox (and your email).
+- **Lamp**: the page opens dark. Pull the chain (drag it down, tap it, or press Enter) to light the room. Real pendulum swing, synthesised click sound, warm-up flicker. State is remembered; search crawlers always see the lit page. Set `lamp_default_on` in Site settings to start lit.
+- **Case studies** are Projects with "case study" ticked (challenge, solution, metrics, architecture flow). **Blog** is under Dashboard > Blog posts (Markdown). Sample articles and case studies were written from your résumé: review them and replace any wording that is not exactly true for you (`python manage.py seed_blog`, `seed_projects` only fill empty content).
+- **Mobile** (under 900px) switches to an app layout: bottom tab bar with a centre Hire button, "More" bottom sheet, swipe cards, safe-area padding.
+- Fonts load from Google Fonts at runtime; your server needs outbound internet for that (or self-host the two families).
 
-## Before deploying
-
-- Set `DEBUG=False` in `.env`
-- Set `ALLOWED_HOSTS` to your real domain
-- Generate a fresh `SECRET_KEY`
-- Run `python manage.py collectstatic`
-- Move off SQLite to PostgreSQL for production
+- **Dashboard motion**: animated sign-in screen (aurora, particles, glowing card, show/hide password), staggered sidebar, count-up KPIs, charts that draw in, growing bars, spotlight cards and animated tables/toasts. Files: `static/dashboard/fx.css`, `fx.js`. All of it switches off under reduced-motion.

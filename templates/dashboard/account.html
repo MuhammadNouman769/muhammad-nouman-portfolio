@@ -1,0 +1,9 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Password{% endblock %}
+{% block heading %}<h1>Password</h1><p class="muted">Use at least 10 characters. A passphrase works well.</p>{% endblock %}
+{% block content %}
+<form method="post" class="card narrow">{% csrf_token %}
+  {% for f in form %}<div class="field {% if f.errors %}bad{% endif %}"><label class="lbl" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}{% for e in f.errors %}<p class="err">{{ e }}</p>{% endfor %}{% if f.help_text %}<small class="help">{{ f.help_text|safe }}</small>{% endif %}</div>{% endfor %}
+  <button class="btn btn-primary" type="submit">Change password</button>
+</form>
+{% endblock %}

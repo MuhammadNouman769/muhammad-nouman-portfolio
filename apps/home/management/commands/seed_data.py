@@ -1,9 +1,11 @@
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
 from apps.about.models import Profile, Education
 from apps.experience.models import Experience, ExperienceHighlight
 from apps.projects.models import Project, ProjectTag, ProjectFeature
 from apps.services.models import Service
+from apps.siteconfig.models import SiteSettings
 from apps.skills.models import SkillCategory, Skill
 
 
@@ -11,12 +13,17 @@ class Command(BaseCommand):
     help = "Seed the database with Muhammad Nouman's portfolio content (idempotent)."
 
     def handle(self, *args, **options):
+        SiteSettings.load()
+        self.stdout.write('  site settings ready')
         self.seed_profile()
         self.seed_education()
         self.seed_experience()
         self.seed_projects()
         self.seed_services()
         self.seed_skills()
+        from django.core.management import call_command
+        call_command('seed_projects')
+        call_command('seed_blog', stdout=self.stdout)
         self.stdout.write(self.style.SUCCESS('Portfolio data seeded successfully.'))
 
     # ------------------------------------------------------------------

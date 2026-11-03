@@ -1,0 +1,28 @@
+{# Pendant lamp with pull chain. Pass cord=<px> for the wire length. One per banner; on/off state is shared via localStorage. #}
+<span class="lamp-beam" aria-hidden="true" style="--cord:{{ cord|default:70 }}px"><canvas class="lamp-dust"></canvas></span>
+<div class="lamp" data-lamp style="--cord:{{ cord|default:70 }}px">
+  <div class="lamp-swing">
+    <span class="lamp-wire" aria-hidden="true"></span>
+    <svg class="lamp-body" viewBox="0 0 160 118" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="shE" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0a0f24"/><stop offset=".28" stop-color="#3a4fc4"/><stop offset=".42" stop-color="#1d2a7a"/><stop offset=".78" stop-color="#0c1334"/><stop offset="1" stop-color="#060a1c"/></linearGradient>
+        <linearGradient id="shR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a6a2a"/><stop offset=".35" stop-color="#ffe29a"/><stop offset=".7" stop-color="#b98a2e"/><stop offset="1" stop-color="#6b4f1c"/></linearGradient>
+        <radialGradient id="shIn" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#fff4cf"/><stop offset=".45" stop-color="#ffc861"/><stop offset="1" stop-color="#d98a1e"/></radialGradient>
+        <radialGradient id="halo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd27a" stop-opacity=".95"/><stop offset=".4" stop-color="#ffb347" stop-opacity=".35"/><stop offset="1" stop-color="#ffb347" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect x="73" y="0" width="14" height="14" rx="3" fill="url(#shR)"/>
+      <rect x="69" y="12" width="22" height="9" rx="3" fill="#10163a"/>
+      <path d="M80 18C46 18 26 52 12 92h136C134 52 114 18 80 18z" fill="url(#shE)"/>
+      <path d="M80 18C46 18 26 52 12 92" fill="none" stroke="rgba(160,185,255,.35)" stroke-width="1.5"/>
+      <ellipse cx="80" cy="92" rx="68" ry="9" fill="url(#shR)"/>
+      <ellipse class="lamp-dark" cx="80" cy="92" rx="62" ry="6.4" fill="#0a0f26"/>
+      <ellipse class="lamp-inner" cx="80" cy="92" rx="62" ry="6.4" fill="url(#shIn)"/>
+      <ellipse class="lamp-halo" cx="80" cy="102" rx="64" ry="34" fill="url(#halo)"/>
+      <g class="lamp-bulb"><path d="M70 94c0 8 4 14 10 14s10-6 10-14z" fill="#fff0c2"/><path d="M75 97v5m5-5v6m5-6v5" stroke="#ffb13b" stroke-width="1.2" stroke-linecap="round"/></g>
+    </svg>
+    <button class="lamp-chain" type="button" aria-pressed="true" aria-label="Pull the chain to turn the light off">
+      <span class="lamp-links" aria-hidden="true"></span><span class="lamp-pull" aria-hidden="true"></span>
+    </button>
+  </div>
+  <p class="lamp-hint" aria-hidden="true"><b>Pull the chain</b> to switch on the light</p>
+</div>

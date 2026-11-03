@@ -1,0 +1,21 @@
+{% extends 'dashboard/base.html' %}
+{% load dash_extras %}
+{% block title %}Visitor{% endblock %}
+{% block heading %}<h1>{{ v.ip|default:'Visitor' }}</h1><p class="muted">{{ v.country|country }}{% if v.city %}, {{ v.city }}{% endif %} · {{ v.browser }} on {{ v.os }} ({{ v.device }}){% if v.is_bot %} · <span class="pill warn">bot</span>{% endif %}</p>{% endblock %}
+{% block tools %}<a class="btn" href="{% url 'dashboard:visitors' %}">Back to visitors</a>{% endblock %}
+{% block content %}
+<section class="kpis">
+  <article class="card kpi"><p class="kpi-label">First seen</p><p class="kpi-value sm">{{ v.first_seen|date:"j M Y, H:i" }}</p></article>
+  <article class="card kpi"><p class="kpi-label">Last seen</p><p class="kpi-value sm">{{ v.last_seen|date:"j M Y, H:i" }}</p></article>
+  <article class="card kpi"><p class="kpi-label">Visits</p><p class="kpi-value">{{ v.visits }}</p></article>
+  <article class="card kpi"><p class="kpi-label">Page views</p><p class="kpi-value">{{ v.pageviews }}</p></article>
+</section>
+<article class="card">
+  <div class="card-head"><h2>Journey</h2><span class="muted small">Newest first</span></div>
+  <ol class="journey">{% for pv in views %}
+    <li class="{% if pv.is_new_visit %}new{% endif %}"><span class="feed-time">{{ pv.created_at|date:"j M, H:i:s" }}</span>
+      <span class="feed-main"><b>{{ pv.label }}</b><small>{{ pv.path }}{% if pv.status != 200 %} · <span class="pill warn">{{ pv.status }}</span>{% endif %}{% if pv.is_new_visit %} · new visit from {{ pv.referrer_domain|default:'direct' }}{% endif %}{% if pv.utm_source %} · utm {{ pv.utm_source }}{% endif %}</small></span></li>
+  {% empty %}<li class="empty">No page views.</li>{% endfor %}</ol>
+</article>
+<p class="muted small">User agent: <code>{{ v.user_agent }}</code></p>
+{% endblock %}

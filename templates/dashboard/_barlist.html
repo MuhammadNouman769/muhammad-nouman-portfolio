@@ -1,0 +1,6 @@
+{% load dash_extras %}
+{% if items %}<ul class="bars">{% for it in items %}
+  <li><span class="bar-name" title="{{ it.sub|default:it.name }}">{{ it.name }}{% if it.extra %}<small>{{ it.extra }}</small>{% endif %}</span>
+  <span class="bar-track"><span class="bar-fill {{ tone|default:'' }}" style="width:{{ it.value|bar_pct:items.0.value }}%"></span></span>
+  <span class="bar-val">{{ it.value }}</span></li>{% endfor %}</ul>
+{% else %}<p class="empty">No data in this period yet.</p>{% endif %}

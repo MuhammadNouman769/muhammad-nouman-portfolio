@@ -1,32 +1,21 @@
 {% extends 'base.html' %}
-{% block title %}Experience — {{ OWNER_NAME }}{% endblock %}
+{% block title %}Experience | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}Work history of {{ site.owner_name }}, {{ site.role_title }}: roles, responsibilities and what was shipped.{% endblock %}
 {% block content %}
-
-<div class="page-header">
-  <div class="wrap">
-    <span class="mono">02 / experience</span>
-    <h1>Where I've worked</h1>
-    <p>From founding an independent software practice to building production backends for a growing team.</p>
-  </div>
-</div>
-
-<section>
-  <div class="wrap">
-    <div class="timeline">
-      {% for exp in experiences %}
-      <div class="tl-item">
-        <span class="mono">{{ exp.date_range|lower }}</span>
-        <h3>{{ exp.role }}</h3>
-        <div class="org">{{ exp.organization }}</div>
-        <ul>
-          {% for h in exp.highlights.all %}<li>{{ h.text }}</li>{% endfor %}
-        </ul>
-      </div>
-      {% empty %}
-      <p style="color:var(--muted);">Run <code>python manage.py seed_data</code> to load experience content.</p>
-      {% endfor %}
-    </div>
+<section class="page-head wrap banner">
+  {% include 'partials/lamp.html' with cord=48 %}<div><h1>Experience</h1><p class="lede">Where I have worked and what I was responsible for, newest first.</p></div></section>
+<section class="wrap">
+  <div class="term term-full" data-progress>
+    <div class="term-bar"><i></i><i></i><i></i><span>~/career $ git log --stat</span></div>
+    <ol class="commits">
+      {% for e in experiences %}
+      <li>
+        <span class="c-hash">{{ e.date_range }}</span>
+        <div class="c-body"><h2>{{ e.role }} <small>@ {{ e.organization }}</small></h2>
+          <ul>{% for h in e.highlights.all %}<li>{{ h.text }}</li>{% endfor %}</ul></div>
+      </li>
+      {% empty %}<li class="empty">No experience added yet.</li>{% endfor %}
+    </ol>
   </div>
 </section>
-
 {% endblock %}

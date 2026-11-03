@@ -1,61 +1,48 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}About — {{ OWNER_NAME }}{% endblock %}
+{% block title %}About {{ site.owner_name }} | {{ site.role_title }}{% endblock %}
+{% block meta_description %}{{ profile.bio_paragraph_1|truncatechars:158 }}{% endblock %}
 {% block content %}
+<section class="page-head wrap banner">
+  {% include 'partials/lamp.html' with cord=48 %}<div><h1>About</h1><p class="lede">{{ profile.headline|default:site.role_title }}{% if site.location %}, based in {{ site.location }}{% endif %}.</p></div></section>
 
-<div class="page-header">
-  <div class="wrap">
-    <span class="mono">01 / about</span>
-    <h1>Profile</h1>
-    <p>A short introduction to who I am, how I work, and the foundation behind the systems I build.</p>
-  </div>
-</div>
-
-<section>
-  <div class="wrap about-grid">
-    <div class="about-portrait">
-      <div class="portrait-circle small">
-        <img src="{% static 'images/photo.png' %}" alt="{{ OWNER_NAME }}">
-      </div>
-      <div class="portrait-meta">
-        <span class="mono">{{ OWNER_NAME|default:"Backend Engineer" }}</span>
-        <div class="portrait-role">Django & DRF Specialist</div>
-      </div>
+<section class="wrap about-grid">
+  <figure class="about-photo">
+    <div class="arch arch-sm">
+      {% if site.portrait %}<img src="{{ site.portrait.url }}" alt="{{ site.owner_name }}" width="900" height="1083" loading="lazy">
+      {% else %}<img src="{% static 'images/portrait-520.webp' %}" alt="{{ site.owner_name }}" width="520" height="626" loading="lazy">{% endif %}
     </div>
-
-    <div class="about-body">
-      {% if profile %}
-        <p>{{ profile.bio_paragraph_1 }}</p>
-        {% if profile.bio_paragraph_2 %}<p>{{ profile.bio_paragraph_2 }}</p>{% endif %}
-        {% if profile.bio_paragraph_3 %}<p>{{ profile.bio_paragraph_3 }}</p>{% endif %}
-      {% else %}
-        <p>Run <code>python manage.py seed_data</code> to load profile content.</p>
-      {% endif %}
-    </div>
+  </figure>
+  <div class="prose prose-lg">
+    {% if profile %}
+      <p>{{ profile.bio_paragraph_1 }}</p>
+      {% if profile.bio_paragraph_2 %}<p>{{ profile.bio_paragraph_2 }}</p>{% endif %}
+      {% if profile.bio_paragraph_3 %}<p>{{ profile.bio_paragraph_3 }}</p>{% endif %}
+    {% else %}<p>Bio coming soon.</p>{% endif %}
+    <p class="row-actions"><a class="btn btn-solid" href="{% url 'contact:contact' %}">Work with me</a>{% if site.resume %}<a class="btn btn-line" href="{{ site.resume.url }}" target="_blank" rel="noopener">Résumé (PDF)</a>{% endif %}</p>
   </div>
 </section>
 
-<section class="edu-section">
+<section class="block principles">
   <div class="wrap">
-    <div class="sec-head">
-      <span class="mono">education</span>
-      <h2>Background</h2>
-    </div>
-
-    <div class="edu-list">
-      {% for edu in education %}
-      <div class="edu-item">
-        <div class="edu-left">
-          <h3>{{ edu.degree }}</h3>
-          <div class="org">{{ edu.institution }}</div>
-        </div>
-        <span class="mono edu-date">{{ edu.date_range|lower }}</span>
-      </div>
-      {% empty %}
-      <p class="muted">No education entries yet.</p>
-      {% endfor %}
-    </div>
+    <h2>How I like to work</h2>
+    <ul class="pr-grid">
+      <li data-reveal><b>Tests ship with the feature</b><span>Core flows are covered by automated tests, so changes are safe to release.</span></li>
+      <li data-reveal style="--i:1"><b>Decide the data model early</b><span>Tenancy, roles and ownership are cheap to design now and painful to retrofit.</span></li>
+      <li data-reveal style="--i:2"><b>Write things down</b><span>OpenAPI docs, clear PR descriptions and short written updates for remote teams.</span></li>
+      <li data-reveal style="--i:3"><b>Own the release</b><span>Docker, CI, HTTPS, backups and logs are part of the job, not someone else’s.</span></li>
+    </ul>
   </div>
 </section>
 
+{% if education %}
+<section class="block block-tint">
+  <div class="wrap">
+    <h2>Education</h2>
+    <ul class="ledger">
+      {% for e in education %}<li><span class="ledger-when">{{ e.date_range }}</span><span class="ledger-what"><strong>{{ e.degree }}</strong>{{ e.institution }}</span></li>{% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
 {% endblock %}

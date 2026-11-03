@@ -1,39 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}Services — {{ OWNER_NAME }}{% endblock %}
+{% block title %}Services | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}Backend development, APIs, e-commerce platforms, DevOps and more. See what {{ site.owner_name }} can build for your business.{% endblock %}
 {% block content %}
-
-<div class="page-header">
-  <div class="wrap">
-    <span class="mono">04 / services</span>
-    <h1>What I offer</h1>
-    <p>End-to-end technology services — from strategy and design through to build, deployment, and ongoing support.</p>
-  </div>
-</div>
-
-<section style="padding-top:20px;">
-  <div class="wrap">
-    <div class="service-grid">
-      {% for service in services %}
-      <div class="service-cell">
-        <span class="mono">{{ forloop.counter|stringformat:"02d" }}</span>
-        <h3>{{ service.title }}</h3>
-        {% if service.description %}<p>{{ service.description }}</p>{% endif %}
-      </div>
-      {% empty %}
-      <p style="color:var(--muted); padding:20px;">Run <code>python manage.py seed_data</code> to load services content.</p>
-      {% endfor %}
-    </div>
-  </div>
+<section class="page-head wrap banner">
+  {% include 'partials/lamp.html' with cord=48 %}<div><h1>Services</h1><p class="lede">What you can hire me and my studio for, from a single API to a full platform.</p></div>
+  <a class="btn btn-solid" href="{% url 'contact:contact' %}">Discuss your project</a></section>
+<section class="wrap">
+  <ul class="svc-list">
+    {% for s in services %}<li><h2>{{ s.title }}</h2><p>{{ s.description }}</p></li>{% empty %}<li class="empty">No services added yet.</li>{% endfor %}
+  </ul>
 </section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="mono">let's talk</span>
-      <h2>Have a project in mind?</h2>
-    </div>
-    <a class="btn btn-primary" href="{% url 'contact:contact' %}">Get in Touch</a>
-  </div>
-</section>
-
 {% endblock %}

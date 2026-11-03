@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Page not found | {{ site.owner_name }}{% endblock %}
+{% block robots %}noindex{% endblock %}
+{% block content %}
+<section class="wrap lost banner">
+  {% include 'partials/lamp.html' with cord=48 %}
+  <div>
+    <h1>This page does not exist.</h1>
+    <p class="lede">The link may be old, or the page moved. Try the work index or go back home.</p>
+    <p class="row-actions"><a class="btn btn-solid" href="{% url 'projects:projects' %}">See the work</a><a class="btn btn-line" href="{% url 'home:home' %}">Home</a></p>
+  </div>
+  <pre class="response" aria-hidden="true"><span class="r-head"><b>GET</b> {{ request.path|truncatechars:48 }}  <i class="bad">404 Not Found</i></span>
+{
+  "error": "no such page",
+  "try": ["/projects/", "/about/", "/contact/"]
+}</pre>
+</section>
+{% endblock %}

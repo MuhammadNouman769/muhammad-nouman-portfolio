@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block title %}{{ project.short_title }}{% if project.subtitle %}: {{ project.subtitle }}{% endif %} | Case study | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}{{ project.summary|truncatechars:158 }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ project.title }}{% endblock %}
+{% block og_description %}{{ project.summary|truncatechars:200 }}{% endblock %}
+{% block og_image %}{% if project.image %}{{ SITE_URL }}{{ project.image.url }}{% else %}{{ DEFAULT_OG_IMAGE }}{% endif %}{% endblock %}
+{% block jsonld %}
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"CreativeWork","name":"{{ project.title|escapejs }}","description":"{{ project.summary|escapejs }}","url":"{{ SITE_URL }}{{ project.get_absolute_url }}","author":{"@id":"{{ SITE_URL }}/#person"},"dateModified":"{{ project.updated_at|date:'c' }}"{% if project.image %},"image":"{{ SITE_URL }}{{ project.image.url }}"{% endif %},"keywords":"{% for t in project.tags.all %}{{ t.name|escapejs }}{% if not forloop.last %}, {% endif %}{% endfor %}"},
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"{{ SITE_URL }}/"},{"@type":"ListItem","position":2,"name":"Case studies","item":"{{ SITE_URL }}/projects/"},{"@type":"ListItem","position":3,"name":"{{ project.short_title|escapejs }}"}]}]}</script>
+{% endblock %}
+{% block content %}
+<article class="cs" style="--ac:{{ project.accent }}">
+  <header class="cs-hero">
+    <div class="wrap cs-hero-grid banner">
+      {% include 'partials/lamp.html' with cord=56 %}
+      <div class="cs-hero-copy">
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'projects:projects' %}">Case studies</a><span aria-hidden="true">/</span><span>{{ project.short_title }}</span></nav>
+        <p class="case-kind"><span class="dot"></span>{{ project.get_kind_display }} · <span class="s-{{ project.status }}">{{ project.get_status_display }}</span></p>
+        <h1>{{ project.short_title }}</h1>
+        {% if project.subtitle %}<p class="lede">{{ project.subtitle }}</p>{% endif %}
+        <p class="row-actions">
+          {% if project.live_url %}<a class="btn btn-solid" href="{{ project.live_url }}" target="_blank" rel="noopener">Visit live site</a>{% endif %}
+          {% if project.github_url %}<a class="btn btn-line" href="{{ project.github_url }}" target="_blank" rel="noopener">View source</a>{% endif %}
+          {% if not project.live_url and not project.github_url %}<button class="btn btn-solid" type="button" data-hire>Hire me for something like this</button>{% endif %}
+        </p>
+      </div>
+      <div class="cs-hero-vis" data-tilt><div class="arch-wrap">{% include 'partials/mock.html' with kind=project.kind accent=project.accent %}</div></div>
+    </div>
+    <dl class="wrap cs-facts">
+      {% if project.year %}<div><dt>Year</dt><dd>{{ project.year }}</dd></div>{% endif %}
+      {% if project.duration %}<div><dt>Duration</dt><dd>{{ project.duration }}</dd></div>{% endif %}
+      {% if project.role %}<div><dt>My role</dt><dd>{{ project.role }}</dd></div>{% endif %}
+      {% if project.team %}<div><dt>Team</dt><dd>{{ project.team }}</dd></div>{% endif %}
+      {% if project.client_type %}<div><dt>Type</dt><dd>{{ project.client_type }}</dd></div>{% endif %}
+    </dl>
+  </header>
+
+  {% if project.image %}<div class="wrap"><figure class="shot"><img src="{{ project.image.url }}" alt="Screenshot of {{ project.short_title }}" width="1200" height="700"></figure></div>{% endif %}
+
+  {% if project.metric_list %}
+  <section class="wrap cs-metrics" aria-label="Key facts">
+    {% for m in project.metric_list %}<div class="metric" data-reveal style="--i:{{ forloop.counter0 }}"><b>{{ m.value }}</b><span>{{ m.label }}</span></div>{% endfor %}
+  </section>
+  {% endif %}
+
+  <section class="wrap cs-story">
+    <div class="cs-col"><h2>{% if project.challenge %}The challenge{% else %}Overview{% endif %}</h2></div>
+    <div class="prose">
+      {% if project.challenge %}{% for para in project.challenge_paras %}<p>{{ para }}</p>{% endfor %}
+      {% else %}<p>{{ project.summary }}</p>{% for para in project.paragraphs %}<p>{{ para }}</p>{% endfor %}{% endif %}
+    </div>
+  </section>
+
+  {% if project.solution %}
+  <section class="wrap cs-story">
+    <div class="cs-col"><h2>The approach</h2></div>
+    <div class="prose">{% for para in project.solution_paras %}<p>{{ para }}</p>{% endfor %}</div>
+  </section>
+  {% endif %}
+
+  {% if project.architecture_steps %}
+  <section class="wrap cs-arch">
+    <h2>How it fits together</h2>
+    <ol class="flow" data-progress>
+      {% for a in project.architecture_steps %}
+      <li style="--i:{{ forloop.counter0 }}"><span class="flow-n">{{ forloop.counter }}</span><b>{{ a.label }}</b>{% if a.detail %}<span>{{ a.detail }}</span>{% endif %}</li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% endif %}
+
+  <section class="wrap cs-two">
+    {% if project.result_list or project.features.all %}
+    <div>
+      <h2>{% if project.result_list %}What came out of it{% else %}Capabilities{% endif %}</h2>
+      <ul class="ticks">
+        {% if project.result_list %}{% for r in project.result_list %}<li>{{ r }}</li>{% endfor %}
+        {% else %}{% for f in project.features.all %}<li>{{ f.text }}</li>{% endfor %}{% endif %}
+      </ul>
+    </div>
+    {% endif %}
+    <aside>
+      <h2>Built with</h2>
+      <ul class="chips">{% for t in project.tags.all %}<li>{{ t.name }}</li>{% endfor %}</ul>
+      {% if project.result_list and project.features.all %}
+      <h2 class="mt">Capabilities</h2>
+      <ul class="ticks ticks-1">{% for f in project.features.all|slice:":8" %}<li>{{ f.text }}</li>{% endfor %}</ul>
+      {% endif %}
+    </aside>
+  </section>
+
+  {% if project.lessons %}
+  <section class="wrap cs-story">
+    <div class="cs-col"><h2>What I would tell the next team</h2></div>
+    <div class="prose">{% for para in project.lessons_paras %}<p>{{ para }}</p>{% endfor %}</div>
+  </section>
+  {% endif %}
+
+  <section class="wrap cs-cta">
+    <div><h2>Need something like this built?</h2><p>I can take it from requirements to a running, monitored deployment.</p></div>
+    <button class="btn btn-amber btn-lg" type="button" data-hire>Hire me</button>
+  </section>
+
+  {% if related %}
+  <section class="wrap block-sm">
+    <h2 class="mb">More work</h2>
+    <div class="cs-grid cs-grid-sm">
+      {% for p in related %}
+      <a class="cs-tile" href="{{ p.get_absolute_url }}" style="--ac:{{ p.accent }}">
+        <span class="cs-tile-vis" aria-hidden="true">{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}</span>
+        <span class="cs-tile-body"><span class="cs-tile-title">{{ p.short_title }}</span><span class="row-sub">{{ p.subtitle|default:p.summary|truncatechars:90 }}</span></span>
+      </a>{% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <nav class="wrap pager" aria-label="More projects">
+    {% if prev_project %}<a href="{% url 'projects:detail' prev_project.slug %}" rel="prev"><span>Previous</span>{{ prev_project.title }}</a>{% else %}<span></span>{% endif %}
+    {% if next_project %}<a href="{% url 'projects:detail' next_project.slug %}" rel="next" class="r"><span>Next</span>{{ next_project.title }}</a>{% endif %}
+  </nav>
+</article>
+{% endblock %}

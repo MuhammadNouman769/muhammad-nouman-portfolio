@@ -1,159 +1,206 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{{ OWNER_NAME }} — Backend Engineer{% endblock %}
 {% block content %}
 
-<header class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <div class="availability-badge">
-        <span class="dot"></span> Available for new projects
-      </div>
-
-      <span class="mono" style="display:block; margin-top:22px;">backend engineer · django &amp; drf</span>
-      <h1 style="margin-top:16px;">Building the systems<br>behind the storefront.</h1>
-      <p class="role">I design and ship scalable Django &amp; DRF backends — multi-vendor marketplaces, editorial platforms, and the APIs that hold them together. Founder of Xvera Labs, currently building at TheTechFury.</p>
-
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="{% url 'projects:projects' %}">View Projects</a>
-        <a class="btn btn-ghost" href="{% url 'contact:contact' %}">Get in Touch</a>
-      </div>
+{# 1 ─ BANNER: dark room, pendant lamp, headline, hire modes #}
+<section class="hero hero-v4">
+  <div class="wrap hero-grid banner">
+    {% include 'partials/lamp.html' with cord=96 %}
+    <div class="hero-copy">
+      {% if site.available %}<p class="avail"><span class="pulse" aria-hidden="true"></span>{{ site.availability_text }}</p>{% endif %}
+      <h1>{{ site.hero_heading }}</h1>
+      <p class="lede">{{ site.hero_text }}</p>
+      <ul class="modes" aria-label="Open to">
+        {% if site.open_remote %}<li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>Remote</li>{% endif %}
+        {% if site.open_onsite %}<li><svg viewBox="0 0 24 24"><path d="M4 21V8l8-5 8 5v13M9 21v-6h6v6"/></svg>On-site</li>{% endif %}
+        {% if site.open_contract %}<li><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M10 12h6M10 16h6"/></svg>Contract</li>{% endif %}
+      </ul>
+      <p class="row-actions">
+        <button class="btn btn-amber btn-lg" type="button" data-hire>Hire me</button>
+        <a class="btn btn-line btn-lg" href="{% url 'projects:projects' %}">See case studies</a>
+        {% if site.resume %}<a class="link-quiet" href="{{ site.resume.url }}" target="_blank" rel="noopener">Résumé (PDF)</a>{% endif %}
+      </p>
+      <dl class="hero-facts">
+        {% if site.location %}<div><dt>Based in</dt><dd>{{ site.location }}</dd></div>{% endif %}
+        {% if site.timezone_note %}<div><dt>Working hours</dt><dd>{{ site.timezone_note }}</dd></div>{% endif %}
+        <div><dt>Core stack</dt><dd>Python · Django · DRF · PostgreSQL</dd></div>
+      </dl>
     </div>
 
-    <div class="hero-portrait-wrap">
-      <div class="portrait-circle">
-        <img src="{% static 'images/photo.png' %}" alt="{{ OWNER_NAME }}">
-      </div>
-      <div class="portrait-tag">
-        <span class="mono">founder</span>
-        Xvera Labs
-      </div>
-    </div>
-  </div>
-
-  <div class="wrap">
-    <div class="stat-bar">
-      <div class="stat-item">
-        <span class="stat-number">{{ projects_count }}+</span>
-        <span class="mono">projects shipped</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">{{ live_projects_count }}</span>
-        <span class="mono">live in production</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">{{ skills_count }}+</span>
-        <span class="mono">technologies &amp; skills</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">{{ services_count }}+</span>
-        <span class="mono">services offered</span>
-      </div>
+    <div class="hero-stage" data-tilt>
+      <span class="chip-float chip-1"><i></i>Django &amp; DRF</span>
+      <span class="chip-float chip-2"><i></i>Multi-tenant SaaS</span>
+      <span class="chip-float chip-3"><i></i>Shipped to prod</span>
+      <div class="arch-wrap"><div class="arch">
+        {% if site.portrait %}<img src="{{ site.portrait.url }}" alt="Portrait of {{ site.owner_name }}" width="900" height="1083" fetchpriority="high">
+        {% else %}<img src="{% static 'images/portrait-900.webp' %}" srcset="{% static 'images/portrait-520.webp' %} 520w, {% static 'images/portrait-900.webp' %} 900w" sizes="(max-width: 900px) 80vw, 440px" alt="Portrait of {{ site.owner_name }}" width="900" height="1083" fetchpriority="high">{% endif %}
+      </div></div>
+      <pre class="response" id="response" aria-label="Summary of {{ site.owner_name }}'s profile"><span class="r-head"><b>GET</b> /{{ site.owner_name|slugify }}  <i class="ok">200 OK</i></span>
+<span class="r-body">{
+  "role": "{{ site.role_title|escapejs }}",{% if site.company_name %}
+  "company": "{{ site.company_name|escapejs }}",{% endif %}
+  "case_studies": {{ case_studies|length }},
+  "open_to": [{% if site.open_remote %}"remote"{% endif %}{% if site.open_onsite %}{% if site.open_remote %}, {% endif %}"on-site"{% endif %}{% if site.open_contract %}{% if site.open_remote or site.open_onsite %}, {% endif %}"contract"{% endif %}],
+  "available": {% if site.available %}true{% else %}false{% endif %}
+}</span></pre>
     </div>
   </div>
-</header>
+  <a class="scroll-cue" href="#hire" aria-label="Scroll to next section"><span></span></a>
+</section>
 
-<section>
+{# 2 ─ TECH MARQUEE #}
+{% if ticker %}
+<div class="ticker" aria-label="Technologies">
+  <div class="ticker-track" aria-hidden="true">{% for t in ticker %}<span>{{ t }}</span>{% endfor %}{% for t in ticker %}<span>{{ t }}</span>{% endfor %}</div>
+  <p class="sr">{{ ticker|join:", " }}</p>
+</div>
+{% endif %}
+
+{# 3 ─ HIRE TRIPTYCH: accordion on desktop, swipe cards on phones #}
+<section class="block hire" id="hire">
   <div class="wrap">
-    <div class="sec-head-row sec-head">
-      <div>
-        <span class="mono">experience</span>
-        <h2>Where I've worked</h2>
-      </div>
-      <a class="card-link" href="{% url 'experience:experience' %}">Full timeline →</a>
-    </div>
-    <div class="timeline">
-      {% for exp in experiences %}
-      <div class="tl-item">
-        <span class="mono">{{ exp.date_range|lower }}</span>
-        <h3>{{ exp.role }}</h3>
-        <div class="org">{{ exp.organization }}</div>
-      </div>
-      {% endfor %}
+    <header class="sec-head"><h2>Hire me the way that suits your team</h2><p class="lede">One engineer, three ways to work together. Pick one and send a short message.</p></header>
+    <div class="triptych" data-accordion>
+      {% if site.open_remote %}
+      <article class="tri tri-a on" tabindex="0">
+        <span class="tri-no" aria-hidden="true">R</span>
+        <h3>Remote, full-time</h3>
+        <p>Join your team as a backend engineer. Overlap with your hours, async by default, clear written updates.</p>
+        <ul><li>Own APIs, data models and background jobs</li><li>Code review, tests and docs as part of every PR</li><li>{{ site.timezone_note|default:'Flexible time-zone overlap' }}</li></ul>
+        <button class="btn btn-solid" type="button" data-hire="Remote">Discuss a remote role</button>
+      </article>{% endif %}
+      {% if site.open_onsite %}
+      <article class="tri tri-b" tabindex="0">
+        <span class="tri-no" aria-hidden="true">O</span>
+        <h3>On-site</h3>
+        <p>In the office with your team when the work needs people in a room: planning, launches and hand-overs.</p>
+        <ul><li>Pair on hard problems, mentor juniors</li><li>Works well with product, QA and ops</li><li>Open to relocation for the right role</li></ul>
+        <button class="btn btn-solid" type="button" data-hire="On-site">Discuss an on-site role</button>
+      </article>{% endif %}
+      {% if site.open_contract %}
+      <article class="tri tri-c" tabindex="0">
+        <span class="tri-no" aria-hidden="true">C</span>
+        <h3>Contract &amp; projects</h3>
+        <p>A defined scope, a fixed outcome. From a single API to a complete platform, delivered through {{ site.company_name|default:'my studio' }}.</p>
+        <ul><li>Requirements to deployment, end to end</li><li>Fixed scope or time-and-materials</li><li>Weekly demos and a shared board</li></ul>
+        <button class="btn btn-solid" type="button" data-hire="Contract">Discuss a contract</button>
+      </article>{% endif %}
     </div>
   </div>
 </section>
 
-<section>
+{# 4 ─ CASE STUDIES: cards stack as you scroll #}
+<section class="block cases" id="work">
   <div class="wrap">
-    <div class="sec-head-row sec-head">
-      <div>
-        <span class="mono">selected work</span>
-        <h2>Projects</h2>
-      </div>
-      <a class="card-link" href="{% url 'projects:projects' %}">All projects →</a>
-    </div>
-    <div class="projects">
-      {% for project in projects %}
-      <div class="card">
-        <div class="card-bar">
-          <span class="mono">{{ project.slug }}</span>
-          <span class="status">{{ project.get_status_display|lower }}</span>
+    <header class="sec-head"><h2>Case studies</h2><p class="lede">Real platforms I designed and built. Each one has the problem, the decisions and the stack.</p></header>
+    <div class="case-stack">
+      {% for p in case_studies %}
+      <article class="case-card" style="--ac:{{ p.accent }}; --n:{{ forloop.counter0 }}">
+        <div class="case-copy">
+          <p class="case-kind"><span class="dot"></span>{{ p.get_kind_display }}{% if p.year %} · {{ p.year }}{% endif %} · <span class="s-{{ p.status }}">{{ p.get_status_display }}</span></p>
+          <h3><a href="{{ p.get_absolute_url }}">{{ p.short_title }}</a></h3>
+          <p class="case-sub">{{ p.subtitle|default:p.summary|truncatechars:150 }}</p>
+          <ul class="case-metrics">{% for m in p.metric_list|slice:":3" %}<li><b>{{ m.value }}</b><span>{{ m.label }}</span></li>{% endfor %}</ul>
+          <ul class="chips">{% for t in p.tags.all|slice:":6" %}<li>{{ t.name }}</li>{% endfor %}</ul>
+          <p class="row-actions"><a class="btn btn-solid" href="{{ p.get_absolute_url }}">Read case study</a>{% if p.live_url %}<a class="link-quiet" href="{{ p.live_url }}" target="_blank" rel="noopener">Live site</a>{% endif %}</p>
         </div>
-        <div class="card-body">
-          <h3 class="project-name">{{ project.title }}</h3>
-          <p>{{ project.summary|truncatewords:28 }}</p>
-
-          {% if project.tags.exists %}
-          <div class="card-section">
-            <span class="card-section-label mono">tech stack</span>
-            <div class="tags">
-              {% for tag in project.tags.all %}<span class="tag">{{ tag.name }}</span>{% endfor %}
-            </div>
-          </div>
-          {% endif %}
-
-          <div class="card-links">
-            {% if project.live_url %}<a class="card-link" href="{{ project.live_url }}" target="_blank" rel="noopener">Visit live site →</a>{% endif %}
-            {% if project.github_url %}<a class="card-link" href="{{ project.github_url }}" target="_blank" rel="noopener">View repository →</a>{% endif %}
-          </div>
-        </div>
-      </div>
-      {% endfor %}
+        <a class="case-visual" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+          {% include 'partials/mock.html' with kind=p.kind accent=p.accent %}
+        </a>
+      </article>
+      {% empty %}<p class="empty">Case studies appear here once they are published from the dashboard.</p>{% endfor %}
     </div>
+    <p class="more-link"><a class="link-quiet" href="{% url 'projects:projects' %}">All {{ projects_count }} projects</a></p>
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <div class="sec-head-row sec-head">
-      <div>
-        <span class="mono">what I work with</span>
-        <h2>Toolbox</h2>
-      </div>
-      <a class="card-link" href="{% url 'skills:skills' %}">All skills →</a>
+{# 5 ─ HOW I WORK: a real sequence, line draws as you scroll #}
+<section class="block process">
+  <div class="wrap split-wrap">
+    <div class="split-title">
+      <h2>How I work with a team</h2>
+      <p class="lede">The same four steps whether it is a feature or a whole platform. Nothing exotic, just done carefully.</p>
+      <button class="btn btn-line" type="button" data-hire>Work with me</button>
     </div>
-    <div class="skill-groups">
+    <ol class="steps" data-progress>
+      <li><span class="step-n">1</span><div><h3>Understand the business</h3><p>What does done mean, who uses it, what breaks the company if it fails. Constraints first, code second.</p></div></li>
+      <li><span class="step-n">2</span><div><h3>Model the data</h3><p>Schema, permissions and tenancy decided early, because they are the expensive things to change later.</p></div></li>
+      <li><span class="step-n">3</span><div><h3>Build in thin slices</h3><p>Documented API contract, tests next to the code, and something you can click every week.</p></div></li>
+      <li><span class="step-n">4</span><div><h3>Ship and watch</h3><p>Docker, CI, HTTPS, backups and logs. A release is not finished until it is running and observable.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+{# 6 ─ TOOLBOX: tabs #}
+<section class="block block-tint toolbox">
+  <div class="wrap">
+    <header class="sec-head"><h2>The toolbox</h2><p class="lede">Tools I have shipped to production, grouped by the job they do.</p></header>
+    <div class="tabs" data-tabs>
+      <div class="tab-list" role="tablist" aria-label="Skill groups">
+        {% for cat in skill_categories %}<button role="tab" type="button" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="tp{{ forloop.counter }}" id="tb{{ forloop.counter }}">{{ cat.name }}</button>{% endfor %}
+      </div>
       {% for cat in skill_categories %}
-      <div class="skill-group">
-        <span class="mono">{{ cat.name|lower }}</span>
-        <div class="skill-chips">
-          {% for skill in cat.skills.all %}<span class="chip">{{ skill.name }}</span>{% endfor %}
-        </div>
+      <div class="tab-panel" role="tabpanel" id="tp{{ forloop.counter }}" aria-labelledby="tb{{ forloop.counter }}" {% if not forloop.first %}hidden{% endif %}>
+        <ul class="tokens">{% for s in cat.skills.all %}<li style="--i:{{ forloop.counter0 }}">{{ s.name }}</li>{% endfor %}</ul>
       </div>
       {% endfor %}
     </div>
+    <p class="more-link"><a class="link-quiet" href="{% url 'skills:skills' %}">Full skill set ({{ skills_count }})</a></p>
   </div>
 </section>
 
-<section>
+{# 7 ─ BLOG: magazine layout #}
+{% if latest_posts %}
+<section class="block journal">
   <div class="wrap">
-    <div class="sec-head-row sec-head">
-      <div>
-        <span class="mono">what I offer</span>
-        <h2>Services</h2>
-      </div>
-      <a class="card-link" href="{% url 'services:services' %}">All services →</a>
-    </div>
-    <div class="service-grid">
-      {% for service in services %}
-      <div class="service-cell">
-        <span class="mono">{{ forloop.counter|stringformat:"02d" }}</span>
-        <h3>{{ service.title }}</h3>
-      </div>
+    <div class="block-head"><h2>Notes from the codebase</h2><a class="link-quiet" href="{% url 'blog:index' %}">All articles</a></div>
+    <div class="mag">
+      {% for post in latest_posts %}
+      <a class="mag-card{% if forloop.first %} mag-lead{% endif %}" href="{{ post.get_absolute_url }}" style="--ac:{{ post.cover_accent }}">
+        <span class="mag-cover" aria-hidden="true">{% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="" loading="lazy">{% endif %}<i></i><b>{{ post.category.name|default:'Article' }}</b></span>
+        <span class="mag-body"><span class="mag-meta">{{ post.published_at|date:"j M Y" }} · {{ post.read_minutes }} min read</span><span class="mag-title">{{ post.title }}</span>{% if forloop.first %}<span class="mag-ex">{{ post.excerpt }}</span>{% endif %}</span>
+      </a>
       {% endfor %}
     </div>
   </div>
 </section>
+{% endif %}
 
+{# 8 ─ EXPERIENCE: git-log style #}
+<section class="block block-tint gitlog">
+  <div class="wrap">
+    <div class="block-head"><h2>Where I have worked</h2><a class="link-quiet" href="{% url 'experience:experience' %}">Full history</a></div>
+    <div class="term" data-progress>
+      <div class="term-bar"><i></i><i></i><i></i><span>~/career $ git log --oneline</span></div>
+      <ol class="commits">
+        {% for e in experiences %}
+        <li>
+          <span class="c-hash">{{ e.date_range }}</span>
+          <div class="c-body"><h3>{{ e.role }} <small>@ {{ e.organization }}</small></h3>
+            <ul>{% for h in e.highlights.all|slice:":3" %}<li>{{ h.text }}</li>{% endfor %}</ul></div>
+        </li>{% endfor %}
+      </ol>
+    </div>
+  </div>
+</section>
+
+{# 9 ─ ABOUT: words light up as you scroll #}
+{% if profile %}
+<section class="block scrub-sec">
+  <div class="wrap">
+    <p class="scrub" data-scrub>{{ profile.bio_paragraph_1 }}</p>
+    <p class="row-actions"><a class="btn btn-line" href="{% url 'about:about' %}">More about me</a>{% if site.resume %}<a class="btn btn-solid" href="{{ site.resume.url }}" target="_blank" rel="noopener">Download résumé</a>{% endif %}</p>
+  </div>
+</section>
+{% endif %}
+
+{# 10 ─ SERVICES #}
+<section class="block block-tint">
+  <div class="wrap">
+    <div class="block-head"><h2>What your team can hire me for</h2><a class="link-quiet" href="{% url 'services:services' %}">All {{ services_count }} services</a></div>
+    <ul class="service-grid" data-spot>
+      {% for s in services %}<li><h3>{{ s.title }}</h3><p>{{ s.description }}</p></li>{% endfor %}
+    </ul>
+  </div>
+</section>
 {% endblock %}

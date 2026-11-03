@@ -1,0 +1,14 @@
+# /etc/systemd/system/portfolio.service
+[Unit]
+Description=Portfolio (gunicorn)
+After=network.target
+
+[Service]
+User=www-data
+WorkingDirectory=/srv/portfolio
+EnvironmentFile=/srv/portfolio/.env
+ExecStart=/srv/portfolio/venv/bin/gunicorn core.wsgi:application -c deploy/gunicorn.conf.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

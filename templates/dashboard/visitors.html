@@ -1,0 +1,34 @@
+{% extends 'dashboard/base.html' %}
+{% load dash_extras %}
+{% block title %}Visitors{% endblock %}
+{% block heading %}<h1>Visitors</h1><p class="muted">Every browser that opened the site. Click a row to see its journey.</p>{% endblock %}
+{% block tools %}<a class="btn" href="{% url 'dashboard:visitors_export' %}?{{ qs }}"><svg class="ic"><use href="#i-dl"/></svg>Export CSV</a>{% endblock %}
+{% block content %}
+<form class="card filter-bar" method="get">
+  <label class="sr" for="q">Search</label>
+  <input class="inp" id="q" name="q" value="{{ q }}" placeholder="Search IP, country code, browser, page…">
+  <select class="inp" name="range" aria-label="Date range">{% for k, v in ranges.items %}<option value="{{ k }}" {% if k == range_key %}selected{% endif %}>{{ v.0 }}</option>{% endfor %}</select>
+  <select class="inp" name="device" aria-label="Device"><option value="">All devices</option><option value="desktop" {% if device == 'desktop' %}selected{% endif %}>Desktop</option><option value="mobile" {% if device == 'mobile' %}selected{% endif %}>Mobile</option><option value="tablet" {% if device == 'tablet' %}selected{% endif %}>Tablet</option><option value="bot" {% if device == 'bot' %}selected{% endif %}>Bot</option></select>
+  <label class="check"><input type="checkbox" name="bots" value="1" {% if show_bots %}checked{% endif %}> Include bots</label>
+  <button class="btn btn-primary" type="submit">Apply</button>
+</form>
+<div class="card flush">
+  <div class="table-wrap"><table class="tbl">
+    <thead><tr><th>Visitor</th><th>Location</th><th>Device</th><th>Came from</th><th class="num">Visits</th><th class="num">Pages</th><th>Last seen</th></tr></thead>
+    <tbody>{% for v in page %}
+      <tr class="click" data-href="{% url 'dashboard:visitor_detail' v.pk %}">
+        <td><a href="{% url 'dashboard:visitor_detail' v.pk %}"><b>{{ v.ip|default:'Hidden' }}</b></a><small>{% if v.is_bot %}<span class="pill warn">bot</span> {% endif %}first page {{ v.first_path }}</small></td>
+        <td>{{ v.country|country }}{% if v.city %}<small>{{ v.city }}</small>{% endif %}</td>
+        <td>{{ v.browser }}<small>{{ v.os }} · {{ v.device }}</small></td>
+        <td>{{ v.first_referrer|default:'Direct' }}</td>
+        <td class="num">{{ v.visits }}</td><td class="num">{{ v.pageviews }}</td>
+        <td title="{{ v.last_seen }}">{{ v.last_seen|ago }}</td></tr>
+    {% empty %}<tr><td colspan="7" class="empty">No visitors match these filters.</td></tr>{% endfor %}</tbody>
+  </table></div>
+</div>
+{% if page.paginator.num_pages > 1 %}<nav class="pager" aria-label="Pages">
+  {% if page.has_previous %}<a class="btn" href="?{{ qs }}&page={{ page.previous_page_number }}">Previous</a>{% endif %}
+  <span class="muted">Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a class="btn" href="?{{ qs }}&page={{ page.next_page_number }}">Next</a>{% endif %}
+</nav>{% endif %}
+{% endblock %}

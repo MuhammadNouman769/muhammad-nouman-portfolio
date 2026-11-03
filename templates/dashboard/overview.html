@@ -1,0 +1,58 @@
+{% extends 'dashboard/base.html' %}
+{% load dash_extras %}
+{% block title %}Overview{% endblock %}
+{% block heading %}<h1>Overview</h1><p class="muted">How your site is performing{% if online %} · <span class="live-dot"></span><b id="online-n">{{ online }}</b> online now{% endif %}</p>{% endblock %}
+{% block tools %}
+<div class="seg" role="group" aria-label="Date range">{% for k, v in ranges.items %}<a href="?range={{ k }}" class="{% if k == range_key %}on{% endif %}">{{ v.0 }}</a>{% endfor %}</div>
+{% endblock %}
+{% block content %}
+<section class="kpis">
+  {% for key, k in kpis.items %}
+  <article class="card kpi">
+    <p class="kpi-label">{{ k.label }}</p>
+    <p class="kpi-value">{{ k.value }}</p>
+    <p class="kpi-meta">{% delta_class k.delta as dc %}{% if k.delta is not None %}<span class="delta {{ dc }}">{% if k.delta > 0 %}+{% endif %}{{ k.delta }}%</span> vs previous {{ range_label|lower }}{% else %}<span class="muted">No earlier data</span>{% endif %}{% if k.sub %} · {{ k.sub }}{% endif %}</p>
+  </article>{% endfor %}
+</section>
+
+<section class="grid g-3-1">
+  <article class="card">
+    <div class="card-head"><h2>Traffic</h2>
+      <div class="legend"><span><i class="sw s1"></i>Page views</span><span><i class="sw s2"></i>Visitors</span></div>
+      <button class="link-btn" type="button" id="chart-table-btn" aria-pressed="false">Show as table</button></div>
+    <div class="chart" id="chart" role="img" aria-label="Page views and visitors per day"></div>
+    <div class="table-wrap" id="chart-table" hidden></div>
+    {{ series|json_script:"series-data" }}
+  </article>
+  <article class="card">
+    <div class="card-head"><h2>Live</h2><span class="pill ok"><span class="live-dot"></span>updates every 15s</span></div>
+    <ul class="feed" id="feed">
+      {% for r in recent %}<li><span class="feed-time">{{ r.time }}</span><span class="feed-main"><b>{{ r.label }}</b><small>{{ r.country }} · {{ r.device }} · {{ r.source }}</small></span></li>{% empty %}<li class="empty">Waiting for the first visitor.</li>{% endfor %}
+    </ul>
+  </article>
+</section>
+
+<section class="grid g-2">
+  <article class="card"><div class="card-head"><h2>Top pages</h2></div>{% include 'dashboard/_barlist.html' with items=pages %}</article>
+  <article class="card"><div class="card-head"><h2>Where visitors come from</h2></div>{% include 'dashboard/_barlist.html' with items=breakdowns.referrers tone='t2' %}
+    {% if breakdowns.campaigns %}<h3 class="sub">Campaign sources (UTM)</h3>{% include 'dashboard/_barlist.html' with items=breakdowns.campaigns tone='t2' %}{% endif %}</article>
+</section>
+
+<section class="grid g-3">
+  <article class="card"><div class="card-head"><h2>Countries</h2></div>{% include 'dashboard/_barlist.html' with items=breakdowns.countries tone='t3' %}</article>
+  <article class="card"><div class="card-head"><h2>Devices</h2></div>{% include 'dashboard/_barlist.html' with items=breakdowns.devices %}
+    <h3 class="sub">Browsers</h3>{% include 'dashboard/_barlist.html' with items=breakdowns.browsers %}</article>
+  <article class="card"><div class="card-head"><h2>Operating systems</h2></div>{% include 'dashboard/_barlist.html' with items=breakdowns.systems tone='t2' %}
+    <h3 class="sub">Projects people open</h3>{% include 'dashboard/_barlist.html' with items=projects_top tone='t3' %}</article>
+</section>
+
+<section class="grid g-2">
+  <article class="card"><div class="card-head"><h2>Busiest hours</h2><span class="muted small">Server time zone</span></div>
+    <div class="chart chart-sm" id="hours" role="img" aria-label="Page views by hour of day"></div>{{ hourly|json_script:"hours-data" }}</article>
+  <article class="card"><div class="card-head"><h2>Latest messages</h2><a class="link-btn" href="{% url 'dashboard:messages' %}">Open inbox{% if unread_total %} ({{ unread_total }} unread){% endif %}</a></div>
+    <ul class="msg-mini">{% for m in latest_messages %}<li class="{% if not m.is_read %}unread{% endif %}"><a href="{% url 'dashboard:message_detail' m.pk %}"><b>{{ m.name }}</b><span>{{ m.subject|default:m.message|truncatechars:70 }}</span><small>{{ m.created_at|ago }}</small></a></li>{% empty %}<li class="empty">No messages yet.</li>{% endfor %}</ul>
+    <p class="muted small foot-note">{{ totals.projects }} projects{% if totals.drafts %} ({{ totals.drafts }} hidden){% endif %} · {{ totals.visitors }} human visitors recorded · {{ bots }} bot hits filtered out this period.</p>
+  </article>
+</section>
+{% endblock %}
+{% block extra_js %}<script>window.DASH_LIVE_URL = "{% url 'dashboard:live_api' %}";</script>{% endblock %}
