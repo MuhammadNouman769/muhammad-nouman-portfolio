@@ -350,7 +350,7 @@ html:not(.lamp-off) .lamp-halo, html:not(.lamp-off) .lamp-inner { opacity: 1; } 
 .pc-bar { position: absolute; z-index: 2; left: 0; right: 0; top: 0; height: 26px; display: flex; align-items: center; gap: 6px; padding: 0 10px; background: rgba(8,12,32,.82); backdrop-filter: none; border-bottom: 1px solid rgba(255,255,255,.07); }
 .pc-bar i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.25); } .pc-bar i:first-child { background: #ff6b6b; } .pc-bar i:nth-child(2) { background: #ffc861; } .pc-bar i:nth-child(3) { background: #3ddc97; }
 .pc-bar em { margin-left: 8px; font: 500 .7rem var(--mono, monospace); font-style: normal; color: rgba(210,220,255,.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.pc-art img { position: absolute; inset: 26px 0 0 0; width: 100%; height: calc(100% - 26px); object-fit: cover; object-position: top left; transition: transform .8s var(--ease); }
+.pc-art img { position: absolute; inset: 26px 0 0 0; width: 100%; height: calc(100% - 26px); object-fit: fill; object-position: top left; transition: transform .8s var(--ease); }
 
 .pc-mono { position: absolute; inset: 26px 0 0 0; display: grid; place-items: center; font-size: clamp(2.6rem, 5vw, 3.6rem); font-weight: 760; letter-spacing: -.05em; color: #fff; background: linear-gradient(135deg, color-mix(in srgb, var(--ac, #3452e8) 85%, #000), #0a1040), radial-gradient(rgba(255,255,255,.14) 1px, transparent 1.4px) 0 0 / 16px 16px; background-blend-mode: normal; }
 .pc-mono::after { content: ""; position: absolute; inset: 0; background: radial-gradient(rgba(255,255,255,.16) 1px, transparent 1.4px) 0 0 / 16px 16px; }
