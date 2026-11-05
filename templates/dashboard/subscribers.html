@@ -1,0 +1,43 @@
+{% extends 'dashboard/base.html' %}
+{% load dash_extras %}
+{% block title %}Subscribers{% endblock %}
+{% block heading %}<h1>Subscribers</h1><p class="muted">People who joined through the chat robot. A new article or case study is emailed to them automatically.</p>{% endblock %}
+{% block content %}
+<div class="grid-2" style="display:grid;gap:20px;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);align-items:start">
+  <div>
+    <div class="filter-bar card">
+      <span class="pill ok">{{ active_count }} real active</span><span class="muted">{{ total }} total</span>
+      <form method="get" class="inline" style="margin-left:auto"><input class="inp" name="q" value="{{ q }}" placeholder="Search name or email" aria-label="Search subscribers"></form>
+    </div>
+    <div class="card flush" style="margin-top:14px"><ul class="inbox">
+      {% for s in page %}
+      <li>
+        <span class="inbox-main" style="grid-template-columns:minmax(0,1fr);gap:2px;min-width:9rem"><b>{{ s.name }}{% if s.source == 'demo' %} <span class="pill">demo</span>{% endif %}</b><span class="inbox-snip" style="overflow-wrap:anywhere;white-space:normal">{{ s.email }}</span></span>
+        {% if not s.active %}<span class="pill">Unsubscribed</span>{% endif %}
+        <time title="{{ s.created_at }}">{{ s.created_at|ago }}</time>
+        <form method="post">{% csrf_token %}<input type="hidden" name="pk" value="{{ s.pk }}"><button class="btn sm" name="action" value="toggle" type="submit">{% if s.active %}Pause{% else %}Resume{% endif %}</button> <button class="btn sm" name="action" value="delete" type="submit" onclick="return confirm('Remove this subscriber?')">Remove</button></form>
+      </li>
+      {% empty %}<li class="empty">No subscribers yet. The chat robot on your site collects them.</li>{% endfor %}
+    </ul></div>
+    {% if page.paginator.num_pages > 1 %}<nav class="pager">{% if page.has_previous %}<a class="btn" href="?q={{ q }}&page={{ page.previous_page_number }}">Previous</a>{% endif %}<span class="muted">Page {{ page.number }} of {{ page.paginator.num_pages }}</span>{% if page.has_next %}<a class="btn" href="?q={{ q }}&page={{ page.next_page_number }}">Next</a>{% endif %}</nav>{% endif %}
+  </div>
+  <div style="display:grid;gap:20px">
+    <form class="card" method="post" style="display:grid;gap:14px">{% csrf_token %}
+      <h2 style="margin:0 0 4px;font-size:1.1rem">Send an update</h2>
+      <p class="muted" style="margin:0 0 14px">Sent as a designed email card to every active subscriber. New articles and case studies go out by themselves when you publish them.</p>
+      <label class="field"><span>Headline</span><input class="inp" name="title" maxlength="120" required placeholder="Now open to contract work"></label>
+      <label class="field"><span>Message</span><textarea class="inp" name="text" rows="5" maxlength="1200" required placeholder="A short note, two or three sentences."></textarea></label>
+      <label class="field"><span>Link (optional)</span><input class="inp" name="link" placeholder="/projects/btr-mall/ or https://…"></label>
+      <label class="field"><span>Button text</span><input class="inp" name="button" maxlength="40" placeholder="Read more"></label>
+      <input type="hidden" name="action" value="send">
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" type="submit" name="test" value="1">Send me a test</button><button class="btn btn-primary" type="submit" onclick="return confirm('Send this to {{ active_count }} subscriber(s)?')">Send to subscribers</button></div>
+    </form>
+    <div class="card"><h2 style="margin:0 0 10px;font-size:1.1rem">Recent emails</h2>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;gap:10px">
+        {% for c in campaigns %}<li style="display:flex;justify-content:space-between;gap:10px"><span><b>{{ c.title|truncatechars:42 }}</b><br><span class="muted">{{ c.get_kind_display }} · {{ c.created_at|ago }}</span></span><span class="pill {% if c.failed %}warn{% else %}ok{% endif %}">{{ c.recipients }} sent{% if c.failed %}, {{ c.failed }} failed{% endif %}</span></li>
+        {% empty %}<li class="muted">Nothing sent yet.</li>{% endfor %}
+      </ul></div>
+  </div>
+</div>
+<style>@media (max-width: 960px){ .grid-2{grid-template-columns:minmax(0,1fr) !important} }</style>
+{% endblock %}

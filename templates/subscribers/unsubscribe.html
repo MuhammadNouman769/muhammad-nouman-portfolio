@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Email preferences{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block content %}
+<section class="wrap block" style="max-width:560px;text-align:center">
+  {% if done %}
+  <h1>You are unsubscribed</h1>
+  <p class="lede">I will not email {{ sub.email }} again. Changed your mind? Use the chat robot on the site to subscribe again.</p>
+  <p><a class="btn btn-solid" href="/">Back to the portfolio</a></p>
+  {% else %}
+  <h1>Stop emails?</h1>
+  <p class="lede">{{ sub.email }} will no longer get updates about new articles and case studies.</p>
+  <form method="post">{% csrf_token %}<button class="btn btn-solid" type="submit">Yes, unsubscribe me</button> <a class="btn btn-line" href="/">Keep me subscribed</a></form>
+  {% endif %}
+</section>
+{% endblock %}

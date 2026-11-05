@@ -1,0 +1,31 @@
+{# Small chat robot: asks for a name and email, then subscribes the visitor to new articles and case studies. #}
+<div class="bot" id="bot" data-url="{% url 'subscribers:subscribe' %}" data-owner="{{ site.owner_name }}">
+  <p class="bot-bubble" id="bot-bubble" hidden>Hi! Want an email when I publish something new?</p>
+  <button class="bot-fab" id="bot-fab" type="button" aria-expanded="false" aria-controls="bot-panel" aria-label="Chat with the updates robot">
+    <svg viewBox="0 0 64 64" width="44" height="44" aria-hidden="true" focusable="false">
+      <line x1="32" y1="6" x2="32" y2="15" stroke="#9db0ff" stroke-width="3" stroke-linecap="round"/>
+      <circle class="bot-led" cx="32" cy="6" r="4" fill="#ffc861"/>
+      <rect x="9" y="26" width="6" height="14" rx="3" fill="#6f86ff"/><rect x="49" y="26" width="6" height="14" rx="3" fill="#6f86ff"/>
+      <rect x="13" y="15" width="38" height="34" rx="12" fill="#fff"/>
+      <rect x="18" y="21" width="28" height="19" rx="8" fill="#0d1642"/>
+      <g class="bot-eyes"><ellipse cx="26" cy="30" rx="3.2" ry="4" fill="#6df0ff"/><ellipse cx="38" cy="30" rx="3.2" ry="4" fill="#6df0ff"/></g>
+      <path d="M27 36.5c2.6 2 7.4 2 10 0" fill="none" stroke="#6df0ff" stroke-width="2" stroke-linecap="round"/>
+      <rect x="22" y="50" width="20" height="8" rx="4" fill="#cfd8ff"/>
+    </svg>
+    <span class="bot-dot" aria-hidden="true"></span>
+  </button>
+  <section class="bot-panel" id="bot-panel" role="dialog" aria-label="Updates robot" hidden>
+    <header><span class="bot-ava" aria-hidden="true"><svg viewBox="0 0 64 64" width="28" height="28"><rect x="13" y="15" width="38" height="34" rx="12" fill="#fff"/><rect x="18" y="21" width="28" height="19" rx="8" fill="#0d1642"/><ellipse cx="26" cy="30" rx="3.2" ry="4" fill="#6df0ff"/><ellipse cx="38" cy="30" rx="3.2" ry="4" fill="#6df0ff"/></svg></span>
+      <span><b>Nova</b><small>Updates robot</small></span>
+      <button class="bot-x" id="bot-x" type="button" aria-label="Close chat">&times;</button></header>
+    <div class="bot-log" id="bot-log" aria-live="polite"></div>
+    <div class="bot-quick" id="bot-quick"></div>
+    <form class="bot-form" id="bot-form" autocomplete="on" novalidate>{% csrf_token %}
+      <input type="text" name="website" tabindex="-1" autocomplete="off" class="bot-hp" aria-hidden="true">
+      <label class="sr" for="bot-in">Your answer</label>
+      <input class="bot-in" id="bot-in" type="text" maxlength="254" placeholder="Type here" disabled>
+      <button class="bot-send" type="submit" aria-label="Send" disabled><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </form>
+    <p class="bot-note">Only new articles and case studies. One click to unsubscribe.</p>
+  </section>
+</div>

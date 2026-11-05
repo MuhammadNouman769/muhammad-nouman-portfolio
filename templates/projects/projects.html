@@ -17,11 +17,11 @@
 <section class="wrap cs-grid">
   {% for p in case_studies %}
   <a class="cs-tile" href="{{ p.get_absolute_url }}" style="--ac:{{ p.accent }}" data-reveal>
-    <span class="cs-tile-vis" aria-hidden="true">{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}</span>
+    <span class="cs-tile-vis" aria-hidden="true">{% if p.card_img %}<img class="cs-tile-img" src="{{ p.card_img.url }}" alt="" loading="lazy">{% else %}{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}{% endif %}{% if p.card_badge %}<b class="corner">{{ p.card_badge }}</b>{% endif %}</span>
     <span class="cs-tile-body">
       <span class="case-kind"><span class="dot"></span>{{ p.get_kind_display }} · <span class="s-{{ p.status }}">{{ p.get_status_display }}</span></span>
-      <span class="cs-tile-title">{{ p.short_title }}</span>
-      <span class="row-sub">{{ p.subtitle|default:p.summary|truncatechars:110 }}</span>
+      <span class="cs-tile-title">{{ p.card_heading }}</span>
+      <span class="row-sub">{{ p.card_text|truncatechars:130 }}</span>
       <span class="cs-tile-go">Read case study <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </span>
   </a>
@@ -44,18 +44,26 @@
   </form>
   <p class="count" id="count" aria-live="polite">{{ projects|length }} projects</p>
 
-  <ol class="index" id="index">
+  <ul class="pcards" id="index">
     {% for p in projects %}
-    <li class="row" data-status="{{ p.status }}" data-text="{{ p.title|lower }} {% for t in p.tags.all %}{{ t.name|lower }} {% endfor %}" data-tags="{% for t in p.tags.all %}|{{ t.name }}{% endfor %}|">
-      <a class="row-link" href="{{ p.get_absolute_url }}">
-        <span class="row-thumb">{% if p.image %}<img src="{{ p.image.url }}" alt="" loading="lazy" width="320" height="200">{% else %}<span class="mono-tile" aria-hidden="true">{{ p.short_title|slice:":2" }}</span>{% endif %}</span>
-        <span class="row-main"><span class="row-title">{{ p.short_title }}</span><span class="row-sub">{{ p.subtitle|default:p.summary|truncatechars:90 }}</span></span>
-        <span class="row-tags">{% for t in p.tags.all|slice:":4" %}<span>{{ t.name }}</span>{% endfor %}</span>
-        <span class="status s-{{ p.status }}">{{ p.get_status_display }}</span>
+    <li class="row pcard" style="--ac:{{ p.accent }}" data-status="{{ p.status }}" data-text="{{ p.title|lower }} {% for t in p.tags.all %}{{ t.name|lower }} {% endfor %}" data-tags="{% for t in p.tags.all %}|{{ t.name }}{% endfor %}|">
+      <a class="pc-link" href="{{ p.get_absolute_url }}">
+        <span class="pc-art">
+          <span class="pc-bar" aria-hidden="true"><i></i><i></i><i></i><em>{{ p.slug|truncatechars:24 }}</em></span>
+          {% if p.card_img %}<img src="{{ p.card_img.url }}" alt="" loading="lazy" width="640" height="400">{% else %}<span class="pc-mono" aria-hidden="true">{{ p.short_title|slice:":2" }}</span>{% endif %}
+          {% if p.card_badge %}<b class="corner">{{ p.card_badge }}</b>{% endif %}
+        </span>
+        <span class="pc-body">
+          <span class="pc-meta"><span class="status s-{{ p.status }}">{{ p.get_status_display }}</span>{% if p.year %}<time>{{ p.year }}</time>{% endif %}</span>
+          <span class="pc-title">{{ p.card_heading }}</span>
+          <span class="pc-sub">{{ p.card_text|truncatechars:120 }}</span>
+          <span class="pc-tags">{% for t in p.tags.all|slice:":4" %}<span>{{ t.name }}</span>{% endfor %}</span>
+          <span class="pc-go">View project <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
       </a>
     </li>
     {% empty %}<li class="empty">No projects are published yet.</li>{% endfor %}
-  </ol>
+  </ul>
   <p class="empty" id="none" hidden>Nothing matches those filters. Clear the search or pick “All”.</p>
 </section>
 {% endblock %}

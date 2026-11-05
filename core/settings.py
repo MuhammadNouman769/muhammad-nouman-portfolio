@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'apps.services',
     'apps.skills',
     'apps.contact',
+    'apps.subscribers',
     'apps.analytics',
     'apps.dashboard',
 ]
@@ -169,12 +170,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Fingerprinted static files only once `collectstatic` has produced a manifest.
+# Without it (fresh local run with DEBUG=False) we fall back to plain storage
+# instead of raising "Missing staticfiles manifest entry".
+_HAS_MANIFEST = (STATIC_ROOT / 'staticfiles.json').exists()
 STORAGES = {
     'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
     'staticfiles': {
         'BACKEND': (
             'whitenoise.storage.CompressedManifestStaticFilesStorage'
-            if (_HAS_WHITENOISE and not DEBUG)
+            if (_HAS_WHITENOISE and not DEBUG and _HAS_MANIFEST)
             else 'django.contrib.staticfiles.storage.StaticFilesStorage'
         )
     },

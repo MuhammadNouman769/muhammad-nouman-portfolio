@@ -47,6 +47,7 @@ RESOURCES = {r.key: r for r in [
             ('Basics', 'This is what visitors and Google see first.', ['title', 'slug', 'summary', 'status']),
             ('Case study', 'Optional. Adds depth to the project page and helps search rankings.', ['role', 'year', 'body']),
             ('Links and cover', '', ['github_url', 'live_url', 'image']),
+            ('Card on the site', 'How this project looks as a card on the home page, Projects page and More work. Everything is optional: empty fields fall back to the project name, summary and cover.', ['card_title', 'card_description', 'card_badge', 'card_image']),
             ('Full case study', 'Tick "case study" to feature this project in the showcase with the sections below.',
              ['case_study', 'order_in_showcase', 'kind', 'accent', 'client_type', 'duration', 'team']),
             ('Story', 'Challenge, solution and lessons: a blank line starts a new paragraph.', ['challenge', 'solution', 'lessons']),

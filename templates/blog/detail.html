@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}{{ post.title }} | {{ site.owner_name }}{% endblock %}
+{% block title %}{% if post.title|length > 50 %}{{ post.title }}{% else %}{{ post.title }} | {{ site.owner_name }}{% endif %}{% endblock %}
 {% block meta_description %}{{ post.description }}{% endblock %}
 {% block og_type %}article{% endblock %}
 {% block og_title %}{{ post.title }}{% endblock %}

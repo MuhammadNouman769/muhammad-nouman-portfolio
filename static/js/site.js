@@ -132,11 +132,11 @@
     };
 
     /* pendulum: damped spring toward a tiny breeze, kicked by every pull */
-    var ang = 0, vel = 0, last = 0, tilt = 0, running = false, visible = true;
+    var ang = 0, vel = 0, last = 0, lean = 0, running = false, visible = true;
     var frame = function (now) {
       var dt = Math.min(.034, (now - last) / 1000 || .016); last = now;
       var breeze = reduceM ? 0 : Math.sin(now / 1900) * .7;
-      var acc = -34 * (ang - breeze - tilt) - 2.6 * vel;
+      var acc = -34 * (ang - breeze - lean) - 2.6 * vel;
       vel += acc * dt; ang += vel * dt;
       swing.style.transform = 'rotate(' + ang.toFixed(3) + 'deg)';
       if (beam) beam.style.setProperty('--sway', ang.toFixed(3) + 'deg');
@@ -163,6 +163,7 @@
           dctx.globalAlpha = (.25 + .6 * Math.abs(Math.sin(now / 1600 + m.a))) * Math.min(1, m.y * 3);
           dctx.fillStyle = '#ffe2a0'; dctx.beginPath(); dctx.arc(m.x * W, m.y * H, m.r, 0, 6.283); dctx.fill();
         });
+        if (!visible) { dustOn = false; return; }
         requestAnimationFrame(draw);
       })(0);
     };
@@ -179,7 +180,7 @@
     var pull = function () { kick(on0() ? 46 : -46); set(!isOn()); };
     var on0 = function () { return isOn(); };
     origin(); lock(); dustStart();
-    window.addEventListener('resize', function () { origin(); if (dust && dustOn) { dust.width = beam.clientWidth; dust.height = beam.clientHeight; } });
+    var _lw = window.innerWidth; window.addEventListener('resize', function () { if (window.innerWidth === _lw) return; _lw = window.innerWidth; origin(); if (dust && dustOn) { dust.width = beam.clientWidth; dust.height = beam.clientHeight; } });
 
     /* drag the chain down to pull; a tap or Enter/Space works too */
     var startY = null, moved = false, fired = false;
@@ -188,15 +189,15 @@
     chain.addEventListener('pointermove', function (e) {
       if (startY === null) return;
       var dy = Math.max(0, Math.min(38, e.clientY - startY));
-      chain.style.setProperty('--drag', dy + 'px'); tilt = dy * .09; run();
+      chain.style.setProperty('--drag', dy + 'px'); lean = dy * .09; run();
       if (dy >= PULL_AT && !fired) { fired = true; moved = true; pull(); }   /* switches the moment the chain is pulled down */
     });
     var release = function () {
       if (startY === null) return;
-      startY = null; tilt = 0; chain.classList.add('snap'); chain.style.setProperty('--drag', '0px');
+      startY = null; lean = 0; chain.classList.add('snap'); chain.style.setProperty('--drag', '0px');
     };
     chain.addEventListener('pointerup', release);
-    chain.addEventListener('pointercancel', function () { startY = null; tilt = 0; chain.classList.add('snap'); chain.style.setProperty('--drag', '0px'); });
+    chain.addEventListener('pointercancel', function () { startY = null; lean = 0; chain.classList.add('snap'); chain.style.setProperty('--drag', '0px'); });
     chain.addEventListener('click', function (e) {
       if (moved) { moved = false; return; }
       chain.classList.add('snap'); chain.style.setProperty('--drag', '24px');
@@ -260,6 +261,10 @@
 
   /* ---- scroll progress bar + nav shadow + timeline draw ---- */
   var bar = document.getElementById('progress'), nav = document.querySelector('.nav'), tl = document.querySelector('.timeline');
+  /* one animation frame per burst of scroll/resize events (phones fire these constantly) */
+  var raf1 = function (fn) { var q = false; return function () { if (q) return; q = true; requestAnimationFrame(function () { q = false; fn(); }); }; };
+  /* mobile URL bars fire resize on every scroll; only react to real width changes */
+  var onWidth = function (fn) { var w = window.innerWidth; window.addEventListener('resize', function () { if (window.innerWidth !== w) { w = window.innerWidth; fn(); } }); };
   var ticking = false;
   var onScroll = function () {
     ticking = false;
@@ -272,7 +277,7 @@
     }
   };
   window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
-  window.addEventListener('resize', onScroll); onScroll();
+  onWidth(onScroll); onScroll();
 
   if (!reduce && fine) {
     /* ---- cursor glow, spotlight cards ---- */
@@ -521,7 +526,7 @@
       $$('li', el).forEach(function (li) { li.classList.toggle('in', li.getBoundingClientRect().top < vh * .62); });
     });
   };
-  if (seqs.length) { window.addEventListener('scroll', seqUpdate, { passive: true }); window.addEventListener('resize', seqUpdate); seqUpdate(); }
+  if (seqs.length) { window.addEventListener('scroll', raf1(seqUpdate), { passive: true }); onWidth(seqUpdate); seqUpdate(); }
 
   /* ---- scrub text: words light up as you scroll ---- */
   $$('[data-scrub]').forEach(function (el) {
@@ -535,7 +540,7 @@
       var n = Math.round(p * sw.length);
       sw.forEach(function (w, i) { w.classList.toggle('on', i < n); });
     };
-    window.addEventListener('scroll', upd, { passive: true }); window.addEventListener('resize', upd); upd();
+    window.addEventListener('scroll', raf1(upd), { passive: true }); onWidth(upd); upd();
   });
 
   /* ---- article: table of contents follows the reader; copy link ---- */

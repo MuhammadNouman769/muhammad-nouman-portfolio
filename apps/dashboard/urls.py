@@ -19,6 +19,8 @@ urlpatterns = [
     path('messages/<int:pk>/', views.message_detail, name='message_detail'),
     path('messages/<int:pk>/<str:action>/', views.message_action, name='message_action'),
 
+    path('subscribers/', views.subscribers, name='subscribers'),
+
     path('about-text/', views.singleton_edit, {'key': 'profile'}, name='profile'),
     path('site-settings/', views.singleton_edit, {'key': 'settings'}, name='settings'),
     path('account/', views.PasswordView.as_view(), name='account'),

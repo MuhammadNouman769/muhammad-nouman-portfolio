@@ -67,3 +67,50 @@ Analytics stores IP addresses and a first-party cookie (`nv_id`). Set `ANALYTICS
 - Fonts load from Google Fonts at runtime; your server needs outbound internet for that (or self-host the two families).
 
 - **Dashboard motion**: animated sign-in screen (aurora, particles, glowing card, show/hide password), staggered sidebar, count-up KPIs, charts that draw in, growing bars, spotlight cards and animated tables/toasts. Files: `static/dashboard/fx.css`, `fx.js`. All of it switches off under reduced-motion.
+
+## Local test, then deploy
+
+Local (Windows PowerShell):
+    python -m venv venv ; venv\Scripts\activate
+    pip install -r requirements.txt
+    python manage.py migrate
+    python manage.py runserver        # DEBUG=True in .env for local
+
+If you test with DEBUG=False, either run `python manage.py collectstatic --noinput`
+first or just run as-is: the site falls back to plain static storage when no
+manifest exists (no more "Missing staticfiles manifest entry").
+
+PythonAnywhere (from the repo):
+    git clone https://github.com/MuhammadNouman769/noumanportfolio.git
+    cd noumanportfolio && git checkout redesign-v7   # or merge to main first
+    mkvirtualenv --python=python3.12 nouman && pip install -r requirements.txt
+    create .env (SECRET_KEY, DEBUG=False, ALLOWED_HOSTS=<you>.pythonanywhere.com)
+    python manage.py migrate && python manage.py collectstatic --noinput
+    Web tab: set source dir + virtualenv, WSGI -> core.wsgi,
+             Static: /static/ -> <repo>/staticfiles , /media/ -> <repo>/media
+    Reload.
+
+## Updates robot and email subscribers
+
+A small robot (bottom-left) asks visitors for a name and email and subscribes them. When you publish a new
+blog post or a case study, every active subscriber gets a designed email card automatically (once per item).
+Dashboard > Subscribers lists people, lets you pause/remove them, send a custom update (with a "send me a test"
+button) and shows recent campaigns. Every email has a one-click unsubscribe link.
+
+Emails need SMTP in `.env`, otherwise they only print in the console. Gmail example (use an App Password):
+
+    EMAIL_HOST=smtp.gmail.com
+    EMAIL_PORT=587
+    EMAIL_HOST_USER=you@gmail.com
+    EMAIL_HOST_PASSWORD=<16-character app password>
+    DEFAULT_FROM_EMAIL=Muhammad Nouman <you@gmail.com>
+
+After pulling: `python manage.py migrate` (new tables) then `collectstatic` and reload.
+
+## Dummy data for design and QA
+
+    python manage.py seed_dummy            # adds 9 posts (15 total), 2 categories, 3 projects (15 total),
+                                           # 4 experience entries, 8 contact messages, 14 subscribers
+    python manage.py seed_dummy --remove   # deletes only what that command added
+
+Dummy subscribers use `@example.com` and never receive emails. Seeding does not trigger announcement emails.

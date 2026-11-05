@@ -19,6 +19,7 @@ urlpatterns = [
     path('services/', include('apps.services.urls')),
     path('skills/', include('apps.skills.urls')),
     path('contact/', include('apps.contact.urls')),
+    path('subscribe/', include('apps.subscribers.urls')),
     path('privacy/', TemplateView.as_view(template_name='privacy.html'), name='privacy'),
 ]
 

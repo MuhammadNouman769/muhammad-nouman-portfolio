@@ -98,14 +98,14 @@
       <article class="case-card" style="--ac:{{ p.accent }}; --n:{{ forloop.counter0 }}">
         <div class="case-copy">
           <p class="case-kind"><span class="dot"></span>{{ p.get_kind_display }}{% if p.year %} · {{ p.year }}{% endif %} · <span class="s-{{ p.status }}">{{ p.get_status_display }}</span></p>
-          <h3><a href="{{ p.get_absolute_url }}">{{ p.short_title }}</a></h3>
-          <p class="case-sub">{{ p.subtitle|default:p.summary|truncatechars:150 }}</p>
+          <h3><a href="{{ p.get_absolute_url }}">{{ p.card_heading }}</a></h3>
+          <p class="case-sub">{{ p.card_text|truncatechars:170 }}</p>
           <ul class="case-metrics">{% for m in p.metric_list|slice:":3" %}<li><b>{{ m.value }}</b><span>{{ m.label }}</span></li>{% endfor %}</ul>
           <ul class="chips">{% for t in p.tags.all|slice:":6" %}<li>{{ t.name }}</li>{% endfor %}</ul>
           <p class="row-actions"><a class="btn btn-solid" href="{{ p.get_absolute_url }}">Read case study</a>{% if p.live_url %}<a class="link-quiet" href="{{ p.live_url }}" target="_blank" rel="noopener">Live site</a>{% endif %}</p>
         </div>
         <a class="case-visual" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true">
-          {% include 'partials/mock.html' with kind=p.kind accent=p.accent %}
+          <span class="case-frame">{% if p.card_img %}<img class="case-shot" src="{{ p.card_img.url }}" alt="" loading="lazy" decoding="async">{% else %}{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}{% endif %}{% if p.card_badge %}<b class="corner">{{ p.card_badge }}</b>{% endif %}</span>
         </a>
       </article>
       {% empty %}<p class="empty">Case studies appear here once they are published from the dashboard.</p>{% endfor %}

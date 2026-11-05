@@ -47,6 +47,7 @@
       <a href="{% url 'dashboard:overview' %}" class="{% if active == 'overview' %}on{% endif %}"><svg class="ic"><use href="#i-home"/></svg>Overview</a>
       <a href="{% url 'dashboard:visitors' %}" class="{% if active == 'visitors' %}on{% endif %}"><svg class="ic"><use href="#i-users"/></svg>Visitors</a>
       <a href="{% url 'dashboard:messages' %}" class="{% if active == 'messages' %}on{% endif %}"><svg class="ic"><use href="#i-mail"/></svg>Messages{% if unread_count %}<b class="badge">{{ unread_count }}</b>{% endif %}</a>
+      <a href="{% url 'dashboard:subscribers' %}" class="{% if active == 'subscribers' %}on{% endif %}"><svg class="ic"><use href="#i-users"/></svg>Subscribers</a>
       <p class="side-group">Content</p>
       {% for key, r in resources.items %}<a href="{% url 'dashboard:resource_list' key %}" class="{% if active == key %}on{% endif %}"><svg class="ic"><use href="#i-{{ r.icon }}"/></svg>{{ r.plural }}</a>{% endfor %}
       <a href="{% url 'dashboard:profile' %}" class="{% if active == 'profile' %}on{% endif %}"><svg class="ic"><use href="#i-user"/></svg>About text</a>

@@ -21,6 +21,8 @@ from apps.analytics.utils import client_ip
 from apps.contact.models import ContactMessage
 from apps.projects.models import Project
 from apps.siteconfig.models import SiteSettings
+from apps.subscribers.emails import absolute, announce
+from apps.subscribers.models import Announcement, Subscriber
 
 from . import stats
 from .resources import RESOURCES, SINGLETONS
@@ -405,3 +407,55 @@ class PasswordView(auth_views.PasswordChangeView):
         if not (request.user.is_authenticated and request.user.is_staff):
             return redirect(f'{settings.LOGIN_URL}?next={request.path}')
         return super().dispatch(request, *a, **kw)
+
+
+# ---------------------------------------------------------------- subscribers
+@staff_required
+def subscribers(request):
+    if request.method == 'POST':
+        action = request.POST.get('action', '')
+        if action == 'send':
+            title = request.POST.get('title', '').strip()[:120]
+            text = request.POST.get('text', '').strip()[:1200]
+            link = request.POST.get('link', '').strip()[:300]
+            button = request.POST.get('button', '').strip()[:40] or 'Read more'
+            if not title or not text:
+                messages.error(request, 'Add a headline and a message before sending.')
+            else:
+                card = dict(kicker='Update', title=title, text=text, url=absolute(link) or settings.SITE_URL, button=button)
+                if request.POST.get('test'):
+                    me = SiteSettings.load().email or request.user.email
+                    if not me:
+                        messages.error(request, 'Add your email in Site settings first, then send a test.')
+                    else:
+                        try:
+                            announce('update', title, only_to=Subscriber(name=request.user.get_username(), email=me, token='preview'), subject=title, **card)
+                            messages.success(request, f'Test email sent to {me}.')
+                        except Exception:
+                            messages.error(request, 'The test email could not be sent. Check the email settings (EMAIL_HOST, user and password) in your .env.')
+                else:
+                    n = Subscriber.objects.filter(active=True).exclude(source='demo').count()
+                    if not n:
+                        messages.error(request, 'There are no active subscribers yet.')
+                    else:
+                        announce('update', title, subject=title, **card)
+                        messages.success(request, f'Update is being sent to {n} subscriber{"s" if n != 1 else ""}.')
+        elif action in ('delete', 'toggle'):
+            sub = get_object_or_404(Subscriber, pk=request.POST.get('pk'))
+            if action == 'delete':
+                sub.delete()
+                messages.success(request, 'Subscriber removed.')
+            else:
+                sub.active = not sub.active
+                sub.save(update_fields=['active'])
+        return redirect('dashboard:subscribers')
+    qs = Subscriber.objects.all()
+    q = request.GET.get('q', '').strip()
+    if q:
+        qs = qs.filter(Q(name__icontains=q) | Q(email__icontains=q))
+    page = Paginator(qs, 30).get_page(request.GET.get('page'))
+    return render_dash(request, 'dashboard/subscribers.html', {
+        'active': 'subscribers', 'page': page, 'q': q,
+        'total': Subscriber.objects.count(), 'active_count': Subscriber.objects.filter(active=True).exclude(source='demo').count(),
+        'campaigns': Announcement.objects.all()[:8],
+    })

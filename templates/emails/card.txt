@@ -1,0 +1,12 @@
+{{ kicker }}
+
+{{ title }}
+
+{{ text }}
+
+{{ button }}: {{ url }}
+
+--
+{{ site.owner_name }} · {{ site.role_title }}
+You are receiving this because you subscribed on {{ site_url }}.
+Unsubscribe: {{ unsubscribe }}

@@ -46,7 +46,7 @@ class ProjectForm(DashModelForm):
     class Meta:
         model = Project
         fields = ['title', 'slug', 'summary', 'body', 'role', 'year', 'status', 'github_url', 'live_url',
-                  'image', 'featured', 'published', 'case_study', 'kind', 'accent', 'client_type', 'duration', 'team',
+                  'image', 'card_title', 'card_description', 'card_badge', 'card_image', 'featured', 'published', 'case_study', 'kind', 'accent', 'client_type', 'duration', 'team',
                   'challenge', 'solution', 'results', 'metrics', 'architecture', 'lessons', 'order_in_showcase']
         widgets = {'summary': forms.Textarea(attrs={'rows': 4}), 'body': forms.Textarea(attrs={'rows': 8}),
                    'challenge': forms.Textarea(attrs={'rows': 7}), 'solution': forms.Textarea(attrs={'rows': 7}),
@@ -55,6 +55,7 @@ class ProjectForm(DashModelForm):
                    'accent': forms.TextInput(attrs={'type': 'color'})}
 
     clean_image = lambda self: self._check_upload('image')  # noqa: E731
+    clean_card_image = lambda self: self._check_upload('card_image')  # noqa: E731
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

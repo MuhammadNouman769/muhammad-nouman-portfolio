@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}{{ project.short_title }}{% if project.subtitle %}: {{ project.subtitle }}{% endif %} | Case study | {{ site.owner_name }}{% endblock %}
+{% block title %}{{ project.short_title }} case study | {{ site.owner_name }}{% endblock %}
 {% block meta_description %}{{ project.summary|truncatechars:158 }}{% endblock %}
 {% block og_type %}article{% endblock %}
 {% block og_title %}{{ project.title }}{% endblock %}
@@ -26,7 +26,7 @@
           {% if not project.live_url and not project.github_url %}<button class="btn btn-solid" type="button" data-hire>Hire me for something like this</button>{% endif %}
         </p>
       </div>
-      <div class="cs-hero-vis" data-tilt><div class="arch-wrap">{% include 'partials/mock.html' with kind=project.kind accent=project.accent %}</div></div>
+      <div class="cs-hero-vis" data-tilt><div class="arch-wrap">{% if project.image %}<img class="cs-shot" src="{{ project.image.url }}" alt="Screenshot of {{ project.short_title }}" loading="eager" decoding="async">{% else %}{% include 'partials/mock.html' with kind=project.kind accent=project.accent %}{% endif %}</div></div>
     </div>
     <dl class="wrap cs-facts">
       {% if project.year %}<div><dt>Year</dt><dd>{{ project.year }}</dd></div>{% endif %}
@@ -37,7 +37,6 @@
     </dl>
   </header>
 
-  {% if project.image %}<div class="wrap"><figure class="shot"><img src="{{ project.image.url }}" alt="Screenshot of {{ project.short_title }}" width="1200" height="700"></figure></div>{% endif %}
 
   {% if project.metric_list %}
   <section class="wrap cs-metrics" aria-label="Key facts">
@@ -109,8 +108,8 @@
     <div class="cs-grid cs-grid-sm">
       {% for p in related %}
       <a class="cs-tile" href="{{ p.get_absolute_url }}" style="--ac:{{ p.accent }}">
-        <span class="cs-tile-vis" aria-hidden="true">{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}</span>
-        <span class="cs-tile-body"><span class="cs-tile-title">{{ p.short_title }}</span><span class="row-sub">{{ p.subtitle|default:p.summary|truncatechars:90 }}</span></span>
+        <span class="cs-tile-vis" aria-hidden="true">{% if p.card_img %}<img class="cs-tile-img" src="{{ p.card_img.url }}" alt="" loading="lazy">{% else %}{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}{% endif %}{% if p.card_badge %}<b class="corner corner-sm">{{ p.card_badge }}</b>{% endif %}</span>
+        <span class="cs-tile-body"><span class="cs-tile-title">{{ p.card_heading }}</span><span class="row-sub">{{ p.card_text|truncatechars:110 }}</span></span>
       </a>{% endfor %}
     </div>
   </section>

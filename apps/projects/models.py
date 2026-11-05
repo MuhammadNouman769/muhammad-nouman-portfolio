@@ -24,6 +24,11 @@ class Project(models.Model):
     github_url = models.URLField(blank=True)
     live_url = models.URLField(blank=True)
     image = models.ImageField(upload_to='projects/', blank=True, null=True)
+    # --- card shown on the home page, Projects page and "More work" ---
+    card_title = models.CharField(max_length=80, blank=True, help_text='Title on the card. Leave empty to use the project name.')
+    card_description = models.CharField(max_length=220, blank=True, help_text='One or two sentences on the card. Leave empty to use the summary.')
+    card_badge = models.CharField('Corner label', max_length=24, blank=True, help_text='Small label in the card corner, e.g. Featured, Live, Open source.')
+    card_image = models.ImageField('Card image', upload_to='projects/cards/', blank=True, null=True, help_text='Optional. Falls back to the cover image, then to a drawn preview. Best at 1600x1000.')
     featured = models.BooleanField(default=True, help_text='Show on the home page.')
     published = models.BooleanField(default=True, help_text='Untick to hide from the public site.')
     order = models.PositiveIntegerField(default=0)
@@ -70,6 +75,18 @@ class Project(models.Model):
     def short_title(self):
         """'BTR Mall — Multi-Vendor E-Commerce Platform' -> 'BTR Mall'."""
         return self.title.split(' — ')[0].strip()
+
+    @property
+    def card_heading(self):
+        return self.card_title.strip() or self.short_title
+
+    @property
+    def card_text(self):
+        return self.card_description.strip() or self.subtitle or self.summary
+
+    @property
+    def card_img(self):
+        return self.card_image or self.image or None
 
     @property
     def subtitle(self):
