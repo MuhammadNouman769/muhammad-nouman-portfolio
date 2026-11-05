@@ -23,6 +23,7 @@ def index(request):
     return render(request, 'blog/index.html', {
         'posts': posts, 'featured': featured, 'categories': categories, 'active_category': active,
         'rest': [p for p in posts if p is not featured],
+        'posts_all': ([featured] + [p for p in posts if p is not featured]) if featured else [],
     })
 
 

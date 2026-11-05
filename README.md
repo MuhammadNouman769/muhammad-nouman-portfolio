@@ -114,3 +114,14 @@ After pulling: `python manage.py migrate` (new tables) then `collectstatic` and 
     python manage.py seed_dummy --remove   # deletes only what that command added
 
 Dummy subscribers use `@example.com` and never receive emails. Seeding does not trigger announcement emails.
+
+## One-command update on PythonAnywhere
+
+One-time setup (Bash console):
+
+    chmod +x ~/muhammad-nouman-portfolio/deploy/pa_update.sh
+    echo "alias deploy='bash ~/muhammad-nouman-portfolio/deploy/pa_update.sh'" >> ~/.bashrc
+    source ~/.bashrc
+
+After that, every update is just:  `deploy`
+(it pulls, installs requirements, migrates, collects static files and reloads the site).

@@ -16,22 +16,15 @@
     {% for c in categories %}<a href="{% url 'blog:index' %}?c={{ c.slug }}" class="pill{% if active_category == c %} on{% endif %}">{{ c.name }}</a>{% endfor %}
   </div>
 
-  {% if featured and not active_category %}
-  <a class="feat" href="{{ featured.get_absolute_url }}" style="--ac:{{ featured.cover_accent }}" data-reveal>
-    <span class="feat-art" aria-hidden="true">{% if featured.cover_image %}<img src="{{ featured.cover_image.url }}" alt="">{% endif %}<i></i><b>{{ featured.category.name|default:'Article' }}</b></span>
-    <span class="feat-body"><span class="mag-meta">Featured · {{ featured.published_at|date:"j M Y" }} · {{ featured.read_minutes }} min read</span><span class="feat-title">{{ featured.title }}</span><span class="mag-ex">{{ featured.excerpt }}</span><span class="cs-tile-go">Read article <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
-  </a>
-  {% endif %}
-
   <div class="post-grid">
-    {% for post in rest %}
+    {% for post in posts_all %}
     <a class="post" href="{{ post.get_absolute_url }}" style="--ac:{{ post.cover_accent }}" data-reveal>
       <span class="post-art" aria-hidden="true">{% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="" loading="lazy">{% endif %}<i></i><b>{{ post.category.name|default:'Article' }}</b></span>
-      <span class="mag-meta">{{ post.published_at|date:"j M Y" }} · {{ post.read_minutes }} min read</span>
+      <span class="mag-meta">{% if post == featured and not active_category %}Featured · {% endif %}{{ post.published_at|date:"j M Y" }} · {{ post.read_minutes }} min</span>
       <span class="post-title">{{ post.title }}</span>
       <span class="row-sub">{{ post.excerpt }}</span>
     </a>
-    {% empty %}{% if not featured %}<p class="empty">No articles yet.</p>{% endif %}{% endfor %}
+    {% empty %}<p class="empty">No articles yet.</p>{% endfor %}
   </div>
 </section>
 {% endblock %}
