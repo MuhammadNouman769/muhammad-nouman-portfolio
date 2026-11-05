@@ -4,6 +4,7 @@
 {% block robots %}noindex, follow{% endblock %}
 {% block content %}
 <section class="page-head wrap banner">
+  {% include 'partials/banner_art.html' with icon='shield' a='No ads' b='No selling' c='Your data' %}
   {% include 'partials/lamp.html' %}<div><h1>Privacy</h1><p class="lede">A short, plain-language description of what this site records.</p></div></section>
 <section class="wrap prose">
   <h2>What I record</h2>

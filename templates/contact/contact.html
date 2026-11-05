@@ -3,6 +3,7 @@
 {% block meta_description %}Start a project or ask a question. Message {{ site.owner_name }} directly through the form, email or WhatsApp.{% endblock %}
 {% block content %}
 <section class="page-head wrap banner">
+  {% include 'partials/banner_art.html' with icon='mail' a='Reply in a day' b='Remote' c='Contract' %}
   {% include 'partials/lamp.html' with cord=48 %}<div><h1>Let’s talk about your project</h1><p class="lede">A few lines about what you are building is enough to start. I reply personally.</p></div></section>
 
 <section class="wrap contact-grid">

@@ -225,9 +225,9 @@
   });
 
   /* ---- scroll reveal with automatic stagger among siblings ---- */
-  var auto = '.row, .role, .service-grid li, .svc-list li, .manifest-group, .skill-row, .timeline > li, .ledger li, .ticks li, .prose > *, .detail-side, .shot, .facts, .block-head .link-quiet, .lede, .avail, .row-actions, .about-photo, .foot-cta p, .foot-cta .btn, .foot-grid > *, .pager a, .filters, .skill-card, .cs-tile, .post, .feat, .mag-card, .pr-grid li, .cs-story, .cs-arch, .metric, .flow li, .steps li, .commits > li, .tri, .case-card, .art-cta, .cs-cta';
+  var auto = '.case-card, .cs-tile, .post, .mag-card, .pcard, .kpi, .bs-viewport, .flow li, .steps li, .row, .role, .service-grid li, .svc-list li, .manifest-group, .skill-row, .timeline > li, .ledger li, .ticks li, .prose > *, .detail-side, .shot, .facts, .block-head .link-quiet, .lede, .avail, .row-actions, .about-photo, .foot-cta p, .foot-cta .btn, .foot-grid > *, .pager a, .filters, .skill-card, .cs-tile, .post, .feat, .mag-card, .pr-grid li, .cs-story, .cs-arch, .metric, .flow li, .steps li, .commits > li, .tri, .case-card, .art-cta, .cs-cta';
   $$(auto).forEach(function (el) {
-    if (el.hasAttribute('data-reveal') || el.closest('.hero-stage') || el.closest('.case-card') && !el.matches('.case-card') || el.matches('.tri, .case-card')) return;
+    if (el.hasAttribute('data-reveal') || el.closest('.hero-stage') || el.closest('.case-card') && !el.matches('.case-card') || el.matches('.tri')) return;
     el.setAttribute('data-reveal', '');
     var sibs = Array.prototype.filter.call(el.parentNode.children, function (c) { return c.matches(auto); });
     el.style.setProperty('--i', Math.min(sibs.indexOf(el), 7));

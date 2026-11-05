@@ -3,6 +3,7 @@
 {% block meta_description %}Languages, frameworks, infrastructure and practices {{ site.owner_name }} uses to build backends: Python, Django, DRF, PostgreSQL, Redis, Celery, Docker.{% endblock %}
 {% block content %}
 <section class="page-head wrap banner">
+  {% include 'partials/banner_art.html' with icon='code' a='Python' b='Celery' c='Docker' %}
   {% include 'partials/lamp.html' with cord=48 %}<div><h1>Skills</h1><p class="lede">The languages, frameworks and practices I use day to day, grouped by what they are for.</p></div></section>
 <section class="wrap skill-cards">
   {% for cat in categories %}

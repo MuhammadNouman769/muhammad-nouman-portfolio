@@ -4,6 +4,7 @@
 {% block meta_description %}{{ profile.bio_paragraph_1|truncatechars:158 }}{% endblock %}
 {% block content %}
 <section class="page-head wrap banner">
+  {% include 'partials/banner_art.html' with icon='user' a='Python' b='Django' c='Remote' %}
   {% include 'partials/lamp.html' with cord=48 %}<div><h1>About</h1><p class="lede">{{ profile.headline|default:site.role_title }}{% if site.location %}, based in {{ site.location }}{% endif %}.</p></div></section>
 
 <section class="wrap about-grid">

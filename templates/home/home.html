@@ -56,35 +56,61 @@
 </div>
 {% endif %}
 
-{# 3 ─ HIRE TRIPTYCH: accordion on desktop, swipe cards on phones #}
+{# 2b ─ MOVING BANNERS: hire, top case studies and the latest article #}
+<section class="bn-slider wrap" data-slider aria-roledescription="carousel" aria-label="Highlights">
+  <div class="bs-viewport"><div class="bs-track">
+    <article class="bs-slide is-active" style="--ac:#3452e8" aria-roledescription="slide">
+      <div class="bs-copy"><p class="bs-kicker"><span class="dot"></span>Open to work</p><h2>{{ site.availability_text|default:"Open to remote, on-site and contract roles" }}</h2><p>Django backends for marketplaces, SaaS and editorial platforms, from first model to production.</p><p class="row-actions"><button class="btn btn-amber" type="button" data-hire>Hire me</button><a class="btn btn-ghost" href="{% url 'contact:contact' %}">Contact</a></p></div>
+      <div class="bs-vis bs-vis-art">{% include 'partials/banner_art.html' with icon='stack' a='Django' b='DRF' c='PostgreSQL' %}</div>
+    </article>
+    {% for p in case_studies|slice:":3" %}
+    <article class="bs-slide" style="--ac:{{ p.accent }}" aria-roledescription="slide">
+      <div class="bs-copy"><p class="bs-kicker"><span class="dot"></span>{{ p.get_kind_display }} · {{ p.get_status_display }}</p><h2>{{ p.card_heading }}</h2><p>{{ p.card_text|truncatechars:140 }}</p><p class="row-actions"><a class="btn btn-amber" href="{{ p.get_absolute_url }}">Read case study</a>{% if p.live_url %}<a class="btn btn-ghost" href="{{ p.live_url }}" target="_blank" rel="noopener">Live site</a>{% endif %}</p></div>
+      <a class="bs-vis" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true"><span class="bs-frame">{% if p.card_img %}<img src="{{ p.card_img.url }}" alt="" loading="lazy" decoding="async">{% else %}{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}{% endif %}</span></a>
+    </article>
+    {% endfor %}
+    {% for post in latest_posts|slice:":1" %}
+    <article class="bs-slide" style="--ac:{{ post.cover_accent }}" aria-roledescription="slide">
+      <div class="bs-copy"><p class="bs-kicker"><span class="dot"></span>Latest article</p><h2>{{ post.title }}</h2><p>{{ post.excerpt }}</p><p class="row-actions"><a class="btn btn-amber" href="{{ post.get_absolute_url }}">Read article</a><a class="btn btn-ghost" href="{% url 'blog:index' %}">All articles</a></p></div>
+      <div class="bs-vis bs-vis-art">{% include 'partials/banner_art.html' with icon='pen' a='Notes' b='Case studies' c='Lessons' %}</div>
+    </article>
+    {% endfor %}
+  </div></div>
+  <div class="bs-ctrl"><button class="bs-nav" type="button" data-prev aria-label="Previous banner"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="bs-dots" role="tablist" aria-label="Choose banner"></div><button class="bs-nav" type="button" data-next aria-label="Next banner"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></div>
+</section>
+
+{# 3 ─ HIRE MODES: three equal cards #}
 <section class="block hire" id="hire">
   <div class="wrap">
     <header class="sec-head"><h2>Hire me the way that suits your team</h2><p class="lede">One engineer, three ways to work together. Pick one and send a short message.</p></header>
-    <div class="triptych" data-accordion>
+    <div class="hm-grid">
       {% if site.open_remote %}
-      <article class="tri tri-a on" tabindex="0">
-        <span class="tri-no" aria-hidden="true">R</span>
+      <article class="hm hm-a">
+        <div class="hm-top"><span class="hm-ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="16"/><path d="M8 24h32M24 8c-7 8-7 24 0 32M24 8c7 8 7 24 0 32"/></svg></span><span class="hm-tag">Full-time</span></div>
         <h3>Remote, full-time</h3>
         <p>Join your team as a backend engineer. Overlap with your hours, async by default, clear written updates.</p>
-        <ul><li>Own APIs, data models and background jobs</li><li>Code review, tests and docs as part of every PR</li><li>{{ site.timezone_note|default:'Flexible time-zone overlap' }}</li></ul>
+        <ul class="hm-list"><li>Own APIs, data models and background jobs</li><li>Code review, tests and docs as part of every PR</li><li>{{ site.timezone_note|default:'Flexible time-zone overlap' }}</li></ul>
         <button class="btn btn-solid" type="button" data-hire="Remote">Discuss a remote role</button>
-      </article>{% endif %}
+      </article>
+      {% endif %}
       {% if site.open_onsite %}
-      <article class="tri tri-b" tabindex="0">
-        <span class="tri-no" aria-hidden="true">O</span>
+      <article class="hm hm-b">
+        <div class="hm-top"><span class="hm-ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 42V12l16-6v36M26 42h12V20l-12 4"/><path d="M16 18h4M16 25h4M16 32h4"/></svg></span><span class="hm-tag">In the office</span></div>
         <h3>On-site</h3>
         <p>In the office with your team when the work needs people in a room: planning, launches and hand-overs.</p>
-        <ul><li>Pair on hard problems, mentor juniors</li><li>Works well with product, QA and ops</li><li>Open to relocation for the right role</li></ul>
+        <ul class="hm-list"><li>Pair on hard problems, mentor juniors</li><li>Works well with product, QA and ops</li><li>Open to relocation for the right role</li></ul>
         <button class="btn btn-solid" type="button" data-hire="On-site">Discuss an on-site role</button>
-      </article>{% endif %}
+      </article>
+      {% endif %}
       {% if site.open_contract %}
-      <article class="tri tri-c" tabindex="0">
-        <span class="tri-no" aria-hidden="true">C</span>
+      <article class="hm hm-c">
+        <div class="hm-top"><span class="hm-ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 6h16l8 8v28H14z"/><path d="M30 6v8h8M20 24h12M20 31h12"/></svg></span><span class="hm-tag">Fixed scope</span></div>
         <h3>Contract &amp; projects</h3>
         <p>A defined scope, a fixed outcome. From a single API to a complete platform, delivered through {{ site.company_name|default:'my studio' }}.</p>
-        <ul><li>Requirements to deployment, end to end</li><li>Fixed scope or time-and-materials</li><li>Weekly demos and a shared board</li></ul>
+        <ul class="hm-list"><li>Requirements to deployment, end to end</li><li>Fixed scope or time-and-materials</li><li>Weekly demos and a shared board</li></ul>
         <button class="btn btn-solid" type="button" data-hire="Contract">Discuss a contract</button>
-      </article>{% endif %}
+      </article>
+      {% endif %}
     </div>
   </div>
 </section>
@@ -157,8 +183,8 @@
     <div class="mag">
       {% for post in latest_posts %}
       <a class="mag-card{% if forloop.first %} mag-lead{% endif %}" href="{{ post.get_absolute_url }}" style="--ac:{{ post.cover_accent }}">
-        <span class="mag-cover" aria-hidden="true">{% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="" loading="lazy">{% endif %}<i></i><b>{{ post.category.name|default:'Article' }}</b></span>
-        <span class="mag-body"><span class="mag-meta">{{ post.published_at|date:"j M Y" }} · {{ post.read_minutes }} min read</span><span class="mag-title">{{ post.title }}</span></span>
+        <span class="mag-cover" aria-hidden="true">{% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="" loading="lazy" onerror="this.remove()">{% endif %}<i></i><b>{{ post.category.name|default:'Article' }}</b></span>
+<span class="mag-body"><span class="mag-meta">{{ post.published_at|date:"j M Y" }} · {{ post.read_minutes }} min read</span><span class="mag-title">{{ post.title }}</span><span class="mag-desc">{{ post.excerpt }}</span></span>
       </a>
       {% endfor %}
     </div>

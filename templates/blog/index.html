@@ -6,6 +6,7 @@
 {% endblock %}
 {% block content %}
 <section class="page-head wrap banner">
+  {% include 'partials/banner_art.html' with icon='pen' a='Notes' b='Case studies' c='Lessons' %}
   {% include 'partials/lamp.html' with cord=48 %}
   <div><h1>Notes from the codebase</h1><p class="lede">What I learned building marketplaces, SaaS and editorial platforms, written down so your team does not have to learn it the slow way.</p></div>
 </section>

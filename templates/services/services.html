@@ -3,6 +3,7 @@
 {% block meta_description %}Backend development, APIs, e-commerce platforms, DevOps and more. See what {{ site.owner_name }} can build for your business.{% endblock %}
 {% block content %}
 <section class="page-head wrap banner">
+  {% include 'partials/banner_art.html' with icon='stack' a='APIs' b='SaaS' c='Marketplaces' %}
   {% include 'partials/lamp.html' with cord=48 %}<div><h1>Services</h1><p class="lede">What you can hire me and my studio for, from a single API to a full platform.</p></div>
   <a class="btn btn-solid" href="{% url 'contact:contact' %}">Discuss your project</a></section>
 <section class="wrap">

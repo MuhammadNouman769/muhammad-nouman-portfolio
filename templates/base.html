@@ -43,6 +43,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   <link rel="stylesheet" href="{% static 'css/v4.css' %}">
+  <link rel="stylesheet" href="{% static 'css/banners.css' %}">
   <link rel="stylesheet" href="{% static 'css/bot.css' %}">
 
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{{ PERSON_JSONLD|safe }},{"@type":"WebSite","@id":"{{ SITE_URL }}/#website","url":"{{ SITE_URL }}/","name":"{{ site.owner_name|escapejs }}","inLanguage":"en","publisher":{"@id":"{{ SITE_URL }}/#person"}}]}</script>
@@ -67,6 +68,7 @@
 {% include 'partials/bot.html' %}
 <script src="{% static 'js/site.js' %}" defer></script>
 <script src="{% static 'js/bot.js' %}" defer></script>
+<script src="{% static 'js/banners.js' %}" defer></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>
