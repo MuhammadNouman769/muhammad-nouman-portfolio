@@ -157,7 +157,7 @@ html:not(.lamp-off) .lamp-halo, html:not(.lamp-off) .lamp-inner { opacity: 1; } 
 .mag-card:hover, .post:hover, .feat:hover { transform: translateY(-6px); }
 .mag-lead { grid-row: span 2; }
 .mag-cover, .post-art, .feat-art { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: var(--r-md); overflow: hidden; isolation: isolate; background: linear-gradient(135deg, color-mix(in srgb, var(--ac) 85%, #000), #060a16 90%); border: 1px solid color-mix(in srgb, var(--ac) 40%, var(--line)); }
-.mag-cover img, .post-art img, .feat-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.mag-cover img, .post-art img, .feat-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; z-index: 1; }
 .mag-cover i, .post-art i, .feat-art i { position: absolute; inset: 0; background: radial-gradient(60% 80% at 85% 10%, rgba(255,255,255,.28), transparent 60%), repeating-linear-gradient(115deg, transparent 0 22px, rgba(255,255,255,.07) 22px 23px); transition: transform .8s var(--ease); }
 .mag-card:hover i, .post:hover i, .feat:hover i { transform: scale(1.12) rotate(1deg); }
 .mag-cover b, .post-art b, .feat-art b { position: absolute; z-index: 2; left: 14px; top: 14px; padding: 5px 12px; border-radius: 999px; font-size: .78rem; font-weight: 650; color: #fff; background: rgba(5,9,24,.55); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.2); }
@@ -333,17 +333,17 @@ html:not(.lamp-off) .lamp-halo, html:not(.lamp-off) .lamp-inner { opacity: 1; } 
 .case-frame, .cs-tile-vis, .row-thumb { position: relative; }
 .case-frame { display: block; border-radius: 22px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--ac) 40%, rgba(255,255,255,.12)); background: #0a1024; box-shadow: 0 40px 80px -32px color-mix(in srgb, var(--ac) 70%, #000), inset 0 0 0 1px rgba(255,255,255,.04); }
 .case-frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, transparent 62%, rgba(4,7,20,.55)); }
-.case-frame .case-shot { border: 0; border-radius: 0; box-shadow: none; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; transition: transform .8s var(--ease); }
-.case-card:hover .case-frame .case-shot { transform: scale(1.04); }
+.case-frame .case-shot { border: 0; border-radius: 0; box-shadow: none; aspect-ratio: 16 / 10; object-fit: contain; object-position: top left; transition: transform .8s var(--ease); }
+
 .corner { position: absolute; z-index: 3; top: 0; right: 0; padding: 9px 18px 9px 20px; border-radius: 0 22px 0 18px; font-size: .78rem; font-weight: 700; letter-spacing: .02em; color: #fff; background: var(--ac, #3452e8); box-shadow: -4px 4px 14px rgba(0,0,0,.35); }
 .corner-sm { padding: 5px 11px 5px 13px; border-radius: 0 12px 0 10px; font-size: .68rem; }
-.cs-tile-vis { display: block; overflow: hidden; border-radius: 16px; } .cs-tile-img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
+.cs-tile-vis { display: block; overflow: hidden; border-radius: 16px; } .cs-tile-img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cantain; object-position: top left; }
 .row-thumb .corner-sm { top: 0; right: 0; }
 
 /* ---------- Projects page: window-style cards (a different language from the blog cards) ---------- */
 .pcards { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
 .pcards .row { border: 0; }
-.pc-link { position: relative; display: flex; flex-direction: column; height: 100%; text-decoration: none; color: inherit; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; isolation: isolate; transition: transform .45s var(--ease), border-color .3s, box-shadow .45s var(--ease); }
+.pc-link { position: relative; display: flex; flex-direction: column; height: 100%; text-decoration: none; color: inherit;  background: var(--surface); border: 1px solid var(--line); overflow: hidden; isolation: isolate; transition: transform .45s var(--ease), border-color .3s, box-shadow .45s var(--ease); }
 .pc-link::before { content: ""; position: absolute; z-index: -1; inset: 0 0 auto 0; height: 55%; background: radial-gradient(80% 100% at 50% 0, color-mix(in srgb, var(--ac, #3452e8) 34%, transparent), transparent 72%); opacity: .55; transition: opacity .4s; }
 .pc-link:hover, .pc-link:focus-visible { transform: translateY(-6px); border-color: color-mix(in srgb, var(--ac, #3452e8) 60%, var(--line)); box-shadow: 0 30px 60px -34px color-mix(in srgb, var(--ac, #3452e8) 70%, #000); } .pc-link:hover::before { opacity: 1; }
 .pc-art { position: relative; display: block; margin: 14px 14px 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: #090e24; aspect-ratio: 16 / 10; }
@@ -351,7 +351,7 @@ html:not(.lamp-off) .lamp-halo, html:not(.lamp-off) .lamp-inner { opacity: 1; } 
 .pc-bar i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.25); } .pc-bar i:first-child { background: #ff6b6b; } .pc-bar i:nth-child(2) { background: #ffc861; } .pc-bar i:nth-child(3) { background: #3ddc97; }
 .pc-bar em { margin-left: 8px; font: 500 .7rem var(--mono, monospace); font-style: normal; color: rgba(210,220,255,.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pc-art img { position: absolute; inset: 26px 0 0 0; width: 100%; height: calc(100% - 26px); object-fit: cover; object-position: top left; transition: transform .8s var(--ease); }
-.pc-link:hover .pc-art img { transform: scale(1.06); }
+
 .pc-mono { position: absolute; inset: 26px 0 0 0; display: grid; place-items: center; font-size: clamp(2.6rem, 5vw, 3.6rem); font-weight: 760; letter-spacing: -.05em; color: #fff; background: linear-gradient(135deg, color-mix(in srgb, var(--ac, #3452e8) 85%, #000), #0a1040), radial-gradient(rgba(255,255,255,.14) 1px, transparent 1.4px) 0 0 / 16px 16px; background-blend-mode: normal; }
 .pc-mono::after { content: ""; position: absolute; inset: 0; background: radial-gradient(rgba(255,255,255,.16) 1px, transparent 1.4px) 0 0 / 16px 16px; }
 .pcards .row:nth-child(4n+2) .pc-mono { background: linear-gradient(135deg, #0e7490, #082a4a); } .pcards .row:nth-child(4n+3) .pc-mono { background: linear-gradient(135deg, #6a4bff, #170f52); } .pcards .row:nth-child(4n+4) .pc-mono { background: linear-gradient(135deg, #0b8a70, #052a33); }
