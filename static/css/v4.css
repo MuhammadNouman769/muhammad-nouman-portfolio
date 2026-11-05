@@ -333,7 +333,7 @@ html:not(.lamp-off) .lamp-halo, html:not(.lamp-off) .lamp-inner { opacity: 1; } 
 .case-frame, .cs-tile-vis, .row-thumb { position: relative; }
 .case-frame { display: block; border-radius: 22px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--ac) 40%, rgba(255,255,255,.12)); background: #0a1024; box-shadow: 0 40px 80px -32px color-mix(in srgb, var(--ac) 70%, #000), inset 0 0 0 1px rgba(255,255,255,.04); }
 .case-frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, transparent 62%, rgba(4,7,20,.55)); }
-.case-frame .case-shot { border: 0; border-radius: 0; box-shadow: none; aspect-ratio: 16 / 10; object-fit: contain; object-position: top left; transition: transform .8s var(--ease); }
+.case-frame .case-shot { border: 0; border-radius: 0; box-shadow: none; aspect-ratio: 16 / 10; object-fit: fill; object-position: top left; transition: transform .8s var(--ease); }
 
 .corner { position: absolute; z-index: 3; top: 0; right: 0; padding: 9px 18px 9px 20px; border-radius: 0 22px 0 18px; font-size: .78rem; font-weight: 700; letter-spacing: .02em; color: #fff; background: var(--ac, #3452e8); box-shadow: -4px 4px 14px rgba(0,0,0,.35); }
 .corner-sm { padding: 5px 11px 5px 13px; border-radius: 0 12px 0 10px; font-size: .68rem; }
