@@ -13,10 +13,12 @@ def home(request):
     """Landing page: hero + highlights pulled live from the database."""
     published = Project.objects.filter(published=True)
     ticker = list(Skill.objects.values_list('name', flat=True)[:24])
+
+    case_items = list(case_studies())[:6]
     context = {
         'ticker': ticker,
         'profile': Profile.objects.first(),
-        'case_studies': case_studies(),
+        'case_studies': case_items,
         'latest_posts': Post.objects.filter(published=True).select_related('category')[:6],
         'experiences': Experience.objects.prefetch_related('highlights')[:2],
         'projects': published.filter(featured=True).prefetch_related('tags')[:3],

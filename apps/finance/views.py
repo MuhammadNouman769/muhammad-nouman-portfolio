@@ -44,28 +44,48 @@ def finance_home(request):
 def finance_report_pdf(request):
     buffer = BytesIO()
     today = timezone.localdate()
+    navy = colors.HexColor('#171447')
+    purple = colors.HexColor('#5b4bf5')
+    ink = colors.HexColor('#20213d')
+    muted = colors.HexColor('#69708f')
+    border = colors.HexColor('#e2e5ef')
+    row_alt = colors.HexColor('#f6f7fc')
     document = SimpleDocTemplate(
         buffer,
         pagesize=landscape(A4),
         rightMargin=14 * mm,
         leftMargin=14 * mm,
-        topMargin=15 * mm,
-        bottomMargin=16 * mm,
-        title='Income and Expenses Report',
+        topMargin=13 * mm,
+        bottomMargin=19 * mm,
+        title='Income and Expenses - Financial Report',
         author='Portfolio Dashboard',
     )
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(
-        name='ReportSubtitle', parent=styles['Normal'], textColor=colors.HexColor('#64708f'),
-        fontSize=9, leading=13, spaceAfter=12,
+        name='ReportBanner', parent=styles['Normal'], fontName='Helvetica',
+        textColor=colors.white, fontSize=9, leading=14,
     ))
     styles.add(ParagraphStyle(
-        name='ReportSection', parent=styles['Heading2'], textColor=colors.HexColor('#171447'),
-        fontSize=13, leading=17, spaceBefore=12, spaceAfter=7,
+        name='ReportDate', parent=styles['Normal'], fontName='Helvetica',
+        textColor=colors.HexColor('#e1ddff'), fontSize=8, leading=12,
+        alignment=TA_RIGHT,
     ))
     styles.add(ParagraphStyle(
-        name='ReportCell', parent=styles['Normal'], fontName='Helvetica', fontSize=7.5,
-        leading=9.5, textColor=colors.HexColor('#15172e'),
+        name='ReportSection', parent=styles['Heading2'], textColor=navy,
+        fontName='Helvetica-Bold', fontSize=12, leading=16,
+        spaceBefore=11, spaceAfter=6, keepWithNext=True,
+    ))
+    styles.add(ParagraphStyle(
+        name='ReportKpiLabel', parent=styles['Normal'], fontName='Helvetica-Bold',
+        textColor=muted, fontSize=7, leading=9,
+    ))
+    styles.add(ParagraphStyle(
+        name='ReportKpiValue', parent=styles['Normal'], fontName='Helvetica-Bold',
+        textColor=ink, fontSize=11, leading=14,
+    ))
+    styles.add(ParagraphStyle(
+        name='ReportCell', parent=styles['Normal'], fontName='Helvetica',
+        fontSize=7.5, leading=9.5, textColor=ink,
     ))
     styles.add(ParagraphStyle(
         name='ReportHeaderCell', parent=styles['ReportCell'], fontName='Helvetica-Bold',
@@ -73,56 +93,79 @@ def finance_report_pdf(request):
     ))
     styles.add(ParagraphStyle(
         name='ReportAmount', parent=styles['ReportCell'], alignment=TA_RIGHT,
+        fontName='Helvetica-Bold',
     ))
 
     def cell(value, style='ReportCell'):
         return Paragraph(escape(str(value if value is not None else '')), styles[style])
 
     def amount(value):
-        return f'Rs {value:,.0f}'
+        return f'PKR {value:,.0f}'
 
-    story = [
-        Paragraph('Income &amp; Expenses Report', styles['Title']),
-        Paragraph(f'Complete financial ledger · Generated {today:%d %b %Y}', styles['ReportSubtitle']),
-    ]
+    story = []
+    banner = Table([[
+        Paragraph(
+            '<font size="8" color="#c7c1ff"><b>FINANCE OVERVIEW</b></font>'
+            '<br/><font size="22"><b>Income and Expenses</b></font>'
+            '<br/><font size="9" color="#e1ddff">Complete financial ledger and performance summary</font>',
+            styles['ReportBanner'],
+        ),
+        Paragraph(
+            f'<font size="7" color="#c7c1ff"><b>REPORT DATE</b></font>'
+            f'<br/><font size="10"><b>{today:%d %B %Y}</b></font>',
+            styles['ReportDate'],
+        ),
+    ]], colWidths=[205 * mm, 64 * mm], hAlign='LEFT')
+    banner.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), navy),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('LEFTPADDING', (0, 0), (0, 0), 12),
+        ('RIGHTPADDING', (0, 0), (0, 0), 8),
+        ('LEFTPADDING', (1, 0), (1, 0), 8),
+        ('RIGHTPADDING', (1, 0), (1, 0), 12),
+        ('TOPPADDING', (0, 0), (-1, -1), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 11),
+        ('LINEBEFORE', (1, 0), (1, 0), .5, colors.HexColor('#4a4778')),
+    ]))
+    story.extend([banner, Spacer(1, 5 * mm)])
 
     summary = stats.summary()
-    summary_data = [[
-        cell('Agreed income', 'ReportHeaderCell'),
-        cell('Received', 'ReportHeaderCell'),
-        cell('Outstanding', 'ReportHeaderCell'),
-        cell('Expenses', 'ReportHeaderCell'),
-        cell('Net in hand', 'ReportHeaderCell'),
-    ], [
-        cell(amount(summary['total'])),
-        cell(amount(summary['received'])),
-        cell(amount(summary['pending'])),
-        cell(amount(summary['spent'])),
-        cell(amount(summary['net'])),
-    ]]
-    summary_table = Table(summary_data, colWidths=[49 * mm] * 5, hAlign='LEFT')
+    kpis = [
+        ('Agreed income', summary['total']),
+        ('Received', summary['received']),
+        ('Outstanding', summary['pending']),
+        ('Total expenses', summary['spent']),
+        ('Net cash flow', summary['net']),
+    ]
+    summary_table = Table([
+        [cell(label, 'ReportKpiLabel') for label, _ in kpis],
+        [cell(amount(value), 'ReportKpiValue') for _, value in kpis],
+    ], colWidths=[53.8 * mm] * 5, hAlign='LEFT')
     summary_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#171447')),
-        ('BACKGROUND', (0, 1), (-1, 1), colors.HexColor('#f2f3fb')),
-        ('BOX', (0, 0), (-1, -1), .5, colors.HexColor('#d9dced')),
-        ('INNERGRID', (0, 0), (-1, -1), .35, colors.HexColor('#d9dced')),
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f1efff')),
+        ('BACKGROUND', (1, 0), (1, -1), colors.HexColor('#eef8f4')),
+        ('BACKGROUND', (2, 0), (2, -1), colors.HexColor('#fff7e9')),
+        ('BACKGROUND', (3, 0), (3, -1), colors.HexColor('#fff0f1')),
+        ('BACKGROUND', (4, 0), (4, -1), colors.HexColor('#eef3ff')),
+        ('BOX', (0, 0), (-1, -1), .5, border),
+        ('INNERGRID', (0, 0), (-1, -1), .5, colors.white),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('LEFTPADDING', (0, 0), (-1, -1), 8),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
-        ('TOPPADDING', (0, 0), (-1, -1), 8),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('LEFTPADDING', (0, 0), (-1, -1), 9),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 5),
+        ('TOPPADDING', (0, 0), (-1, -1), 7),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 7),
     ]))
-    story.extend([summary_table, Spacer(1, 5 * mm)])
+    story.extend([summary_table, Spacer(1, 2 * mm)])
 
     source_rows = stats.by_source()
     category_rows = stats.by_category()
     if source_rows or category_rows:
-        story.append(Paragraph('Breakdown', styles['ReportSection']))
+        story.append(Paragraph('Income and Expense Breakdown', styles['ReportSection']))
         breakdown_data = [[
             cell('Income source', 'ReportHeaderCell'), cell('Deals', 'ReportHeaderCell'),
-            cell('Agreed', 'ReportHeaderCell'), cell('Received', 'ReportHeaderCell'),
+            cell('Agreed (PKR)', 'ReportHeaderCell'), cell('Received (PKR)', 'ReportHeaderCell'),
             cell('Expense category', 'ReportHeaderCell'), cell('Payments', 'ReportHeaderCell'),
-            cell('Spent', 'ReportHeaderCell'),
+            cell('Spent (PKR)', 'ReportHeaderCell'),
         ]]
         for index in range(max(len(source_rows), len(category_rows))):
             source = source_rows[index] if index < len(source_rows) else None
@@ -143,10 +186,10 @@ def finance_report_pdf(request):
             hAlign='LEFT',
         )
         breakdown_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#5b4bf5')),
-            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f7f8fc')]),
-            ('BOX', (0, 0), (-1, -1), .4, colors.HexColor('#d9dced')),
-            ('INNERGRID', (0, 0), (-1, -1), .3, colors.HexColor('#e2e5ef')),
+            ('BACKGROUND', (0, 0), (-1, 0), purple),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, row_alt]),
+            ('BOX', (0, 0), (-1, -1), .5, border),
+            ('INNERGRID', (0, 0), (-1, -1), .35, border),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
             ('LEFTPADDING', (0, 0), (-1, -1), 6),
             ('RIGHTPADDING', (0, 0), (-1, -1), 6),
@@ -156,19 +199,19 @@ def finance_report_pdf(request):
         story.extend([breakdown_table, Spacer(1, 4 * mm)])
 
     incomes = Income.objects.all().order_by('-date', '-id')
-    story.append(Paragraph(f'Income &amp; Client Payments ({incomes.count()})', styles['ReportSection']))
+    story.append(Paragraph(f'Income and Client Payments <font color="#69708f">({incomes.count()} records)</font>', styles['ReportSection']))
     income_data = [[
         cell('#', 'ReportHeaderCell'), cell('Deal', 'ReportHeaderCell'),
-        cell('Client / source', 'ReportHeaderCell'), cell('Date', 'ReportHeaderCell'),
-        cell('Agreed', 'ReportHeaderCell'), cell('Received', 'ReportHeaderCell'),
-        cell('Balance', 'ReportHeaderCell'), cell('Status', 'ReportHeaderCell'),
+        cell('Client / source', 'ReportHeaderCell'), cell('Deal date', 'ReportHeaderCell'),
+        cell('Agreed (PKR)', 'ReportHeaderCell'), cell('Received (PKR)', 'ReportHeaderCell'),
+        cell('Balance (PKR)', 'ReportHeaderCell'), cell('Payment status', 'ReportHeaderCell'),
     ]]
     for index, income in enumerate(incomes.iterator(), start=1):
         status = {'paid': 'Paid', 'partial': 'Part paid', 'pending': 'Pending'}[income.status]
         income_data.append([
             cell(index), cell(income.title), cell(f'{income.client or "—"} / {income.get_source_display()}'),
-            cell(income.date.strftime('%d %b %Y')), cell(amount(income.total_amount)),
-            cell(amount(income.received)), cell(amount(income.remaining)), cell(status),
+            cell(income.date.strftime('%d %B %Y')), cell(amount(income.total_amount), 'ReportAmount'),
+            cell(amount(income.received), 'ReportAmount'), cell(amount(income.remaining), 'ReportAmount'), cell(status),
         ])
     if len(income_data) == 1:
         income_data.append([cell('No income records.')]+[cell('') for _ in range(7)])
@@ -179,10 +222,10 @@ def finance_report_pdf(request):
         hAlign='LEFT',
     )
     income_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#171447')),
-        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f7f8fc')]),
-        ('BOX', (0, 0), (-1, -1), .4, colors.HexColor('#d9dced')),
-        ('INNERGRID', (0, 0), (-1, -1), .3, colors.HexColor('#e2e5ef')),
+        ('BACKGROUND', (0, 0), (-1, 0), navy),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, row_alt]),
+        ('BOX', (0, 0), (-1, -1), .5, border),
+        ('INNERGRID', (0, 0), (-1, -1), .35, border),
         ('ALIGN', (4, 1), (6, -1), 'RIGHT'),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
         ('LEFTPADDING', (0, 0), (-1, -1), 5),
@@ -193,16 +236,16 @@ def finance_report_pdf(request):
     story.extend([income_table, Spacer(1, 4 * mm)])
 
     expenses = Expense.objects.all().order_by('-date', '-id')
-    story.append(Paragraph(f'Expenses ({expenses.count()})', styles['ReportSection']))
+    story.append(Paragraph(f'Expense Ledger <font color="#69708f">({expenses.count()} records)</font>', styles['ReportSection']))
     expense_data = [[
         cell('#', 'ReportHeaderCell'), cell('Expense', 'ReportHeaderCell'),
         cell('Category', 'ReportHeaderCell'), cell('Paid to', 'ReportHeaderCell'),
-        cell('Date', 'ReportHeaderCell'), cell('Amount', 'ReportHeaderCell'),
+        cell('Expense date', 'ReportHeaderCell'), cell('Amount (PKR)', 'ReportHeaderCell'),
     ]]
     for index, expense in enumerate(expenses.iterator(), start=1):
         expense_data.append([
             cell(index), cell(expense.title), cell(expense.get_category_display()),
-            cell(expense.spent_at or '—'), cell(expense.date.strftime('%d %b %Y')),
+            cell(expense.spent_at or '—'), cell(expense.date.strftime('%d %B %Y')),
             cell(amount(expense.amount), 'ReportAmount'),
         ])
     if len(expense_data) == 1:
@@ -214,10 +257,10 @@ def finance_report_pdf(request):
         hAlign='LEFT',
     )
     expense_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#171447')),
-        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f7f8fc')]),
-        ('BOX', (0, 0), (-1, -1), .4, colors.HexColor('#d9dced')),
-        ('INNERGRID', (0, 0), (-1, -1), .3, colors.HexColor('#e2e5ef')),
+        ('BACKGROUND', (0, 0), (-1, 0), navy),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, row_alt]),
+        ('BOX', (0, 0), (-1, -1), .5, border),
+        ('INNERGRID', (0, 0), (-1, -1), .35, border),
         ('ALIGN', (5, 1), (5, -1), 'RIGHT'),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
         ('LEFTPADDING', (0, 0), (-1, -1), 5),
@@ -229,12 +272,16 @@ def finance_report_pdf(request):
 
     def draw_footer(canvas, doc):
         canvas.saveState()
-        canvas.setStrokeColor(colors.HexColor('#d9dced'))
-        canvas.line(doc.leftMargin, 11 * mm, doc.pagesize[0] - doc.rightMargin, 11 * mm)
-        canvas.setFont('Helvetica', 8)
-        canvas.setFillColor(colors.HexColor('#64708f'))
-        canvas.drawString(doc.leftMargin, 7 * mm, f'Confidential · Generated {today:%d %b %Y}')
-        canvas.drawRightString(doc.pagesize[0] - doc.rightMargin, 7 * mm, f'Page {doc.page}')
+        canvas.setStrokeColor(border)
+        canvas.setLineWidth(.6)
+        canvas.line(doc.leftMargin, 12 * mm, doc.pagesize[0] - doc.rightMargin, 12 * mm)
+        canvas.setFont('Helvetica-Bold', 7)
+        canvas.setFillColor(muted)
+        canvas.drawString(doc.leftMargin, 7 * mm, 'CONFIDENTIAL - FOR INTERNAL USE')
+        canvas.setFont('Helvetica', 7)
+        canvas.drawCentredString(doc.pagesize[0] / 2, 7 * mm, f'Generated {today:%d %B %Y}')
+        canvas.setFont('Helvetica-Bold', 7)
+        canvas.drawRightString(doc.pagesize[0] - doc.rightMargin, 7 * mm, f'PAGE {doc.page}')
         canvas.restoreState()
 
     document.build(story, onFirstPage=draw_footer, onLaterPages=draw_footer)

@@ -46,6 +46,7 @@ class FinanceReportTests(TestCase):
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertIn('attachment; filename="income-expenses-', response['Content-Disposition'])
         self.assertTrue(response.content.startswith(b'%PDF-'))
+        self.assertIn(b'Income and Expenses - Financial Report', response.content)
 
     def test_finance_screen_has_pdf_download_action(self):
         self.client.force_login(self.staff)

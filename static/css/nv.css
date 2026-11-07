@@ -334,13 +334,13 @@ main > section.wrap, .wrap > .prose { margin-block: clamp(28px, 4vw, 56px); }
 .h-services li::before { inset: auto 0 0 0; height: 5px; top: auto; background: var(--accent); transform: scaleX(.18); transform-origin: left; transition: transform .45s; }
 .h-services li::after { content: "→"; position: absolute; right: 22px; bottom: 18px; font-size: 1.5rem; color: var(--accent); transition: transform .3s, color .3s; }
 .h-services i { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--grad); color: #fff; font-size: .9rem; }
-.h-services li:hover { background: var(--accent); color: #fff; transform: translateY(-6px); } .h-services li:hover p, .h-services li:hover h3 { color: #fff; } .h-services li:hover::before { transform: scaleX(1); background: #fff; } .h-services li:hover::after { color: #fff; transform: translateX(6px); } .h-services li:hover i { background: #fff; color: var(--accent); }
+.h-services li:hover { background: var(--accent); color: #fff;  } .h-services li:hover p, .h-services li:hover h3 { color: #fff; } .h-services li:hover::before { transform: scaleX(1); background: #fff; } .h-services li:hover::after { color: #fff; transform: translateX(6px); } .h-services li:hover i { background: #fff; color: var(--accent); }
 
 /* HOME · case studies: clear media area, followed by readable project details */
 .h-cases { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
-.h-case { position: relative; display: flex; min-width: 0; min-height: 0; flex-direction: column; border: 1px solid var(--line); border-radius: 0px; color: var(--ink); background: var(--surface); box-shadow: var(--shadow); transition: transform .25s var(--ease), border-color .25s, box-shadow .25s; }
-.h-case:hover { transform: translateY(-4px); border-color: var(--line-strong); box-shadow: 0 24px 48px -30px rgba(0, 0, 0, .55); }
-.h-case-img { position: relative; inset: auto; z-index: 0; flex: none; width: 100%; height: auto; aspect-ratio: 16 / 10; border: 0; border-bottom: 1px solid var(--line); border-radius: 0px 19px 0 0; background: linear-gradient(135deg, color-mix(in srgb, var(--ac, #5b4bf5) 25%, var(--bg)), var(--bg-tint)); overflow: hidden; }
+.h-case { position: relative; display: flex; min-width: 0; min-height: 0; flex-direction: column; border: 1px solid var(--line); border-radius: 0px; color: var(--ink); background: var(--surface); box-shadow: var(--shadow);  }
+.h-case:hover { border-color: var(--line-strong); box-shadow: 0 24px 48px -30px rgba(0, 0, 0, .55); }
+.h-case-img { position: relative; inset: auto; z-index: 0; flex: none; width: 100%; height: auto; aspect-ratio: 16 / 10; border: 0; border-bottom: 1px solid var(--line); border-radius: 0px 0px 0 0; background: linear-gradient(135deg, color-mix(in srgb, var(--ac, #5b4bf5) 25%, var(--bg)), var(--bg-tint)); overflow: hidden; }
 .h-case-img img, .h-case-img svg { display: block; width: 100% !important; height: 100% !important; object-fit: fill !important; object-position: center; }
 .h-case-img .mock { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; border: 0; border-radius: 0; box-shadow: none; }
 .h-case-img b { left: 12px; top: 12px; padding: 5px 10px; border-radius: 999px; background: var(--surface); color: var(--ink); font-size: .72rem; line-height: 1.25; box-shadow: 0 4px 14px rgba(0, 0, 0, .14); }
@@ -418,7 +418,7 @@ main > section.wrap, .wrap > .prose { margin-block: clamp(28px, 4vw, 56px); }
 .post { padding: 0; border: 0; background: transparent; border-radius: 0; gap: 0; } .post:hover { box-shadow: none; }
 .post-art { height: 230px; border-radius: 22px; } .post > span:not(.post-art) { margin-inline: 14px; padding: 0 18px; background: var(--surface); } .post .mag-meta { margin-top: -34px; padding-top: 16px; border-radius: 16px 16px 0 0; position: relative; } .post .post-title { padding-top: 4px; } .post .row-sub { padding-bottom: 20px; border-radius: 0 0 16px 16px; box-shadow: var(--shadow); }
 /* BLOG index: keep the complete article text visible below, not over, its cover */
-#articles .post { display: flex; min-width: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 0 0 18px; overflow: hidden; border: 1px solid var(--line); border-top: 3px solid var(--ac, var(--accent)); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
+#articles .post { display: flex; min-width: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 0 0 18px; overflow: hidden; border: 1px solid var(--line); border-top: 3px solid var(--ac, var(--accent)); border-radius: 0px; background: var(--surface); box-shadow: var(--shadow); }
 #articles .post[data-reveal] { opacity: 1; transform: none; transition: border-color .2s, box-shadow .2s; will-change: auto; }
 #articles .post:hover { transform: none; border-color: var(--ac, var(--accent)); box-shadow: 0 18px 38px -28px var(--ac, var(--accent)); }
 #articles .post-art { width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; border-radius: 0; }
@@ -550,13 +550,13 @@ main > section.wrap, .wrap > .prose { margin-block: clamp(28px, 4vw, 56px); }
 .project-filters input, .project-filters select { width: 100%; min-height: 46px; border-radius: 12px; }
 .project-filter-submit { min-height: 46px; white-space: nowrap; }
 .project-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-bottom: 30px; }
-.project-card { position: relative; display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: var(--surface); box-shadow: 0 16px 38px -30px rgba(0, 0, 0, .8); transition: transform .3s var(--ease), border-color .3s, box-shadow .3s; }
+.project-card { position: relative; display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 0px; background: var(--surface); box-shadow: 0 16px 38px -30px rgba(0, 0, 0, .8);  }
 .project-card::before { position: absolute; z-index: 1; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg, var(--ac, var(--accent)), color-mix(in srgb, var(--ac, var(--accent)) 25%, transparent)); content: ""; }
-.project-card:hover { transform: translateY(-7px); border-color: color-mix(in srgb, var(--ac, var(--accent)) 58%, var(--line)); box-shadow: 0 26px 52px -32px color-mix(in srgb, var(--ac, var(--accent)) 55%, transparent); }
-.project-card-media { position: relative; display: grid; aspect-ratio: 16 / 10; place-items: center; overflow: hidden; padding: 12px; background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--ac, var(--accent)) 35%, transparent), transparent 68%), linear-gradient(145deg, color-mix(in srgb, var(--ac, var(--accent)) 12%, var(--surface)), var(--bg-tint)); text-decoration: none; }
+.project-card:hover {  border-color: color-mix(in srgb, var(--ac, var(--accent)) 58%, var(--line)); box-shadow: 0 26px 52px -32px color-mix(in srgb, var(--ac, var(--accent)) 55%, transparent); }
+.project-card-media { position: relative; display: grid; aspect-ratio: 16 / 10; place-items: center; overflow: hidden; padding: 0px; background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--ac, var(--accent)) 35%, transparent), transparent 68%), linear-gradient(145deg, color-mix(in srgb, var(--ac, var(--accent)) 12%, var(--surface)), var(--bg-tint)); text-decoration: none; }
 .project-card-media::after { position: absolute; inset: 12px; border: 1px solid rgba(255, 255, 255, .18); border-radius: 14px; content: ""; pointer-events: none; }
-.project-card-media > img { display: block; width: 100%; height: 100%; border-radius: 14px; object-fit: cover; object-position: center; transition: transform .5s var(--ease); }
-.project-card:hover .project-card-media > img { transform: scale(1.045); }
+.project-card-media > img { display: block; width: 100%; height: 100% !important; border-radius: 0px; object-fit: fill; object-position: center;  }
+.project-card:hover .project-card-media > img 
 .project-card-mock { display: block; width: 100%; height: 100%; overflow: hidden; border-radius: 14px; background: var(--surface); }
 .project-card-mock .mock { width: 100%; height: 100%; min-height: 0; aspect-ratio: auto; border: 0; border-radius: 14px; box-shadow: none; }
 .project-card-number { position: absolute; z-index: 2; right: 22px; bottom: 20px; color: rgba(255, 255, 255, .9); font: 700 2.4rem/1 var(--font); letter-spacing: -.08em; text-shadow: 0 3px 14px rgba(0, 0, 0, .65); }
