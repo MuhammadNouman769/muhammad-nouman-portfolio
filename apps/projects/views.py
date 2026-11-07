@@ -64,7 +64,7 @@ def _project_listing_context(request):
 
     page_obj = Paginator(queryset, 12).get_page(request.GET.get('page'))
     pagination_pages = []
-    for number in page_obj.paginator.get_elided_page_range(page_obj.number, on_each_side=1, on_ends=1):
+    for number in page_obj.paginator.get_elided_page_range(page_obj.number, on_each_side=1, on_ends=1): # type: ignore
         is_ellipsis = isinstance(number, str)
         params = request.GET.copy()
         params['page'] = number if not is_ellipsis else page_obj.number
@@ -105,7 +105,7 @@ def detail(request, slug):
     idx = next((i for i, (s, _) in enumerate(items) if s == slug), 0)
     prev_p = items[idx - 1] if idx > 0 else None
     next_p = items[idx + 1] if idx < len(items) - 1 else None
-    tag_names = [t.name for t in project.tags.all()]
+    tag_names = [t.name for t in project.tags.all()] # type: ignore
     related = list(_published().exclude(pk=project.pk).filter(models.Q(tags__name__in=tag_names) | models.Q(kind=project.kind, case_study=True)).distinct()[:2])
     return render(request, 'projects/detail.html', {
         'project': project,
