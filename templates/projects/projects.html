@@ -15,15 +15,12 @@
     {% for p in case_studies %}
     <article class="pf" style="--ac:{{ p.accent }}">
       <a class="pf-media" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true">
-        <span class="pf-frame"><span class="pf-bar"><i></i><i></i><i></i></span>{% if p.card_img %}<img src="{{ p.card_img.url }}" alt="" loading="lazy" decoding="async">{% else %}<span class="pf-mock">{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}</span>{% endif %}</span>
-        {% if p.card_badge %}<b class="pj-badge">{{ p.card_badge }}</b>{% endif %}
+        <span class="pf-frame">{% if p.card_img %}<img src="{{ p.card_img.url }}" alt="" loading="lazy" decoding="async">{% else %}<span class="pf-mock">{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}</span>{% endif %}</span>
       </a>
       <div class="pf-body">
-        <p class="pj-meta"><span class="pj-pill s-{{ p.status }}">{{ p.get_status_display }}</span>{{ p.get_kind_display }}{% if p.year %} · {{ p.year }}{% endif %}</p>
         <h3><a href="{{ p.get_absolute_url }}">{{ p.card_heading }}</a></h3>
         <p class="pf-desc">{{ p.card_text|truncatechars:210 }}</p>
-        <ul class="pj-tags">{% for t in p.tags.all|slice:":6" %}<li>{{ t.name }}</li>{% endfor %}</ul>
-        <a class="btn btn-solid" href="{{ p.get_absolute_url }}">Read case study</a>
+        <a class="pf-more" href="{{ p.get_absolute_url }}">View project &rarr;</a>
       </div>
     </article>
     {% endfor %}
