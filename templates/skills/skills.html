@@ -2,13 +2,14 @@
 {% block title %}Skills and technology | {{ site.owner_name }}{% endblock %}
 {% block meta_description %}Languages, frameworks, infrastructure and practices {{ site.owner_name }} uses to build backends: Python, Django, DRF, PostgreSQL, Redis, Celery, Docker.{% endblock %}
 {% block content %}
-<section class="page-head wrap banner">
-  {% include 'partials/banner_art.html' with icon='code' a='Python' b='Celery' c='Docker' %}
-  {% include 'partials/lamp.html' with cord=48 %}<div><h1>Skills</h1><p class="lede">The languages, frameworks and practices I use day to day, grouped by what they are for.</p></div></section>
-<section class="wrap skill-cards">
+<section class="page-head wrap banner p-hero ph-skills ph-dark" id="top" data-sec="Overview">
+  {% include 'partials/lamp.html' with cord=48 %}
+  <div><span class="h-eyebrow">Skills</span><h1>Skills & technology</h1><p class="lede">The languages, frameworks and practices I use day to day, grouped by what they are for.</p></div></section>
+
+<section class="wrap p-skills">
   {% for cat in categories %}
-  <section class="skill-card spot" data-reveal style="--i:{{ forloop.counter0 }}">
-    <h2><span>{{ forloop.counter }}</span>{{ cat.name }}</h2>
+  <section class="p-skill sk-{{ forloop.counter0|divisibleby:2|yesno:'a,b' }}" id="skill-{{ forloop.counter }}" data-sec="{{ cat.name }}">
+    <h2><span>{{ forloop.counter|stringformat:"02d" }}</span>{{ cat.name }}</h2>
     <ul class="tokens">{% for s in cat.skills.all %}<li style="--i:{{ forloop.counter0 }}">{{ s.name }}</li>{% endfor %}</ul>
   </section>
   {% empty %}<p class="empty">No skills added yet.</p>{% endfor %}

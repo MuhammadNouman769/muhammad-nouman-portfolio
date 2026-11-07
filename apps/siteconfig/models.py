@@ -94,3 +94,31 @@ class SiteSettings(models.Model):
     @property
     def sameas(self):
         return [u for u in (self.github, self.linkedin, self.x_twitter) if u]
+
+
+class Banner(models.Model):
+    """A picture banner managed from the dashboard.
+
+    Placement "home" adds a moving slide to the home page slider. Any other placement shows
+    the image as the artwork of that page's banner (the first active one is used).
+    """
+    PLACEMENTS = [
+        ('home', 'Home page (moving slider)'), ('about', 'About page'), ('projects', 'Projects page'),
+        ('blog', 'Blog page'), ('experience', 'Experience page'), ('skills', 'Skills page'),
+        ('services', 'Services page'), ('contact', 'Contact page'), ('privacy', 'Privacy page'),
+    ]
+    placement = models.CharField(max_length=20, choices=PLACEMENTS, default='home')
+    title = models.CharField(max_length=90, blank=True, help_text='Headline on a home slider slide. Also used as the image description.')
+    text = models.CharField(max_length=200, blank=True, help_text='One or two short sentences under the headline (home slider only).')
+    image = models.ImageField(upload_to='banners/', help_text='Wide picture, about 1600 x 1000 px (16:10). Max 5 MB.')
+    button_text = models.CharField(max_length=30, blank=True, help_text='Optional, e.g. "Read case study".')
+    button_url = models.CharField(max_length=300, blank=True, help_text='Optional page or link, e.g. /projects/btr-mall/ or https://...')
+    accent = models.CharField(max_length=7, default='#3452e8', help_text='Hex colour for the glow behind this banner, e.g. #3452e8.')
+    active = models.BooleanField(default=True, help_text='Untick to hide this banner without deleting it.')
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['placement', 'order', 'id']
+
+    def __str__(self):
+        return f'{self.get_placement_display()}: {self.title or self.image.name}'

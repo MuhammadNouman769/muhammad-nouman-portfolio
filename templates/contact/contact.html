@@ -2,11 +2,11 @@
 {% block title %}Contact | {{ site.owner_name }}{% endblock %}
 {% block meta_description %}Start a project or ask a question. Message {{ site.owner_name }} directly through the form, email or WhatsApp.{% endblock %}
 {% block content %}
-<section class="page-head wrap banner">
-  {% include 'partials/banner_art.html' with icon='mail' a='Reply in a day' b='Remote' c='Contract' %}
-  {% include 'partials/lamp.html' with cord=48 %}<div><h1>Let’s talk about your project</h1><p class="lede">A few lines about what you are building is enough to start. I reply personally.</p></div></section>
+<section class="page-head wrap banner p-hero ph-contact ph-dark" id="top" data-sec="Overview">
+  {% include 'partials/lamp.html' with cord=48 %}
+  <div><span class="h-eyebrow">Contact</span><h1>Let’s talk about your project</h1><p class="lede">A few lines about what you are building is enough to start. I reply personally.</p></div></section>
 
-<section class="wrap contact-grid">
+<section class="wrap contact-grid" id="form" data-sec="Send a message">
   <div class="contact-info">
     {% if site.email %}<button class="c-card" type="button" data-copy="{{ site.email }}" data-reveal>
       <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg></span>

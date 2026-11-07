@@ -1,4 +1,5 @@
 {# Animated banner artwork for page heads. Needs: icon, a, b, c (three floating chip labels). Decorative only. #}
+{% if page_banner %}<div class="bn-art bn-photo" style="--ac:{{ page_banner.accent }}"><span class="bn-pic"><img src="{{ page_banner.image.url }}" alt="{{ page_banner.title }}" decoding="async"></span></div>{% else %}
 <div class="bn-art" aria-hidden="true">
   <i class="bn-orb bn-o1"></i><i class="bn-orb bn-o2"></i><i class="bn-orb bn-o3"></i>
   <div class="bn-card">
@@ -17,3 +18,4 @@
   </div>
   <span class="bn-chip c1">{{ a }}</span><span class="bn-chip c2">{{ b }}</span><span class="bn-chip c3">{{ c }}</span>
 </div>
+{% endif %}

@@ -5,13 +5,11 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"{{ site.owner_name|escapejs }}: engineering notes","url":"{{ SITE_URL }}/blog/","author":{"@id":"{{ SITE_URL }}/#person"}}</script>
 {% endblock %}
 {% block content %}
-<section class="page-head wrap banner">
-  {% include 'partials/banner_art.html' with icon='pen' a='Notes' b='Case studies' c='Lessons' %}
+<section class="page-head wrap banner p-hero ph-blog" id="top" data-sec="Overview">
   {% include 'partials/lamp.html' with cord=48 %}
-  <div><h1>Notes from the codebase</h1><p class="lede">What I learned building marketplaces, SaaS and editorial platforms, written down so your team does not have to learn it the slow way.</p></div>
-</section>
+  <div><span class="h-eyebrow">Blog</span><h1>Notes from the codebase</h1><p class="lede">What I learned building marketplaces, SaaS and editorial platforms, written down so your team does not have to learn it the slow way.</p></div></section>
 
-<section class="wrap">
+<section class="wrap" id="articles" data-sec="Articles">
   <div class="pills" role="tablist" aria-label="Categories">
     <a href="{% url 'blog:index' %}" class="pill{% if not active_category %} on{% endif %}">All</a>
     {% for c in categories %}<a href="{% url 'blog:index' %}?c={{ c.slug }}" class="pill{% if active_category == c %} on{% endif %}">{{ c.name }}</a>{% endfor %}

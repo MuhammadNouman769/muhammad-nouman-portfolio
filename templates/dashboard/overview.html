@@ -15,6 +15,13 @@
   </article>{% endfor %}
 </section>
 
+<section class="fn-kpis">
+  <article class="fn-k fn-k-total"><span>Total business</span><b>Rs {{ fin.total|floatformat:0 }}</b><small>{{ fin.deals }} deals</small></article>
+  <article class="fn-k fn-k-got"><div class="fn-ring" style="--p:{{ fin.collected_pct }}"><i>{{ fin.collected_pct }}%</i></div><div><span>Received</span><b>Rs {{ fin.received|floatformat:0 }}</b></div></article>
+  <article class="fn-k fn-k-due"><span>Remaining</span><b>Rs {{ fin.pending|floatformat:0 }}</b><small>to collect</small></article>
+  <article class="fn-k fn-k-out"><span>Spent</span><b>Rs {{ fin.spent|floatformat:0 }}</b><small><a href="{% url 'dashboard:finance' %}" style="color:#c4b5fd">Open income &amp; expenses →</a></small></article>
+</section>
+
 <section class="grid g-3-1">
   <article class="card">
     <div class="card-head"><h2>Traffic</h2>

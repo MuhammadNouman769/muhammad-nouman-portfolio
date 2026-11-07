@@ -17,7 +17,6 @@
   <header class="art-head wrap banner">
     {% include 'partials/lamp.html' with cord=48 %}
     <div>
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'blog:index' %}">Blog</a>{% if post.category %}<span aria-hidden="true">/</span><a href="{% url 'blog:index' %}?c={{ post.category.slug }}">{{ post.category.name }}</a>{% endif %}</nav>
       <h1>{{ post.title }}</h1>
       <p class="lede">{{ post.excerpt }}</p>
       <p class="byline"><span class="by-av">{% include 'partials/logo.html' %}</span><span><b>{{ site.owner_name }}</b><small>{{ post.published_at|date:"j F Y" }} · {{ post.read_minutes }} min read</small></span></p>

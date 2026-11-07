@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.forms import inlineformset_factory
 
@@ -6,7 +8,7 @@ from apps.blog.models import Category, Post
 from apps.experience.models import Experience, ExperienceHighlight
 from apps.projects.models import Project, ProjectFeature, ProjectTag
 from apps.services.models import Service
-from apps.siteconfig.models import SiteSettings
+from apps.siteconfig.models import Banner, SiteSettings
 from apps.skills.models import Skill, SkillCategory
 
 MAX_UPLOAD = 5 * 1024 * 1024
@@ -112,6 +114,27 @@ class ServiceForm(DashModelForm):
     class Meta:
         model = Service
         fields = ['title', 'description']
+
+
+class BannerForm(DashModelForm):
+    class Meta:
+        model = Banner
+        fields = ['placement', 'title', 'text', 'image', 'button_text', 'button_url', 'accent', 'active']
+        widgets = {'accent': forms.TextInput(attrs={'type': 'color'})}
+
+    clean_image = lambda self: self._check_upload('image')  # noqa: E731
+
+    def clean_accent(self):
+        v = (self.cleaned_data.get('accent') or '#3452e8').strip()
+        if not re.fullmatch(r'#[0-9a-fA-F]{6}', v):
+            raise forms.ValidationError('Use a hex colour like #3452e8.')
+        return v
+
+    def clean_button_url(self):
+        v = (self.cleaned_data.get('button_url') or '').strip()
+        if v and not (v.startswith('/') or v.startswith('https://') or v.startswith('http://')):
+            raise forms.ValidationError('Start with / for a page on this site, or https:// for another site.')
+        return v
 
 
 class EducationForm(DashModelForm):

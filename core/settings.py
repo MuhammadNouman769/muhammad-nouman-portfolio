@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'apps.contact',
     'apps.subscribers',
     'apps.analytics',
+    'apps.finance',
     'apps.dashboard',
 ]
 

@@ -7,7 +7,7 @@ from apps.blog.models import Category, Post
 from apps.experience.models import Experience
 from apps.projects.models import Project
 from apps.services.models import Service
-from apps.siteconfig.models import SiteSettings
+from apps.siteconfig.models import Banner, SiteSettings
 from apps.skills.models import SkillCategory
 
 from . import forms as f
@@ -102,6 +102,18 @@ RESOURCES = {r.key: r for r in [
         blurb='What clients can hire you for.',
         columns=[('Service', lambda o: o.title), ('Description', lambda o: o.description)],
         fieldsets=[('Service', '', ['title', 'description'])],
+    ),
+    Resource(
+        key='banners', model=Banner, form=f.BannerForm, label='Banner', plural='Banners', icon='grid',
+        blurb='Picture banners. "Home page" adds a moving slide to the home slider; any other page shows the picture in that page\'s banner. Drag to change the slide order.',
+        columns=[('Page', lambda o: o.get_placement_display()), ('Headline', lambda o: o.title or '(no headline)'),
+                 ('Shown', lambda o: 'Yes' if o.active else 'Hidden')],
+        fieldsets=[
+            ('Where it appears', 'Pick the page. Home slides rotate; other pages use the first active banner.', ['placement', 'active']),
+            ('Picture', 'Wide pictures (16:10) look best.', ['image', 'accent']),
+            ('Words (home slider)', 'Optional headline, short text and a button. Leave empty for a picture-only slide.', ['title', 'text', 'button_text', 'button_url']),
+        ],
+        toggles=['active'],
     ),
     Resource(
         key='education', model=Education, form=f.EducationForm, label='Education', plural='Education', icon='book',

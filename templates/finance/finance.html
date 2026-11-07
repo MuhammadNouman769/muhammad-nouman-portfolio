@@ -1,0 +1,68 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Income &amp; expenses{% endblock %}
+{% block heading %}<h1>Income &amp; expenses</h1><p class="muted">Where the money comes from, what is still pending and where it goes.</p>{% endblock %}
+{% block tools %}
+<form class="fn-search" method="get"><input class="inp" type="search" name="q" value="{{ q }}" placeholder="Search client, vendor…" aria-label="Search"></form>
+<a class="btn" href="{% url 'dashboard:finance_new' 'expense' %}">+ Expense</a>
+<a class="btn btn-primary" href="{% url 'dashboard:finance_new' 'income' %}">+ Income</a>
+{% endblock %}
+{% block content %}
+<section class="fn-kpis">
+  <article class="fn-k fn-k-total"><span>Total business</span><b>Rs {{ s.total|floatformat:0 }}</b><small>{{ s.deals }} deal{{ s.deals|pluralize }} · {{ s.open_deals }} still open</small></article>
+  <article class="fn-k fn-k-got">
+    <div class="fn-ring" style="--p:{{ s.collected_pct }}"><i>{{ s.collected_pct }}%</i></div>
+    <div><span>Received</span><b>Rs {{ s.received|floatformat:0 }}</b><small>already in your hands</small></div>
+  </article>
+  <article class="fn-k fn-k-due"><span>Remaining (bakaya)</span><b>Rs {{ s.pending|floatformat:0 }}</b><small>still to collect from clients</small></article>
+  <article class="fn-k fn-k-out"><span>Spent</span><b>Rs {{ s.spent|floatformat:0 }}</b><small class="{% if s.net < 0 %}neg{% endif %}">Net in hand: Rs {{ s.net|floatformat:0 }}</small></article>
+</section>
+
+<section class="grid g-2">
+  <article class="card fn-card-src">
+    <div class="card-head"><h2>Where income comes from</h2></div>
+    {% for r in sources %}
+    <div class="fn-src"><div><b>{{ r.label }}</b><span>{{ r.n }} deal{{ r.n|pluralize }}</span></div>
+      <div class="fn-track" style="width:{{ r.w }}%"><i style="width:{{ r.gw }}%"></i></div>
+      <p><em>Rs {{ r.got|floatformat:0 }}</em> received of Rs {{ r.total|floatformat:0 }}</p></div>
+    {% empty %}<p class="empty">No income added yet.</p>{% endfor %}
+  </article>
+  <article class="card fn-card-mon">
+    <div class="card-head"><h2>Last months</h2><div class="legend"><span><i class="sw s3"></i>In</span><span><i class="sw s2"></i>Out</span></div></div>
+    <div class="fn-months">
+    {% for m in months %}<div class="fn-m"><div class="fn-bars"><i class="in" style="height:{{ m.iw }}%" title="In: Rs {{ m.in|floatformat:0 }}"></i><i class="out" style="height:{{ m.ow }}%" title="Out: Rs {{ m.out|floatformat:0 }}"></i></div><small>{{ m.label }}</small></div>
+    {% empty %}<p class="empty">Chart appears after your first entries.</p>{% endfor %}
+    </div>
+  </article>
+</section>
+
+<h2 class="fn-h">Income &amp; client payments</h2>
+<section class="fn-deals">
+  {% for i in incomes %}
+  <article class="fn-deal st-{{ i.status }}">
+    <header><div><h3>{{ i.title }}</h3><p>{{ i.client|default:"No client name" }} · {{ i.get_source_display }} · {{ i.date|date:"d M Y" }}</p></div><span class="pill {% if i.status == 'paid' %}ok{% elif i.status == 'partial' %}warn{% else %}bad{% endif %}">{% if i.status == 'paid' %}Fully paid{% elif i.status == 'partial' %}Part paid{% else %}Unpaid{% endif %}</span></header>
+    <div class="fn-prog"><i style="width:{{ i.percent }}%"></i></div>
+    <dl><div><dt>Total</dt><dd>Rs {{ i.total_amount|floatformat:0 }}</dd></div><div><dt>Paid</dt><dd class="g">Rs {{ i.received|floatformat:0 }}</dd></div><div><dt>Remaining</dt><dd class="r">Rs {{ i.remaining|floatformat:0 }}</dd></div></dl>
+    {% if i.due_date and i.remaining %}<p class="fn-due">Balance expected by {{ i.due_date|date:"d M Y" }}</p>{% endif %}
+    {% if i.note %}<p class="fn-note">{{ i.note|truncatechars:140 }}</p>{% endif %}
+    <footer><a class="btn btn-sm" href="{% url 'dashboard:finance_edit' 'income' i.pk %}">Edit / add payment</a>
+      <form method="post" action="{% url 'dashboard:finance_delete' 'income' i.pk %}" data-confirm="Delete “{{ i.title|truncatechars:50 }}”?">{% csrf_token %}<button class="icon-btn danger" type="submit" aria-label="Delete"><svg class="ic"><use href="#i-trash"/></svg></button></form></footer>
+  </article>
+  {% empty %}<p class="empty card">No income yet. Use “+ Income” to add your first deal.</p>{% endfor %}
+</section>
+
+<h2 class="fn-h">Expenses: where the money went</h2>
+<section class="fn-cats">
+  {% for c in categories %}<article class="fn-cat c-{{ c.key }}"><span>{{ c.label }}</span><b>Rs {{ c.total|floatformat:0 }}</b><small>{{ c.n }} payment{{ c.n|pluralize }}</small><i style="width:{{ c.w }}%"></i></article>{% endfor %}
+</section>
+<section class="card fn-receipts">
+  {% for e in expenses %}
+  <div class="fn-rc c-{{ e.category }}">
+    <time><b>{{ e.date|date:"d" }}</b>{{ e.date|date:"M" }}</time>
+    <div><h3>{{ e.title }}</h3><p>{{ e.get_category_display }}{% if e.spent_at %} · paid to <b>{{ e.spent_at }}</b>{% endif %}</p>{% if e.note %}<p class="fn-note">{{ e.note|truncatechars:160 }}</p>{% endif %}</div>
+    <strong>− Rs {{ e.amount|floatformat:0 }}</strong>
+    <span class="fn-act"><a class="icon-btn" href="{% url 'dashboard:finance_edit' 'expense' e.pk %}" aria-label="Edit">✎</a>
+      <form method="post" action="{% url 'dashboard:finance_delete' 'expense' e.pk %}" data-confirm="Delete “{{ e.title|truncatechars:50 }}”?">{% csrf_token %}<button class="icon-btn danger" type="submit" aria-label="Delete"><svg class="ic"><use href="#i-trash"/></svg></button></form></span>
+  </div>
+  {% empty %}<p class="empty">No expenses yet. Use “+ Expense”.</p>{% endfor %}
+</section>
+{% endblock %}

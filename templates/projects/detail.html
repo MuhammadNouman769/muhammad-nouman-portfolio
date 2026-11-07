@@ -16,7 +16,6 @@
     <div class="wrap cs-hero-grid banner">
       {% include 'partials/lamp.html' with cord=56 %}
       <div class="cs-hero-copy">
-        <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'projects:projects' %}">Case studies</a><span aria-hidden="true">/</span><span>{{ project.short_title }}</span></nav>
         <p class="case-kind"><span class="dot"></span>{{ project.get_kind_display }} · <span class="s-{{ project.status }}">{{ project.get_status_display }}</span></p>
         <h1>{{ project.short_title }}</h1>
         {% if project.subtitle %}<p class="lede">{{ project.subtitle }}</p>{% endif %}
@@ -105,12 +104,12 @@
   {% if related %}
   <section class="wrap block-sm">
     <h2 class="mb">More work</h2>
-    <div class="cs-grid cs-grid-sm">
+    <div class="pj-grid">
       {% for p in related %}
-      <a class="cs-tile" href="{{ p.get_absolute_url }}" style="--ac:{{ p.accent }}">
-        <span class="cs-tile-vis" aria-hidden="true">{% if p.card_img %}<img class="cs-tile-img" src="{{ p.card_img.url }}" alt="" loading="lazy">{% else %}{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}{% endif %}{% if p.card_badge %}<b class="corner corner-sm">{{ p.card_badge }}</b>{% endif %}</span>
-        <span class="cs-tile-body"><span class="cs-tile-title">{{ p.card_heading }}</span><span class="row-sub">{{ p.card_text|truncatechars:110 }}</span></span>
-      </a>{% endfor %}
+      <div class="pj" style="--ac:{{ p.accent }}"><a class="pj-link" href="{{ p.get_absolute_url }}">
+        <span class="pj-media">{% if p.card_img %}<img src="{{ p.card_img.url }}" alt="" loading="lazy">{% else %}<span class="pj-mono" aria-hidden="true">{{ p.short_title|slice:":2" }}</span>{% endif %}</span>
+        <span class="pj-body"><strong class="pj-title">{{ p.card_heading }}</strong><span class="pj-desc">{{ p.card_text|truncatechars:110 }}</span><span class="pj-go">View project &rarr;</span></span>
+      </a></div>{% endfor %}
     </div>
   </section>
   {% endif %}

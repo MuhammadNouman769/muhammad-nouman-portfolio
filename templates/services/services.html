@@ -2,13 +2,13 @@
 {% block title %}Services | {{ site.owner_name }}{% endblock %}
 {% block meta_description %}Backend development, APIs, e-commerce platforms, DevOps and more. See what {{ site.owner_name }} can build for your business.{% endblock %}
 {% block content %}
-<section class="page-head wrap banner">
-  {% include 'partials/banner_art.html' with icon='stack' a='APIs' b='SaaS' c='Marketplaces' %}
-  {% include 'partials/lamp.html' with cord=48 %}<div><h1>Services</h1><p class="lede">What you can hire me and my studio for, from a single API to a full platform.</p></div>
-  <a class="btn btn-solid" href="{% url 'contact:contact' %}">Discuss your project</a></section>
-<section class="wrap">
-  <ul class="svc-list">
-    {% for s in services %}<li><h2>{{ s.title }}</h2><p>{{ s.description }}</p></li>{% empty %}<li class="empty">No services added yet.</li>{% endfor %}
+<section class="page-head wrap banner p-hero ph-svc ph-dark" id="top" data-sec="Overview">
+  {% include 'partials/lamp.html' with cord=48 %}
+  <div><span class="h-eyebrow">Services</span><h1>What I can build for you</h1><p class="lede">What you can hire me and my studio for, from a single API to a full platform.</p><p class="row-actions"><a class="btn btn-solid" href="{% url 'contact:contact' %}">Discuss your project</a></p></div></section>
+
+<section class="wrap" id="list" data-sec="What I offer">
+  <ul class="p-svc">
+    {% for s in services %}<li><i>{{ forloop.counter|stringformat:"02d" }}</i><h2>{{ s.title }}</h2><p>{{ s.description }}</p></li>{% empty %}<li class="empty">No services added yet.</li>{% endfor %}
   </ul>
 </section>
 {% endblock %}

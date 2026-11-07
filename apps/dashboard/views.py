@@ -99,7 +99,9 @@ def overview(request):
     rkey, days = _range(request)
     online, recent = stats.live()
     unread = ContactMessage.objects.filter(is_read=False)
+    from apps.finance import stats as fin_stats
     ctx = {
+        'fin': fin_stats.summary(),
         'active': 'overview',
         'range_key': rkey, 'range_label': RANGES[rkey][0], 'ranges': RANGES,
         'kpis': stats.kpis(days),

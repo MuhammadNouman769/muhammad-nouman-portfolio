@@ -1,5 +1,7 @@
 from django.urls import path
 
+from apps.finance import views as fin
+
 from . import views
 
 app_name = 'dashboard'
@@ -18,6 +20,11 @@ urlpatterns = [
     path('messages/read-all/', views.messages_mark_all, name='messages_mark_all'),
     path('messages/<int:pk>/', views.message_detail, name='message_detail'),
     path('messages/<int:pk>/<str:action>/', views.message_action, name='message_action'),
+
+    path('finance/', fin.finance_home, name='finance'),
+    path('finance/<str:kind>/new/', fin.finance_edit, name='finance_new'),
+    path('finance/<str:kind>/<int:pk>/', fin.finance_edit, name='finance_edit'),
+    path('finance/<str:kind>/<int:pk>/delete/', fin.finance_delete, name='finance_delete'),
 
     path('subscribers/', views.subscribers, name='subscribers'),
 

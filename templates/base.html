@@ -19,7 +19,7 @@
   <meta name="author" content="{{ site.owner_name }}">
   <meta name="robots" content="{% block robots %}index, follow, max-image-preview:large{% endblock %}">
   <link rel="canonical" href="{% block canonical %}{{ CANONICAL_URL }}{% endblock %}">
-  <meta name="theme-color" content="#060a16">
+  <meta name="theme-color" content="#0b0c1f">
   {% if site.google_site_verification %}<meta name="google-site-verification" content="{{ site.google_site_verification }}">{% endif %}
   {% if site.bing_site_verification %}<meta name="msvalidate.01" content="{{ site.bing_site_verification }}">{% endif %}
 
@@ -44,7 +44,10 @@
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   <link rel="stylesheet" href="{% static 'css/v4.css' %}">
   <link rel="stylesheet" href="{% static 'css/banners.css' %}">
+  <link rel="stylesheet" href="{% static 'css/chrome.css' %}">
   <link rel="stylesheet" href="{% static 'css/bot.css' %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&family=DM+Sans:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="{% static 'css/nv.css' %}?v=20261107-3">
 
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{{ PERSON_JSONLD|safe }},{"@type":"WebSite","@id":"{{ SITE_URL }}/#website","url":"{{ SITE_URL }}/","name":"{{ site.owner_name|escapejs }}","inLanguage":"en","publisher":{"@id":"{{ SITE_URL }}/#person"}}]}</script>
   {% block jsonld %}{% endblock %}
@@ -69,6 +72,7 @@
 <script src="{% static 'js/site.js' %}" defer></script>
 <script src="{% static 'js/bot.js' %}" defer></script>
 <script src="{% static 'js/banners.js' %}" defer></script>
+<script src="{% static 'js/chrome.js' %}" defer></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

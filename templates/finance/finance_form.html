@@ -1,0 +1,20 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}{% if obj %}Edit{% else %}New{% endif %} {{ label|lower }}{% endblock %}
+{% block heading %}<h1>{% if obj %}Edit{% else %}New{% endif %} {{ label|lower }}</h1><p class="muted">{% if kind == 'income' %}Enter the total deal. Come back later and raise “Received” each time a client pays.{% else %}Write what you paid for, to whom, and why.{% endif %}</p>{% endblock %}
+{% block tools %}<a class="btn" href="{% url 'dashboard:finance' %}">Back</a>{% endblock %}
+{% block content %}
+<form method="post" class="card group" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<p class="toast error">{{ form.non_field_errors|join:" " }}</p>{% endif %}
+  <div class="fields">
+  {% for f in form %}
+    <div class="field {% if f.errors %}bad{% endif %} {% if f.name == 'title' or f.name == 'note' %}wide{% endif %}">
+      <label class="lbl" for="{{ f.id_for_label }}">{{ f.label }}{% if not f.field.required %}<span class="opt"> optional</span>{% endif %}</label>
+      {{ f }}{% if f.help_text %}<small class="help">{{ f.help_text }}</small>{% endif %}
+      {% for e in f.errors %}<p class="err">{{ e }}</p>{% endfor %}
+    </div>
+  {% endfor %}
+  </div>
+  <div class="actions" style="margin-top:20px"><button class="btn btn-primary" type="submit">Save {{ label|lower }}</button></div>
+</form>
+{% endblock %}
