@@ -98,6 +98,23 @@
     var swing = lamp.querySelector('.lamp-swing'), chain = lamp.querySelector('.lamp-chain'), lbody = lamp.querySelector('.lamp-body');
     var beam = document.querySelector('.lamp-beam'), dust = beam && beam.querySelector('.lamp-dust');
     var isOn = function () { return !root.classList.contains('lamp-off'); };
+    var lampParent = lamp.parentNode, lampNext = lamp.nextSibling, lampStyle = lamp.getAttribute('style');
+    var liftLamp = function () {
+      if (lamp.parentNode === document.body) return;
+      var rect = lamp.getBoundingClientRect(), width = getComputedStyle(lamp).getPropertyValue('--lamp-w');
+      document.body.appendChild(lamp);
+      lamp.style.setProperty('--lamp-w', width);
+      lamp.style.position = 'fixed';
+      lamp.style.left = rect.left + 'px';
+      lamp.style.top = rect.top + 'px';
+      lamp.style.zIndex = '61';
+    };
+    var restoreLamp = function () {
+      if (lamp.parentNode !== document.body) return;
+      lampParent.insertBefore(lamp, lampNext && lampNext.parentNode === lampParent ? lampNext : null);
+      if (lampStyle === null) lamp.removeAttribute('style');
+      else lamp.setAttribute('style', lampStyle);
+    };
     var origin = function () {
       var r = lbody.getBoundingClientRect();
       root.style.setProperty('--lx', (r.left + r.width / 2) + 'px');
@@ -169,9 +186,11 @@
     };
 
     var set = function (on) {
-      origin();
       if (!on) window.scrollTo(0, 0);
+      if (on) restoreLamp();
+      origin();
       root.classList.toggle('lamp-off', !on);
+      if (!on) liftLamp();
       if (on) { lamp.classList.add('lamp-warm'); setTimeout(function () { lamp.classList.remove('lamp-warm'); }, 1250); setTimeout(dustStart, 600); }
       try { sessionStorage.setItem('lamp', on ? 'on' : 'off'); } catch (e) {}
       lock(); click(on);
@@ -179,7 +198,9 @@
     };
     var pull = function () { kick(on0() ? 46 : -46); set(!isOn()); };
     var on0 = function () { return isOn(); };
-    origin(); lock(); dustStart();
+    origin();
+    if (!isOn()) liftLamp();
+    lock(); dustStart();
     var _lw = window.innerWidth; window.addEventListener('resize', function () { if (window.innerWidth === _lw) return; _lw = window.innerWidth; origin(); if (dust && dustOn) { dust.width = beam.clientWidth; dust.height = beam.clientHeight; } });
 
     /* drag the chain down to pull; a tap or Enter/Space works too */
