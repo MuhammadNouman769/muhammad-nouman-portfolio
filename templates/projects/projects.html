@@ -1,68 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}Projects and case studies | {{ site.owner_name }}{% endblock %}
-{% block meta_description %}{{ projects|length }} backend and full-stack projects by {{ site.owner_name }}: marketplaces, POS systems, editorial platforms and APIs built with Django and DRF.{% endblock %}
+{% block title %}Projects | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}Explore {{ page_obj.paginator.count }} backend and full-stack projects by {{ site.owner_name }}: marketplaces, POS systems, editorial platforms and APIs built with Django and DRF.{% endblock %}
 {% block jsonld %}
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Projects by {{ site.owner_name|escapejs }}","itemListElement":[{% for p in projects %}{"@type":"ListItem","position":{{ forloop.counter }},"url":"{{ SITE_URL }}{{ p.get_absolute_url }}","name":"{{ p.short_title|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Projects by {{ site.owner_name|escapejs }}","itemListElement":[{% for p in projects %}{"@type":"ListItem","position":{{ page_obj.start_index|add:forloop.counter0 }},"url":"{{ SITE_URL }}{{ p.get_absolute_url }}","name":"{{ p.short_title|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}]}</script>
 {% endblock %}
 {% block content %}
-<section class="page-head wrap banner p-hero ph-proj ph-dark" id="top" data-sec="Overview">
+<section class="page-head wrap banner p-hero ph-proj ph-dark" id="top" data-sec="Projects">
   {% include 'partials/lamp.html' with cord=48 %}
-  <div><span class="h-eyebrow">Case studies</span><h1>Case studies</h1><p class="lede">Marketplaces, SaaS, editorial platforms and the APIs behind them. Each case study covers the problem, the decisions and the stack.</p></div></section>
-
-{% if case_studies %}
-<section class="wrap" id="case-studies" data-sec="Case studies">
-  <div class="pf-list">
-    {% for p in case_studies %}
-    <article class="pf" style="--ac:{{ p.accent }}">
-      <a class="pf-media" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true">
-        <span class="pf-frame">{% if p.card_img %}<img src="{{ p.card_img.url }}" alt="" loading="lazy" decoding="async">{% else %}<span class="pf-mock">{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}</span>{% endif %}</span>
-      </a>
-      <div class="pf-body">
-        <h3><a href="{{ p.get_absolute_url }}">{{ p.card_heading }}</a></h3>
-        <p class="pf-desc">{{ p.card_text|truncatechars:210 }}</p>
-        <a class="pf-more" href="{{ p.get_absolute_url }}">View project &rarr;</a>
-      </div>
-    </article>
-    {% endfor %}
-  </div>
+  <div><span class="h-eyebrow">The portfolio</span><h1>Projects</h1><p class="lede">A collection of platforms, products and tools I have designed and built. Browse the work, explore the details, and see what went into each project.</p></div>
 </section>
-{% endif %}
 
-<section class="wrap all-head" id="all" data-sec="All projects"><h2>Everything I have built</h2></section>
-
-<section class="wrap">
-  <form class="filters" id="filters" role="search" aria-label="Filter projects" onsubmit="return false">
-    <div class="seg" role="group" aria-label="Status">
-      <button type="button" class="on" data-status="">All</button>
-      {% for key, label in statuses %}<button type="button" data-status="{{ key }}">{{ label }}</button>{% endfor %}
-    </div>
-    <label class="search"><span class="sr">Search projects</span><input type="search" id="q" placeholder="Search by name or tech" autocomplete="off"></label>
-    <label class="select"><span class="sr">Technology</span>
-      <select id="tag"><option value="">Any technology</option>{% for t in all_tags %}<option>{{ t }}</option>{% endfor %}</select>
-    </label>
-  </form>
-  <p class="count" id="count" aria-live="polite">{{ projects|length }} projects</p>
-
-  <ul class="pj-grid" id="index">
-    {% for p in projects %}
-    <li class="row pj" style="--ac:{{ p.accent }}" data-status="{{ p.status }}" data-text="{{ p.title|lower }} {% for t in p.tags.all %}{{ t.name|lower }} {% endfor %}" data-tags="{% for t in p.tags.all %}|{{ t.name }}{% endfor %}|">
-      <a class="pj-link" href="{{ p.get_absolute_url }}">
-        <span class="pj-media">
-          {% if p.card_img %}<img src="{{ p.card_img.url }}" alt="{{ p.short_title }} preview" loading="lazy" width="640" height="400">{% else %}<span class="pj-mono" aria-hidden="true">{{ p.short_title|slice:":2" }}</span>{% endif %}
-          <span class="pj-pill s-{{ p.status }}">{{ p.get_status_display }}</span>
-          {% if p.card_badge %}<b class="pj-badge">{{ p.card_badge }}</b>{% endif %}
-        </span>
-        <span class="pj-body">
-          <span class="pj-meta">{{ p.get_kind_display }}{% if p.year %} · {{ p.year }}{% endif %}</span>
-          <strong class="pj-title">{{ p.card_heading }}</strong>
-          <span class="pj-desc">{{ p.card_text|truncatechars:150 }}</span>
-          <span class="pj-tags">{% for t in p.tags.all|slice:":4" %}<span>{{ t.name }}</span>{% endfor %}</span>
-          <span class="pj-go">View project &rarr;</span>
-        </span>
-      </a>
-    </li>
-    {% empty %}<li class="empty">No projects are published yet.</li>{% endfor %}
-  </ul>
-  <p class="empty" id="none" hidden>Nothing matches those filters. Clear the search or pick “All”.</p>
-</section>
+{% include 'projects/partials/project_listing.html' %}
 {% endblock %}

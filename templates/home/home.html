@@ -17,7 +17,7 @@
       </ul>
       <p class="row-actions">
         <button class="btn btn-amber btn-lg" type="button" data-hire>Hire me</button>
-        <a class="btn btn-line btn-lg" href="{% url 'projects:projects' %}">See case studies</a>
+        <a class="btn btn-line btn-lg" href="{% url 'projects:case_studies' %}">See case studies</a>
         {% if site.resume %}<a class="link-quiet" href="{{ site.resume.url }}" target="_blank" rel="noopener">Résumé (PDF)</a>{% endif %}
       </p>
       <ul class="h-trust" aria-label="At a glance">
@@ -60,7 +60,7 @@
 {# 4 ─ CASE STUDIES #}
 <section class="h-sec h-alt" id="work" data-sec="Case studies">
   <div class="wrap">
-    <header class="h-head"><div><span class="h-eyebrow">Case studies</span><h2>Platforms built, shipped and running.</h2><p>Each one has the problem, the decisions and the stack.</p></div><a class="btn btn-line" href="{% url 'projects:projects' %}">All {{ projects_count }} projects</a></header>
+    <header class="h-head"><div><span class="h-eyebrow">Case studies</span><h2>Platforms built, shipped and running.</h2><p>Each one has the problem, the decisions and the stack.</p></div><a class="btn btn-line" href="{% url 'projects:case_studies' %}">All case studies</a></header>
     <div class="h-cases">
       {% for p in case_studies %}
       <article class="h-case" style="--ac:{{ p.accent }}">

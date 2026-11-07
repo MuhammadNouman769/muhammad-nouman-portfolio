@@ -23,6 +23,7 @@ def robots_txt(request):
 STATIC_PAGES = [
     ('home:home', '1.0', 'weekly'),
     ('about:about', '0.8', 'monthly'),
+    ('projects:case_studies', '0.9', 'weekly'),
     ('projects:projects', '0.9', 'weekly'),
     ('blog:index', '0.8', 'weekly'),
     ('experience:experience', '0.7', 'monthly'),
@@ -38,7 +39,7 @@ def sitemap_xml(request):
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">']
     latest = Project.objects.filter(published=True).order_by('-updated_at').first()
     for name, prio, freq in STATIC_PAGES:
-        lastmod = f'<lastmod>{latest.updated_at:%Y-%m-%d}</lastmod>' if latest and name in ('home:home', 'projects:projects') else ''
+        lastmod = f'<lastmod>{latest.updated_at:%Y-%m-%d}</lastmod>' if latest and name in ('home:home', 'projects:case_studies', 'projects:projects') else ''
         out.append(f'<url><loc>{escape(base + reverse(name))}</loc>{lastmod}<changefreq>{freq}</changefreq><priority>{prio}</priority></url>')
     for p in Project.objects.filter(published=True):
         img = ''

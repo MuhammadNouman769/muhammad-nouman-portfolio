@@ -22,6 +22,7 @@ urlpatterns = [
     path('messages/<int:pk>/<str:action>/', views.message_action, name='message_action'),
 
     path('finance/', fin.finance_home, name='finance'),
+    path('finance/report.pdf', fin.finance_report_pdf, name='finance_report_pdf'),
     path('finance/<str:kind>/new/', fin.finance_edit, name='finance_new'),
     path('finance/<str:kind>/<int:pk>/', fin.finance_edit, name='finance_edit'),
     path('finance/<str:kind>/<int:pk>/delete/', fin.finance_delete, name='finance_delete'),

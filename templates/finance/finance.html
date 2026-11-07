@@ -3,6 +3,7 @@
 {% block heading %}<h1>Income &amp; expenses</h1><p class="muted">Where the money comes from, what is still pending and where it goes.</p>{% endblock %}
 {% block tools %}
 <form class="fn-search" method="get"><input class="inp" type="search" name="q" value="{{ q }}" placeholder="Search client, vendor…" aria-label="Search"></form>
+<a class="btn" href="{% url 'dashboard:finance_report_pdf' %}"><svg class="ic"><use href="#i-dl"/></svg>Download PDF report</a>
 <a class="btn" href="{% url 'dashboard:finance_new' 'expense' %}">+ Expense</a>
 <a class="btn btn-primary" href="{% url 'dashboard:finance_new' 'income' %}">+ Income</a>
 {% endblock %}

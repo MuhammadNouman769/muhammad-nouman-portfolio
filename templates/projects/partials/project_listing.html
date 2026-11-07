@@ -1,0 +1,60 @@
+<section class="wrap all-head" id="all" data-sec="All projects">
+  <header class="h-head">
+    <div><span class="h-eyebrow">The portfolio</span><h2>Everything I have built</h2><p>Showing {{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }} projects</p></div>
+  </header>
+
+  <div class="seg project-status" role="group" aria-label="Filter by status">
+    {% for status in status_filters %}<a href="{{ status.url }}" {% if status.is_current %}class="on" aria-current="true"{% endif %}>{{ status.label }}</a>{% endfor %}
+  </div>
+  <form class="filters project-filters" id="filters" role="search" aria-label="Filter projects" method="get">
+    <label class="search"><span class="sr">Search projects</span><input type="search" name="q" id="q" value="{{ search_query }}" placeholder="Search projects" autocomplete="off"></label>
+    <label class="select"><span class="sr">Technology</span>
+      <select name="tech" id="tag"><option value="">Any technology</option>{% for t in all_tags %}<option value="{{ t }}" {% if tech_filter == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select>
+    </label>
+    {% if status_filter %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
+    <button class="btn btn-solid btn-sm project-filter-submit" type="submit">Search</button>
+  </form>
+
+  <div class="project-grid" id="index">
+    {% for p in projects %}
+    <article class="project-card" style="--ac:{{ p.accent }}">
+      <a class="project-card-media" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+        {% if p.card_img %}<img src="{{ p.card_img.url }}" alt="" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">{% else %}<span class="project-card-mock">{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}</span>{% endif %}
+        <span class="project-card-number" aria-hidden="true">{{ page_obj.start_index|add:forloop.counter0|stringformat:"02d" }}</span>
+        {% if p.card_badge %}<b class="project-card-badge">{{ p.card_badge }}</b>{% endif %}
+      </a>
+      <div class="project-card-body">
+        <div class="project-card-meta"><span>{{ p.get_kind_display }}</span>{% if p.year %}<span>{{ p.year }}</span>{% endif %}<span class="project-card-status status-{{ p.status }}">{{ p.get_status_display }}</span></div>
+        <h3><a href="{{ p.get_absolute_url }}">{{ p.card_heading }}</a></h3>
+        <p class="project-card-desc">{{ p.card_text|truncatechars:150 }}</p>
+        {% with project_tags=p.tags.all %}
+        {% if project_tags %}
+        <ul class="project-card-tags" aria-label="Technologies">
+          {% for tag in project_tags|slice:":3" %}<li>{{ tag.name }}</li>{% endfor %}
+          {% if project_tags|length > 3 %}<li class="project-card-more-tags">+{{ project_tags|length|add:"-3" }}</li>{% endif %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        <a class="project-card-link" href="{{ p.get_absolute_url }}"><span>Explore project</span><span class="project-card-arrow" aria-hidden="true">&nearr;</span></a>
+      </div>
+    </article>
+    {% empty %}<p class="empty project-empty">No projects match these filters. Try another search or clear the filters.</p>{% endfor %}
+  </div>
+
+  {% if page_obj.paginator.num_pages > 1 %}
+  <nav class="project-pagination" aria-label="Project pages">
+    <span class="pagination-summary">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    <div class="pagination-controls">
+      {% if previous_url %}<a class="pagination-arrow" href="{{ previous_url }}" rel="prev" aria-label="Previous page">&larr; <span>Previous</span></a>{% else %}<span class="pagination-arrow is-disabled" aria-disabled="true">&larr; <span>Previous</span></span>{% endif %}
+      <div class="pagination-pages">
+        {% for page in pagination_pages %}
+          {% if page.is_ellipsis %}<span class="pagination-ellipsis" aria-hidden="true">…</span>
+          {% elif page.is_current %}<span class="pagination-page is-current" aria-current="page">{{ page.number }}</span>
+          {% else %}<a class="pagination-page" href="{{ page.url }}" aria-label="Page {{ page.number }}">{{ page.number }}</a>{% endif %}
+        {% endfor %}
+      </div>
+      {% if next_url %}<a class="pagination-arrow" href="{{ next_url }}" rel="next"><span>Next</span> &rarr;</a>{% else %}<span class="pagination-arrow is-disabled" aria-disabled="true"><span>Next</span> &rarr;</span>{% endif %}
+    </div>
+  </nav>
+  {% endif %}
+</section>

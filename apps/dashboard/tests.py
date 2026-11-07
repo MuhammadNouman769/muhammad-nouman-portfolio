@@ -21,8 +21,10 @@ class PublicSiteTests(TestCase):
         Project.objects.create(title='Hidden — Draft', summary='x', published=False, order=2)
 
     def test_pages_render(self):
-        for name in ('home:home', 'about:about', 'experience:experience', 'projects:projects', 'services:services',
-                     'skills:skills', 'contact:contact', 'privacy'):
+        for name in (
+            'home:home', 'about:about', 'experience:experience', 'projects:projects',
+            'projects:case_studies', 'services:services', 'skills:skills', 'contact:contact', 'privacy',
+        ):
             r = self.client.get(reverse(name), HTTP_USER_AGENT=BROWSER)
             self.assertEqual(r.status_code, 200, name)
             self.assertContains(r, 'data-lamp')            # every banner carries the lamp
@@ -35,6 +37,7 @@ class PublicSiteTests(TestCase):
     def test_seo_endpoints(self):
         sm = self.client.get('/sitemap.xml').content.decode()
         self.assertIn('/projects/alpha-test-platform/', sm)
+        self.assertIn('/projects/case-studies/', sm)
         self.assertNotIn('hidden-draft', sm)
         robots = self.client.get('/robots.txt').content.decode()
         self.assertIn('Disallow: /dashboard/', robots)

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Case studies | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}Case studies by {{ site.owner_name }}: marketplaces, SaaS, editorial platforms and the APIs behind them. Each study covers the problem, decisions and stack.{% endblock %}
+{% block jsonld %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Case studies by {{ site.owner_name|escapejs }}","itemListElement":[{% for p in case_studies %}{"@type":"ListItem","position":{{ forloop.counter }},"url":"{{ SITE_URL }}{{ p.get_absolute_url }}","name":"{{ p.short_title|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}]}</script>
+{% endblock %}
+{% block content %}
+<section class="page-head wrap banner p-hero ph-proj ph-dark" id="top" data-sec="Overview">
+  {% include 'partials/lamp.html' with cord=48 %}
+  <div><span class="h-eyebrow">Case studies</span><h1>Case studies</h1><p class="lede">Marketplaces, SaaS, editorial platforms and the APIs behind them. Each case study covers the problem, the decisions and the stack.</p></div>
+</section>
+
+{% if case_studies %}
+<section class="wrap" id="case-studies" data-sec="Case studies">
+  <div class="pf-list">
+    {% for p in case_studies %}
+    <article class="pf" style="--ac:{{ p.accent }}">
+      <a class="pf-media" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+        <span class="pf-frame">{% if p.card_img %}<img src="{{ p.card_img.url }}" alt="" loading="lazy" decoding="async">{% else %}<span class="pf-mock">{% include 'partials/mock.html' with kind=p.kind accent=p.accent %}</span>{% endif %}</span>
+      </a>
+      <div class="pf-body">
+        <h3><a href="{{ p.get_absolute_url }}">{{ p.card_heading }}</a></h3>
+        <p class="pf-desc">{{ p.card_text|truncatechars:210 }}</p>
+        <a class="pf-more" href="{{ p.get_absolute_url }}">View project &rarr;</a>
+      </div>
+    </article>
+    {% empty %}<p class="empty">Case studies appear here once they are published from the dashboard.</p>{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% include 'projects/partials/project_listing.html' %}
+{% endblock %}

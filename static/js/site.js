@@ -61,36 +61,6 @@
     }
   }
 
-  /* ---- projects page: filter by status, text and technology ---- */
-  var idx = document.getElementById('index');
-  var filters = document.getElementById('filters');
-  if (idx && filters) {
-    var rows = Array.prototype.slice.call(idx.querySelectorAll('.row'));
-    var q = document.getElementById('q'), tag = document.getElementById('tag');
-    var count = document.getElementById('count'), none = document.getElementById('none');
-    var status = '';
-    var apply = function () {
-      var term = q.value.trim().toLowerCase(), t = tag.value, shown = 0;
-      rows.forEach(function (r) {
-        var ok = (!status || r.dataset.status === status) &&
-                 (!term || r.dataset.text.indexOf(term) > -1) &&
-                 (!t || r.dataset.tags.indexOf('|' + t + '|') > -1);
-        r.hidden = !ok; if (ok) shown++;
-      });
-      count.textContent = shown + (shown === 1 ? ' project' : ' projects');
-      none.hidden = shown !== 0;
-    };
-    filters.querySelectorAll('[data-status]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        filters.querySelectorAll('[data-status]').forEach(function (x) { x.classList.remove('on'); });
-        b.classList.add('on'); status = b.dataset.status; apply();
-      });
-    });
-    q.addEventListener('input', apply); tag.addEventListener('change', apply);
-    var pre = new URLSearchParams(location.search).get('tech');
-    if (pre) { tag.value = pre; apply(); }
-  }
-
   /* ---- lamp: a pendant light with a pull chain. Real pendulum swing, click sound, warm-up flicker. ---- */
   var reduceM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var lamp = document.querySelector('[data-lamp]');

@@ -8,7 +8,7 @@
 {% block jsonld %}
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
 {"@type":"CreativeWork","name":"{{ project.title|escapejs }}","description":"{{ project.summary|escapejs }}","url":"{{ SITE_URL }}{{ project.get_absolute_url }}","author":{"@id":"{{ SITE_URL }}/#person"},"dateModified":"{{ project.updated_at|date:'c' }}"{% if project.image %},"image":"{{ SITE_URL }}{{ project.image.url }}"{% endif %},"keywords":"{% for t in project.tags.all %}{{ t.name|escapejs }}{% if not forloop.last %}, {% endif %}{% endfor %}"},
-{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"{{ SITE_URL }}/"},{"@type":"ListItem","position":2,"name":"Case studies","item":"{{ SITE_URL }}/projects/"},{"@type":"ListItem","position":3,"name":"{{ project.short_title|escapejs }}"}]}]}</script>
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"{{ SITE_URL }}/"},{"@type":"ListItem","position":2,"name":"Projects","item":"{{ SITE_URL }}/projects/"},{"@type":"ListItem","position":3,"name":"{{ project.short_title|escapejs }}"}]}]}</script>
 {% endblock %}
 {% block content %}
 <article class="cs" style="--ac:{{ project.accent }}">
