@@ -157,7 +157,7 @@ html:not(.lamp-off) .lamp-halo, html:not(.lamp-off) .lamp-inner { opacity: 1; } 
 .mag-card:hover, .post:hover, .feat:hover { transform: translateY(-6px); }
 .mag-lead { grid-row: span 2; }
 .mag-cover, .post-art, .feat-art { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: var(--r-md); overflow: hidden; isolation: isolate; background: linear-gradient(135deg, color-mix(in srgb, var(--ac) 85%, #000), #060a16 90%); border: 1px solid color-mix(in srgb, var(--ac) 40%, var(--line)); }
-.mag-cover img, .post-art img, .feat-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.mag-cover img, .post-art img, .feat-art img { position: absolute; inset: 0; width: 100%; height: 100%!important; object-fit: fill; z-index: 1; }
 .mag-cover i, .post-art i, .feat-art i { position: absolute; inset: 0; background: radial-gradient(60% 80% at 85% 10%, rgba(255,255,255,.28), transparent 60%), repeating-linear-gradient(115deg, transparent 0 22px, rgba(255,255,255,.07) 22px 23px); transition: transform .8s var(--ease); }
 .mag-card:hover i, .post:hover i, .feat:hover i { transform: scale(1.12) rotate(1deg); }
 .mag-cover b, .post-art b, .feat-art b { position: absolute; z-index: 2; left: 14px; top: 14px; padding: 5px 12px; border-radius: 999px; font-size: .78rem; font-weight: 650; color: #fff; background: rgba(5,9,24,.55); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.2); }
