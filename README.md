@@ -90,10 +90,14 @@ PythonAnywhere (from the repo):
              Static: /static/ -> <repo>/staticfiles , /media/ -> <repo>/media
     Reload.
 
-## Updates robot and email subscribers
+## Portfolio chatbot and email subscribers
 
-A small robot (bottom-left) asks visitors for a name and email and subscribes them. When you publish a new
-blog post or a case study, every active subscriber gets a designed email card automatically (once per item).
+The bottom-left robot answers English questions using public portfolio content (projects, published articles,
+skills, experience, services, and profile details). It uses lightweight local keyword retrieval over the
+existing database—no AI API, external service, or extra package is required. Answers include links to relevant
+pages; if the site content does not cover a question, the bot says so instead of inventing an answer.
+Knowledge is cached for up to one minute. After answering questions, the same robot can also collect a name
+and email for updates. When you publish a new blog post or a case study, every active subscriber gets a designed email card automatically (once per item).
 Dashboard > Subscribers lists people, lets you pause/remove them, send a custom update (with a "send me a test"
 button) and shows recent campaigns. Every email has a one-click unsubscribe link.
 

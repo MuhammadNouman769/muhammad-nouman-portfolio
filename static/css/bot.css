@@ -24,6 +24,8 @@
 .bot-log { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 160px; overscroll-behavior: contain; }
 .bot-msg { max-width: 86%; padding: 10px 14px; border-radius: 16px; font-size: .94rem; line-height: 1.45; animation: botPop .35s cubic-bezier(.2,1.2,.3,1); overflow-wrap: anywhere; }
 .bot-msg.nova { align-self: flex-start; border-bottom-left-radius: 5px; background: var(--bg-tint, #182148); }
+.bot-msg.bot-sources { display: flex; flex-direction: column; gap: 5px; padding-top: 6px; padding-bottom: 6px; font-size: .82rem; }
+.bot-sources a { color: #aab8ff; text-decoration: underline; text-underline-offset: 2px; }
 .bot-msg.me { align-self: flex-end; border-bottom-right-radius: 5px; background: #3452e8; color: #fff; }
 .bot-msg.typing { display: inline-flex; gap: 4px; align-items: center; }
 .bot-msg.typing i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .5; animation: botType 1s infinite; } .bot-msg.typing i:nth-child(2) { animation-delay: .15s; } .bot-msg.typing i:nth-child(3) { animation-delay: .3s; }
