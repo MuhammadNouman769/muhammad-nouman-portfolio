@@ -434,3 +434,45 @@ html:not(.lamp-off) .lamp-halo, html:not(.lamp-off) .lamp-inner { opacity: 1; } 
 .case-frame { border-radius: 14px 14px 36px 14px; }
 @media (max-width: 640px) { .post-art { border-radius: 40px 40px 12px 12px / 40px 40px 12px 12px; aspect-ratio: 4 / 3; } .mag-card { padding: 8px 8px 14px; border-left-width: 3px; } .cs-tile-vis { border-radius: 4px 18px 4px 18px; } }
 .mag-lead .mag-title { font-size: 1.12rem; } .mag-lead .mag-cover { aspect-ratio: 21 / 9; }
+
+
+/* Blog Markdown Tables */
+.art-body .md-table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.art-body .md-table {
+    width: 100%;
+    min-width: 480px;
+    border-collapse: collapse;
+    font-size: .95rem;
+    text-align: left;
+}
+
+.art-body .md-table th,
+.art-body .md-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+}
+
+.art-body .md-table th {
+    background: var(--surface);
+    color: var(--ink);
+    font-weight: 650;
+}
+
+.art-body .md-table tr:last-child td {
+    border-bottom: 0;
+}
+
+.art-body .md-table th:last-child,
+.art-body .md-table td:last-child {
+    border-right: 0;
+}
