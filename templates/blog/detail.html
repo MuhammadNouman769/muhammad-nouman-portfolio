@@ -1,3 +1,46 @@
+<style>
+/* One card design for every .post (blog list AND "Keep reading") */
+.post-grid .post {
+  position: relative; display: flex; flex-direction: column; gap: 10px;
+  padding: 0 0 22px; overflow: hidden; transform: none;
+  background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--ac);
+  border-radius: 6px; box-shadow: none; text-decoration: none; color: var(--ink);
+}
+.post-grid .post:hover { transform: none; border-color: var(--ac); }
+
+.post-grid .post .post-art {
+  position: relative; display: block; flex: none; width: 100%;
+  aspect-ratio: 16 / 9; border-radius: 0; overflow: hidden;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--ac) 75%, #000), color-mix(in srgb, var(--ac) 25%, #05081c));
+}
+.post-grid .post .post-art img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
+}
+.post-grid .post .post-art i {
+  position: absolute; inset: 0; z-index: 0; border-radius: 0;
+  background: repeating-linear-gradient(115deg, transparent 0 18px, rgba(255,255,255,.06) 18px 19px);
+}
+.post-grid .post .post-art b {
+    position: absolute;
+    z-index: 2;
+    left: 10px;
+    right: auto;
+    top: 180px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 650;
+    color: #111;
+    background: #fff;
+}
+.post-grid .post .mag-meta,
+.post-grid .post .post-title,
+.post-grid .post .row-sub { display: block; padding-inline: 20px; }
+.post-grid .post .mag-meta { margin-top: 6px; font-size: .82rem; color: var(--muted); }
+.post-grid .post .post-title { font-size: 1.15rem; line-height: 1.3; font-weight: 650; color: var(--ink); }
+.post-grid .post .row-sub { font-size: .95rem; line-height: 1.5; color: var(--ink-2);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+</style>
 {% extends 'base.html' %}
 {% block title %}{% if post.title|length > 50 %}{{ post.title }}{% else %}{{ post.title }} | {{ site.owner_name }}{% endif %}{% endblock %}
 {% block meta_description %}{{ post.description }}{% endblock %}
@@ -37,12 +80,13 @@
   {% if related %}
   <section class="wrap block-sm"><h2 class="mb">Keep reading</h2>
     <div class="post-grid">{% for r in related %}
-      <a class="post" href="{{ r.get_absolute_url }}" style="--ac:{{ r.cover_accent }}"><span class="post-art" aria-hidden="true"><i></i><b>{{ r.category.name|default:'Article' }}</b></span><span class="mag-meta">{{ r.published_at|date:"j M Y" }} · {{ r.read_minutes }} min read</span><span class="post-title">{{ r.title }}</span><span class="row-sub">{{ r.excerpt }}</span></a>
+      <a class="post" href="{{ r.get_absolute_url }}" style="--ac:{{ r.cover_accent }}" data-reveal>
+        <span class="post-art" aria-hidden="true">{% if r.cover_image %}<img src="{{ r.cover_image.url }}" alt="" loading="lazy" onerror="this.remove()">{% endif %}<i></i><b>{{ r.category.name|default:'Article' }}</b></span>
+        <span class="mag-meta">{{ r.published_at|date:"j M Y" }} · {{ r.read_minutes }} min</span>
+        <span class="post-title">{{ r.title }}</span>
+        <span class="row-sub">{{ r.excerpt }}</span>
+      </a>
     {% endfor %}</div>
   </section>{% endif %}
-  <nav class="wrap pager" aria-label="More articles">
-    {% if prev_post %}<a href="{{ prev_post.get_absolute_url }}" rel="prev"><span>Older</span>{{ prev_post.title }}</a>{% else %}<span></span>{% endif %}
-    {% if next_post %}<a href="{{ next_post.get_absolute_url }}" rel="next" class="r"><span>Newer</span>{{ next_post.title }}</a>{% endif %}
-  </nav>
 </article>
 {% endblock %}
