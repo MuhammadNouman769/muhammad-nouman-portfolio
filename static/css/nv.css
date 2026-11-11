@@ -334,7 +334,7 @@ main > section.wrap, .wrap > .prose { margin-block: clamp(28px, 4vw, 56px); }
 .h-services li::before { inset: auto 0 0 0; height: 5px; top: auto; background: var(--accent); transform: scaleX(.18); transform-origin: left; transition: transform .45s; }
 .h-services li::after { content: "→"; position: absolute; right: 22px; bottom: 18px; font-size: 1.5rem; color: var(--accent); transition: transform .3s, color .3s; }
 .h-services i { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--grad); color: #fff; font-size: .9rem; }
-.h-services li:hover { background: var(--accent); color: #fff;  } .h-services li:hover p, .h-services li:hover h3 { color: #fff; } .h-services li:hover::before { transform: scaleX(1); background: #fff; } .h-services li:hover::after { color: #fff; transform: translateX(6px); } .h-services li:hover i { background: #fff; color: var(--accent); }
+/* .h-services li:hover { background: var(--accent); color: #fff;  } .h-services li:hover p, .h-services li:hover h3 { color: #fff; } .h-services li:hover::before { transform: scaleX(1); background: #fff; } .h-services li:hover::after { color: #fff; transform: translateX(6px); } .h-services li:hover i { background: #fff; color: var(--accent); } */
 
 /* HOME · case studies: clear media area, followed by readable project details */
 .h-cases { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
@@ -378,7 +378,7 @@ main > section.wrap, .wrap > .prose { margin-block: clamp(28px, 4vw, 56px); }
 
 /* HOME · blog: full-cover image cards with readable text below */
 .h-posts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
-.h-post { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; align-items: stretch; border-radius: 18px; }
+.h-post { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; align-items: stretch; border-radius: 0px; }
 .h-post-img { height: auto; min-height: 0; aspect-ratio: 16 / 10; overflow: hidden; }
 .h-post-img img { object-fit: contain; object-position: center; }
 .h-post-img b { display: block; }
