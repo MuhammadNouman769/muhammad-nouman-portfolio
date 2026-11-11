@@ -27,7 +27,6 @@
     right: auto;
     top: 180px;
     padding: 6px 12px;
-    border-radius: 999px;
     font-size: .78rem;
     font-weight: 650;
     color: #111;
@@ -40,6 +39,34 @@
 .post-grid .post .post-title { font-size: 1.15rem; line-height: 1.3; font-weight: 650; color: var(--ink); }
 .post-grid .post .row-sub { font-size: .95rem; line-height: 1.5; color: var(--ink-2);
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.article-tags {
+    padding-top: 24px;
+    padding-bottom: 30px;
+}
+
+.article-tags h2 {
+    font-size: 1rem;
+    margin-bottom: 14px;
+    color: var(--ink);
+}
+
+.article-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.article-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 13px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink-2);
+    font-size: .82rem;
+    line-height: 1.4;
+}  
 </style>
 {% extends 'base.html' %}
 {% block title %}{% if post.title|length > 50 %}{{ post.title }}{% else %}{{ post.title }} | {{ site.owner_name }}{% endif %}{% endblock %}
@@ -72,6 +99,16 @@
     </aside>
     <div class="prose art-body">{{ post.body_html }}</div>
   </div>
+  {% if post.tag_list %}
+  <section class="wrap article-tags">
+      <h2>Related Topics</h2>
+      <div class="article-tags-list">
+          {% for tag in post.tag_list %}
+              <span class="article-tag">{{ tag }}</span>
+          {% endfor %}
+      </div>
+  </section>
+  {% endif %}
   <section class="wrap art-cta">
     <div class="by-av lg">{% include 'partials/logo.html' %}</div>
     <div><h2>Building something with Django?</h2><p>I am open to remote, on-site and contract roles. If this article is how you think about backends, we should talk.</p></div>
