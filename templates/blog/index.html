@@ -15,15 +15,26 @@
     {% for c in categories %}<a href="{% url 'blog:index' %}?c={{ c.slug }}" class="pill{% if active_category == c %} on{% endif %}">{{ c.name }}</a>{% endfor %}
   </div>
 
-  <div class="post-grid">
+    <div class="post-grid">
     {% for post in posts_all %}
     <a class="post" href="{{ post.get_absolute_url }}" style="--ac:{{ post.cover_accent }}" data-reveal>
       <span class="post-art" aria-hidden="true">{% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="" loading="lazy">{% endif %}<i></i><b>{{ post.category.name|default:'Article' }}</b></span>
-      <span class="mag-meta">{% if post == featured and not active_category %}Featured · {% endif %}{{ post.published_at|date:"j M Y" }} · {{ post.read_minutes }} min</span>
+      <span class="mag-meta">{% if post == featured and page.number == 1 and not active_category %}Featured · {% endif %}{{ post.published_at|date:"j M Y" }} · {{ post.read_minutes }} min</span>
       <span class="post-title">{{ post.title }}</span>
       <span class="row-sub">{{ post.excerpt }}</span>
     </a>
     {% empty %}<p class="empty">No articles yet.</p>{% endfor %}
   </div>
+
+  {% if page.paginator.num_pages > 1 %}
+  <nav class="pagination" aria-label="Blog pages">
+    {% if page.has_previous %}<a class="pg pg-nav" rel="prev" href="?{% if active_category %}c={{ active_category.slug }}&amp;{% endif %}page={{ page.previous_page_number }}#articles">&larr; Newer</a>{% endif %}
+    {% for n in page.paginator.page_range %}
+      {% if n == page.number %}<span class="pg on" aria-current="page">{{ n }}</span>
+      {% else %}<a class="pg" href="?{% if active_category %}c={{ active_category.slug }}&amp;{% endif %}page={{ n }}#articles">{{ n }}</a>{% endif %}
+    {% endfor %}
+    {% if page.has_next %}<a class="pg pg-nav" rel="next" href="?{% if active_category %}c={{ active_category.slug }}&amp;{% endif %}page={{ page.next_page_number }}#articles">Older &rarr;</a>{% endif %}
+  </nav>
+  {% endif %}
 </section>
 {% endblock %}

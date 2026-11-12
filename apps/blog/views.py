@@ -4,12 +4,14 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.html import escape
 from django.utils.http import http_date
+from django.core.paginator import Paginator
 
 from .models import Category, Post
 
 
 def _published():
     return Post.objects.filter(published=True).select_related('category')
+
 
 
 def index(request):
@@ -20,12 +22,16 @@ def index(request):
         qs = qs.filter(category=active)
     posts = list(qs)
     featured = next((p for p in posts if p.featured), posts[0] if posts else None)
-    return render(request, 'blog/index.html', {
-        'posts': posts, 'featured': featured, 'categories': categories, 'active_category': active,
-        'rest': [p for p in posts if p is not featured],
-        'posts_all': ([featured] + [p for p in posts if p is not featured]) if featured else [],
+    ordered = ([featured] + [p for p in posts if p is not featured]) if featured else []
+    page = Paginator(ordered, 9).get_page(request.GET.get('page'))
+    return render(request, 'blog/index.html',
+        {
+          'page': page,
+          'posts_all': page.object_list,
+          'featured': featured,
+          'categories': categories,
+          'active_category': active,
     })
-
 
 def detail(request, slug):
     qs = Post.objects.select_related('category')
@@ -34,8 +40,8 @@ def detail(request, slug):
     post = get_object_or_404(qs, slug=slug)
     pub = _published().exclude(pk=post.pk)
     cond = Q()
-    if post.category_id:
-        cond |= Q(category_id=post.category_id)
+    if post.category_id: # type: ignore
+        cond |= Q(category_id=post.category_id) # type: ignore
     for t in post.tag_list:
         cond |= Q(tags__icontains=t)
     related = list(pub.filter(cond)[:3]) if cond else []

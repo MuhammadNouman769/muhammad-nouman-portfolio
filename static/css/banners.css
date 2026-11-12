@@ -133,3 +133,9 @@ html, body { overflow-x: clip; }
 .bs-slide:not(.has-copy) .bs-copy:empty { display: none; }
 @media (max-width: 640px) { .page-head.banner > .bn-art.bn-photo { opacity: .35; } .bn-pic { width: 70%; } }
 @media (prefers-reduced-motion: reduce) { .bn-pic { animation: none; } }
+.pagination { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin: 40px 0 8px; }
+.pagination .pg { min-width: 44px; height: 44px; padding: 0 16px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; font-weight: 600; text-decoration: none; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); transition: background .2s, color .2s, border-color .2s; }
+.pagination a.pg:hover { border-color: var(--accent); color: var(--accent); }
+.pagination .pg.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.pagination .pg-nav { padding-inline: 20px; }
+@media (max-width: 640px) { .pagination .pg { min-width: 40px; height: 40px; padding: 0 12px; } .pagination .pg-nav { flex: 1 1 100%; } }
