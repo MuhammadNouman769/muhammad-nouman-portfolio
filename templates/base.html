@@ -1,5 +1,5 @@
 {% load static %}<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +9,7 @@
     try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
     /* Lamp: start dark unless the visitor already chose. Search crawlers always get the lit page. */
     try {
-      var l = sessionStorage.getItem('lamp') || '{% if site.lamp_default_on %}on{% else %}off{% endif %}';
+      var l = sessionStorage.getItem('lamp') || 'on';
       if (l === 'off' && !/bot|crawl|spider|slurp|lighthouse|facebookexternalhit/i.test(navigator.userAgent)) document.documentElement.classList.add('lamp-off');
     } catch (e) {}
   </script>
@@ -19,7 +19,7 @@
   <meta name="author" content="{{ site.owner_name }}">
   <meta name="robots" content="{% block robots %}index, follow, max-image-preview:large{% endblock %}">
   <link rel="canonical" href="{% block canonical %}{{ CANONICAL_URL }}{% endblock %}">
-  <meta name="theme-color" content="#0b0c1f">
+  <meta name="theme-color" content="#c2410c">
   {% if site.google_site_verification %}<meta name="google-site-verification" content="{{ site.google_site_verification }}">{% endif %}
   {% if site.bing_site_verification %}<meta name="msvalidate.01" content="{{ site.bing_site_verification }}">{% endif %}
 
@@ -47,7 +47,7 @@
   <link rel="stylesheet" href="{% static 'css/chrome.css' %}">
   <link rel="stylesheet" href="{% static 'css/bot.css' %}">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&family=DM+Sans:wght@400;500;700&display=swap">
-  <link rel="stylesheet" href="{% static 'css/nv.css' %}?v=20261107-9">
+  <link rel="stylesheet" href="{% static 'css/nv.css' %}?v=20261113-4">
 
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{{ PERSON_JSONLD|safe }},{"@type":"WebSite","@id":"{{ SITE_URL }}/#website","url":"{{ SITE_URL }}/","name":"{{ site.owner_name|escapejs }}","inLanguage":"en","publisher":{"@id":"{{ SITE_URL }}/#person"}}]}</script>
   {% block jsonld %}{% endblock %}

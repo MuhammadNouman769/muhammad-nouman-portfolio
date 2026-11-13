@@ -38,7 +38,7 @@ class Project(models.Model):
                     ('corporate', 'Corporate site'), ('tool', 'Tool'), ('other', 'Other')]
     case_study = models.BooleanField(default=False, help_text='Show as a full case study in the showcase.')
     kind = models.CharField(max_length=20, choices=KIND_CHOICES, default='other')
-    accent = models.CharField(max_length=7, default='#3452e8', help_text='Hex colour used for this case study, e.g. #3452e8.')
+    accent = models.CharField(max_length=7, default='#c2410c', help_text='Hex colour used for this case study, e.g. #c2410c.')
     client_type = models.CharField(max_length=80, blank=True, help_text='e.g. Own product, Client work')
     duration = models.CharField(max_length=60, blank=True, help_text='e.g. Aug 2025 to present')
     team = models.CharField(max_length=60, blank=True, help_text='e.g. Solo, 2 engineers')

@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'apps.experience',
     'apps.projects',
     'apps.blog',
+    'apps.books',
     'apps.services',
     'apps.skills',
     'apps.contact',

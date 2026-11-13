@@ -5,6 +5,7 @@ from django.forms import inlineformset_factory
 
 from apps.about.models import Education, Profile
 from apps.blog.models import Category, Post
+from apps.books.models import Book
 from apps.experience.models import Experience, ExperienceHighlight
 from apps.projects.models import Project, ProjectFeature, ProjectTag
 from apps.services.models import Service
@@ -195,3 +196,37 @@ class CategoryForm(DashModelForm):
     class Meta:
         model = Category
         fields = ['name', 'slug']
+
+
+class BookForm(DashModelForm):
+    published_on = forms.DateField(label='Publication date', input_formats=['%Y-%m-%d'],
+                                   widget=forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'))
+
+    class Meta:
+        model = Book
+        fields = ['title', 'slug', 'subtitle', 'summary', 'description', 'category', 'language', 'pages', 'published_on',
+                  'cover_image', 'cover_accent', 'pdf_file', 'featured', 'published']
+        widgets = {'summary': forms.Textarea(attrs={'rows': 3, 'maxlength': 260}),
+                   'description': forms.Textarea(attrs={'rows': 12}),
+                   'cover_accent': forms.TextInput(attrs={'type': 'color'})}
+
+    clean_cover_image = lambda self: self._check_upload('cover_image')  # noqa: E731
+
+    def clean_cover_accent(self):
+        v = (self.cleaned_data.get('cover_accent') or '').strip()
+        if not re.fullmatch(r'#[0-9a-fA-F]{6}', v):
+            raise forms.ValidationError('Use a hex colour like #c2410c.')
+        return v.lower()
+
+    def clean_pdf_file(self):
+        f = self.cleaned_data.get('pdf_file')
+        if f and hasattr(f, 'size') and hasattr(f, 'read'):
+            if not f.name.lower().endswith('.pdf'):
+                raise forms.ValidationError('Please upload a PDF file (.pdf).')
+            if f.size > 50 * 1024 * 1024:
+                raise forms.ValidationError('PDF is larger than 50 MB. Compress it and try again.')
+            head = f.read(5)
+            f.seek(0)
+            if head != b'%PDF-':
+                raise forms.ValidationError('This file does not look like a valid PDF.')
+        return f

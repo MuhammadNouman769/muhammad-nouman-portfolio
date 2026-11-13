@@ -16,6 +16,7 @@ urlpatterns = [
     path('experience/', include('apps.experience.urls')),
     path('projects/', include('apps.projects.urls')),
     path('blog/', include('apps.blog.urls')),
+    path('books/', include('apps.books.urls')),
     path('services/', include('apps.services.urls')),
     path('skills/', include('apps.skills.urls')),
     path('contact/', include('apps.contact.urls')),

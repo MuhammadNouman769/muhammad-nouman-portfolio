@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}{{ book.title }} | Books | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}{{ book.summary }}{% endblock %}
+{% block jsonld %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Book","name":"{{ book.title|escapejs }}","author":{"@id":"{{ SITE_URL }}/#person"},"datePublished":"{{ book.published_on|date:'Y-m-d' }}","inLanguage":"{{ book.language|escapejs }}","description":"{{ book.summary|escapejs }}"{% if book.pages %},"numberOfPages":{{ book.pages }}{% endif %}}</script>
+{% endblock %}
+{% block content %}
+<section class="wrap bk-detail" id="top" data-sec="Book">
+  {% if is_preview %}<p class="bk-preview">Preview: this book is hidden from the public site.</p>{% endif %}
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'books:index' %}">Books</a><span>/</span><span>{{ book.title }}</span></nav>
+  <div class="bk-d-grid">
+    <div class="bk-d-cover">{% include 'books/_cover.html' with book=book %}</div>
+    <div class="bk-d-body">
+      <span class="h-eyebrow">{{ book.category|default:'Book' }}</span>
+      <h1>{{ book.title }}</h1>
+      {% if book.subtitle %}<p class="bk-sub">{{ book.subtitle }}</p>{% endif %}
+      <p class="lede">{{ book.summary }}</p>
+      <div class="bk-actions bk-actions-lg">
+        {% if book.has_pdf %}
+        <a class="btn btn-solid" href="{{ book.pdf_file.url }}" target="_blank" rel="noopener">Read online</a>
+        <a class="btn btn-ghost" href="{% url 'books:download' book.slug %}">Download PDF{% if book.pdf_size %} ({{ book.pdf_size }}){% endif %}</a>
+        {% else %}<span class="bk-soon">PDF coming soon</span>{% endif %}
+      </div>
+      <dl class="bk-facts">
+        <div><dt>Published</dt><dd>{{ book.published_on|date:"j F Y" }}</dd></div>
+        <div><dt>Language</dt><dd>{{ book.language }}</dd></div>
+        {% if book.pages %}<div><dt>Pages</dt><dd>{{ book.pages }}</dd></div>{% endif %}
+        {% if book.has_pdf %}<div><dt>Downloads</dt><dd>{{ book.downloads }}</dd></div>{% endif %}
+      </dl>
+      {% if book.paragraphs %}
+      <div class="bk-desc"><h2>About this book</h2>{% for p in book.paragraphs %}<p>{{ p }}</p>{% endfor %}</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% if others %}
+<section class="wrap" data-sec="More books">
+  <div class="sec-head"><h2>More books</h2></div>
+  <div class="bk-grid bk-grid-sm">
+    {% for b in others %}
+    <article class="bk">
+      <a class="bk-link" href="{{ b.get_absolute_url }}" aria-label="{{ b.title }}">{% include 'books/_cover.html' with book=b %}</a>
+      <div class="bk-info"><span class="bk-meta">{{ b.category|default:'Book' }} · {{ b.published_on|date:"Y" }}</span><h3 class="bk-title"><a href="{{ b.get_absolute_url }}">{{ b.title }}</a></h3></div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

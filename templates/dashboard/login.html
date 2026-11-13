@@ -1,5 +1,5 @@
 {% load static %}<!DOCTYPE html>
-<html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#050918">
+<html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#211e1c">
 <title>Sign in | {{ site.owner_name }}</title><link rel="icon" href="{% static 'images/favicon.svg' %}" type="image/svg+xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap">
 <link rel="stylesheet" href="{% static 'dashboard/dash.css' %}"><link rel="stylesheet" href="{% static 'dashboard/fx.css' %}"></head>
@@ -40,7 +40,7 @@
   size();addEventListener('resize',size);addEventListener('pointermove',function(ev){mx=ev.clientX;my=ev.clientY;});
   (function draw(){x.clearRect(0,0,W,H);
     for(var i=0;i<ps.length;i++){var a=ps[i];a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>W)a.vx*=-1;if(a.y<0||a.y>H)a.vy*=-1;
-      x.fillStyle='rgba(160,185,255,.7)';x.beginPath();x.arc(a.x,a.y,a.r,0,6.283);x.fill();
+      x.fillStyle='rgba(250, 140, 66, .7)';x.beginPath();x.arc(a.x,a.y,a.r,0,6.283);x.fill();
       for(var j=i+1;j<ps.length;j++){var d=Math.hypot(a.x-ps[j].x,a.y-ps[j].y);if(d<120){x.strokeStyle='rgba(120,150,255,'+(.22*(1-d/120))+')';x.beginPath();x.moveTo(a.x,a.y);x.lineTo(ps[j].x,ps[j].y);x.stroke();}}
       var dm=Math.hypot(a.x-mx,a.y-my);if(dm<160){x.strokeStyle='rgba(245,182,66,'+(.5*(1-dm/160))+')';x.beginPath();x.moveTo(a.x,a.y);x.lineTo(mx,my);x.stroke();}}
     requestAnimationFrame(draw);})();

@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.html import escape
 
 from apps.blog.models import Post
+from apps.books.models import Book
 from apps.projects.models import Project
 
 
@@ -26,6 +27,7 @@ STATIC_PAGES = [
     ('projects:case_studies', '0.9', 'weekly'),
     ('projects:projects', '0.9', 'weekly'),
     ('blog:index', '0.8', 'weekly'),
+    ('books:index', '0.7', 'weekly'),
     ('experience:experience', '0.7', 'monthly'),
     ('skills:skills', '0.6', 'monthly'),
     ('services:services', '0.7', 'monthly'),
@@ -51,6 +53,9 @@ def sitemap_xml(request):
         img = f'<image:image><image:loc>{escape(base + post.cover_image.url)}</image:loc></image:image>' if post.cover_image else ''
         out.append(f'<url><loc>{escape(base + post.get_absolute_url())}</loc><lastmod>{post.updated_at:%Y-%m-%d}</lastmod>'
                    f'<changefreq>monthly</changefreq><priority>0.7</priority>{img}</url>')
+    for bk in Book.objects.filter(published=True):
+        out.append(f'<url><loc>{escape(base + bk.get_absolute_url())}</loc><lastmod>{bk.updated_at:%Y-%m-%d}</lastmod>'
+                   f'<changefreq>monthly</changefreq><priority>0.6</priority></url>')
     out.append('</urlset>')
     return HttpResponse('\n'.join(out), content_type='application/xml; charset=utf-8')
 

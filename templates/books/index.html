@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Books by {{ site.owner_name }}{% endblock %}
+{% block meta_description %}Books and PDFs written by {{ site.owner_name }}: technical handbooks and other writing, free to read online or download.{% endblock %}
+{% block jsonld %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Books by {{ site.owner_name|escapejs }}","url":"{{ SITE_URL }}/books/","author":{"@id":"{{ SITE_URL }}/#person"}}</script>
+{% endblock %}
+{% block content %}
+<section class="page-head wrap banner p-hero ph-blog" id="top" data-sec="Overview">
+  {% include 'partials/lamp.html' with cord=48 %}
+  <div><span class="h-eyebrow">Books</span><h1>Books &amp; writing</h1><p class="lede">Handbooks and longer writing, available as PDF. Read a book in the browser or download it to keep.</p></div></section>
+
+<section class="wrap" id="library" data-sec="Library">
+  <div class="bk-bar">
+    <div class="pills" role="tablist" aria-label="Categories">
+      <a href="{% url 'books:index' %}" class="pill{% if not active_category %} on{% endif %}">All</a>
+      {% for c in categories %}<a href="{% url 'books:index' %}?c={{ c|urlencode }}" class="pill{% if active_category == c %} on{% endif %}">{{ c }}</a>{% endfor %}
+    </div>
+    <form class="bk-search" method="get" action="{% url 'books:index' %}" role="search">
+      {% if active_category %}<input type="hidden" name="c" value="{{ active_category }}">{% endif %}
+      <input type="search" name="q" value="{{ q }}" placeholder="Search books" aria-label="Search books">
+    </form>
+  </div>
+
+  <div class="bk-grid">
+    {% for book in books %}
+    <article class="bk" data-reveal>
+      <a class="bk-link" href="{{ book.get_absolute_url }}" aria-label="{{ book.title }}">
+        {% include 'books/_cover.html' with book=book %}
+      </a>
+      <div class="bk-info">
+        <span class="bk-meta">{{ book.category|default:'Book' }} · {{ book.published_on|date:"j M Y" }}</span>
+        <h2 class="bk-title"><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></h2>
+        <p class="bk-sum">{{ book.summary }}</p>
+        <div class="bk-actions">
+          <a class="btn btn-solid btn-sm" href="{{ book.get_absolute_url }}">Details</a>
+          {% if book.has_pdf %}<a class="btn btn-ghost btn-sm" href="{% url 'books:download' book.slug %}">Download PDF</a>{% endif %}
+        </div>
+      </div>
+    </article>
+    {% empty %}<p class="empty">{% if q or active_category %}No books match your filter.{% else %}No books yet.{% endif %}</p>{% endfor %}
+  </div>
+
+  {% if page.paginator.num_pages > 1 %}
+  <nav class="pagination" aria-label="Book pages">
+    {% if page.has_previous %}<a class="pg pg-nav" rel="prev" href="?{% if active_category %}c={{ active_category|urlencode }}&amp;{% endif %}page={{ page.previous_page_number }}#library">&larr; Newer</a>{% endif %}
+    {% for n in page.paginator.page_range %}{% if n == page.number %}<span class="pg on" aria-current="page">{{ n }}</span>{% else %}<a class="pg" href="?{% if active_category %}c={{ active_category|urlencode }}&amp;{% endif %}page={{ n }}#library">{{ n }}</a>{% endif %}{% endfor %}
+    {% if page.has_next %}<a class="pg pg-nav" rel="next" href="?{% if active_category %}c={{ active_category|urlencode }}&amp;{% endif %}page={{ page.next_page_number }}#library">Older &rarr;</a>{% endif %}
+  </nav>
+  {% endif %}
+</section>
+{% endblock %}

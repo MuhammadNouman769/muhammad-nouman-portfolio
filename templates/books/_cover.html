@@ -1,0 +1,4 @@
+<span class="bk-cover" style="--ac:{{ book.cover_accent }}">
+  {% if book.cover_image %}<img src="{{ book.cover_image.url }}" alt="Cover of {{ book.title }}" loading="lazy">
+  {% else %}<span class="bk-gen" aria-hidden="true"><small>{{ book.category|default:'Book' }}</small><b>{{ book.title }}</b><em>{{ site.owner_name }}</em></span>{% endif %}
+</span>

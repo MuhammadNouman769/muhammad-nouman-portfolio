@@ -4,6 +4,7 @@ from typing import Callable, List, Optional, Tuple
 
 from apps.about.models import Education, Profile
 from apps.blog.models import Category, Post
+from apps.books.models import Book
 from apps.experience.models import Experience
 from apps.projects.models import Project
 from apps.services.models import Service
@@ -74,6 +75,20 @@ RESOURCES = {r.key: r for r in [
             ('Visibility', '', ['published', 'featured']),
         ],
         toggles=['published', 'featured'], reorder=False,
+        public_url=lambda o: o.get_absolute_url() if o.published else None,
+    ),
+    Resource(
+        key='books', model=Book, form=f.BookForm, label='Book', plural='Books', icon='book',
+        blurb='Books shown on the Books page. Upload the PDF and cover, add a short and a detailed description. Drag rows to change the order.',
+        columns=[('Title', lambda o: o.title), ('Category', lambda o: o.category), ('Date', lambda o: f'{o.published_on:%d %b %Y}'),
+                 ('PDF', lambda o: o.pdf_size if o.has_pdf else 'No PDF'), ('Downloads', lambda o: str(o.downloads))],
+        fieldsets=[
+            ('Book', 'Title and the short text shown on the book card.', ['title', 'slug', 'subtitle', 'summary']),
+            ('Details', 'Shown on the book page. A blank line starts a new paragraph.', ['description', 'category', 'language', 'pages', 'published_on']),
+            ('Files', 'Without a cover image, a cover is generated from the colour. The PDF can be read online and downloaded.', ['cover_image', 'cover_accent', 'pdf_file']),
+            ('Visibility', '', ['published', 'featured']),
+        ],
+        toggles=['published', 'featured'],
         public_url=lambda o: o.get_absolute_url() if o.published else None,
     ),
     Resource(

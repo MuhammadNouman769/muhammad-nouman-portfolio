@@ -8,7 +8,7 @@ CASES = [
         slug='btr-mall', order_in_showcase=1,
         defaults=dict(
             title='BTR Mall — Multi-Vendor E-Commerce Platform', status=Project.STATUS_PROGRESS, year=2025,
-            kind='ecommerce', accent='#3452e8', case_study=True, featured=True, published=True,
+            kind='ecommerce', accent='#9a3412', case_study=True, featured=True, published=True,
             role='Backend engineer', client_type='Own product', duration='Aug 2025 to present', team='Solo',
             summary=('A multi-vendor marketplace inspired by Daraz and Amazon. One Django and DRF backend serves '
                      'a React web app and a React Native mobile app, covering seller onboarding, catalog, cart, '
@@ -53,7 +53,7 @@ CASES = [
         slug='dinex', order_in_showcase=2,
         defaults=dict(
             title='DineX — Multi-Tenant Restaurant POS & Management SaaS', status=Project.STATUS_PROGRESS, year=2026,
-            kind='saas', accent='#12a8d0', case_study=True, featured=True, published=True, order=2,
+            kind='saas', accent='#b45309', case_study=True, featured=True, published=True, order=2,
             role='Full-stack engineer', client_type='Own product', duration='Sep 2026 to present', team='Solo',
             summary=('A subscription platform for restaurants: point of sale, orders, recipe-based inventory, cash management and reporting. '
                      'Every restaurant is a tenant with strictly isolated data.'),
@@ -100,7 +100,7 @@ CASES = [
         slug='goal-line-report', order_in_showcase=3,
         defaults=dict(
             title='Goal Line Report — Content Management & Editorial Platform', status=Project.STATUS_LIVE, year=2025,
-            kind='editorial', accent='#f5b642', case_study=True, featured=True, published=True,
+            kind='editorial', accent='#a16207', case_study=True, featured=True, published=True,
             live_url='https://goallinereport.com/',
             role='Backend engineer', client_type='Client work', duration='Delivered and live', team='Solo',
             summary=('A live editorial platform where stories move through Draft, Review, Approval and Published, with role-based access, '
@@ -140,7 +140,7 @@ CASES = [
         slug='elecmech', order_in_showcase=4,
         defaults=dict(
             title='ElecMech — Engineering Services & Machinery Platform', status=Project.STATUS_LIVE, year=2025,
-            kind='corporate', accent='#0b8a70', case_study=True, featured=True, published=True,
+            kind='corporate', accent='#c2410c', case_study=True, featured=True, published=True,
             live_url='https://elecmech.com.pk/',
             role='Full-stack developer', client_type='Client work', duration='Delivered and live', team='Solo',
             summary=('A live corporate website and machinery catalog for an engineering services company, with product inquiries, '
