@@ -1,3 +1,22 @@
+<style>
+.bk-title a {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.bk-sum {
+    display: -webkit-box;
+    -webkit-line-clamp: 3!important;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+    min-height: 6em;
+    max-height: 6em;
+}
+</style>
 {% extends 'base.html' %}
 {% block title %}Books by {{ site.owner_name }}{% endblock %}
 {% block meta_description %}Books and PDFs written by {{ site.owner_name }}: technical handbooks and other writing, free to read online or download.{% endblock %}
