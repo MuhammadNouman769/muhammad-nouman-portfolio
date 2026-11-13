@@ -73,7 +73,7 @@ class Command(BaseCommand):
             if Project.objects.filter(title=p['title']).exists():
                 continue
             pr = Project.objects.create(title=p['title'], summary=p['summary'], body=p['body'], status=p['status'], year=p['year'],
-                                        kind=p['kind'], featured=False, role='Backend engineer', accent='#9a3412')
+                                        kind=p['kind'], featured=False, role='Backend engineer', accent='#1f6b3e')
             for t in p['tags']:
                 ProjectTag.objects.create(project=pr, name=t)
             for i, f in enumerate(p['features']):

@@ -376,7 +376,7 @@
   function confetti(cv, r) {
     if (!cv) return;
     var ctx = cv.getContext('2d'), W = cv.width = window.innerWidth, H = cv.height = window.innerHeight;
-    var cols = ['#fa8c42', '#35d4f0', '#f5b642', '#3fc3a1', '#ffffff'];
+    var cols = ['#7fd29d', '#35d4f0', '#f5b642', '#3fc3a1', '#ffffff'];
     var ps = []; for (var i = 0; i < 110; i++) ps.push({ x: r.left + r.width / 2, y: r.top + 120, vx: (Math.random() - .5) * 14, vy: -Math.random() * 13 - 4, s: Math.random() * 7 + 4, a: Math.random() * 6, va: (Math.random() - .5) * .4, c: cols[i % cols.length], life: 1 });
     (function f() {
       ctx.clearRect(0, 0, W, H); var alive = false;

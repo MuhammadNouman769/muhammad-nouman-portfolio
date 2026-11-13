@@ -55,7 +55,7 @@ class DashboardBookTests(TestCase):
 
     def _data(self, **kw):
         d = {'title': 'My New Book', 'slug': '', 'subtitle': '', 'summary': 'Short text.', 'description': 'Long text.\n\nMore.',
-             'category': 'Poetry', 'language': 'Urdu', 'pages': '50', 'published_on': '2026-01-05', 'cover_accent': '#c2410c',
+             'category': 'Poetry', 'language': 'Urdu', 'pages': '50', 'published_on': '2026-01-05', 'cover_accent': '#14532d',
              'published': 'on'}
         d.update(kw)
         return d

@@ -215,7 +215,7 @@ class BookForm(DashModelForm):
     def clean_cover_accent(self):
         v = (self.cleaned_data.get('cover_accent') or '').strip()
         if not re.fullmatch(r'#[0-9a-fA-F]{6}', v):
-            raise forms.ValidationError('Use a hex colour like #c2410c.')
+            raise forms.ValidationError('Use a hex colour like #14532d.')
         return v.lower()
 
     def clean_pdf_file(self):

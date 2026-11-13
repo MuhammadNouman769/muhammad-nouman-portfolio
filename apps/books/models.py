@@ -12,7 +12,7 @@ class Book(models.Model):
     summary = models.CharField(max_length=260, help_text='Short description shown on the book card. One or two sentences.')
     description = models.TextField(blank=True, help_text='Detailed description for the book page. A blank line starts a new paragraph.')
     cover_image = models.ImageField(upload_to='books/covers/', blank=True, null=True, help_text='Portrait cover (2:3 works best). Without one, a cover is generated from the colour below.')
-    cover_accent = models.CharField(max_length=7, default='#c2410c', help_text='Hex colour for the generated cover, e.g. #c2410c.')
+    cover_accent = models.CharField(max_length=7, default='#14532d', help_text='Hex colour for the generated cover, e.g. #14532d.')
     pdf_file = models.FileField(upload_to='books/pdf/', blank=True, null=True, help_text='The book as a PDF. Visitors can read it online or download it.')
     category = models.CharField(max_length=60, blank=True, help_text='For example Technical, Poetry, Essays.')
     language = models.CharField(max_length=40, default='English')
