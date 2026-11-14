@@ -8,7 +8,7 @@ CATEGORIES = ['Django', 'Architecture', 'DevOps', 'Career']
 
 POSTS = [
     dict(
-        slug='tenant-isolation-in-django-without-schema-per-tenant', category='Architecture', accent='#1f6b3e',
+        slug='tenant-isolation-in-django-without-schema-per-tenant', category='Architecture', accent='#3452e8',
         featured=True, days_ago=118,
         title='Tenant isolation in Django without schema-per-tenant',
         excerpt='How I keep one restaurant\'s data invisible to another in a shared-database SaaS: a scoped manager, one middleware, and tests that try to break it.',
@@ -99,7 +99,7 @@ I also test the API layer: log in as restaurant A, request the URL of restaurant
 Schema-per-tenant is a fine choice when you need hard separation for compliance. For most small SaaS products, a scoped manager plus honest tests gives you the isolation you need with far less operational weight.''',
     ),
     dict(
-        slug='idempotent-celery-tasks-for-scheduled-publishing-and-billing', category='Django', accent='#166534',
+        slug='idempotent-celery-tasks-for-scheduled-publishing-and-billing', category='Django', accent='#12a8d0',
         featured=True, days_ago=96,
         title='Idempotent Celery tasks for scheduled publishing and billing',
         excerpt='Tasks run twice, late, or not at all. Here is how I write the ones behind scheduled publishing and subscription billing so a retry never does damage.',
@@ -183,7 +183,7 @@ Network errors and timeouts deserve a retry with backoff. A validation error wil
 That last test is cheap and catches most of the real-world problems before production does.''',
     ),
     dict(
-        slug='designing-a-multi-vendor-order-model', category='Architecture', accent='#2d6a4f',
+        slug='designing-a-multi-vendor-order-model', category='Architecture', accent='#6a4bff',
         featured=False, days_ago=74,
         title='Designing a multi-vendor order model: one order, many shipments',
         excerpt='A customer pays once, but three sellers ship three parcels. How I split orders into per-seller shipments in BTR Mall and keep each state machine honest.',
@@ -259,7 +259,7 @@ Reserve stock when the order is placed, inside the same transaction, using `sele
 Model the real-world units: payment, seller fulfilment and parcels are different things. Snapshot what the customer agreed to. Put transitions in one place. Derive summaries instead of storing them twice.''',
     ),
     dict(
-        slug='redis-caching-in-drf-what-to-cache-and-how-to-invalidate', category='Django', accent='#14532d',
+        slug='redis-caching-in-drf-what-to-cache-and-how-to-invalidate', category='Django', accent='#0b8a70',
         featured=False, days_ago=52,
         title='Redis caching in DRF: what to cache and how to invalidate it',
         excerpt='Caching is easy to add and hard to trust. A practical approach for Django REST Framework: pick the right targets, key them well, and invalidate on write.',
@@ -334,7 +334,7 @@ Log hit and miss counts, or at least expose them in a debug header in staging. I
 - Write one test that changes data and asserts the API shows the change.''',
     ),
     dict(
-        slug='a-pragmatic-docker-compose-nginx-gunicorn-deployment-checklist', category='DevOps', accent='#15803d',
+        slug='a-pragmatic-docker-compose-nginx-gunicorn-deployment-checklist', category='DevOps', accent='#f5b642',
         featured=False, days_ago=33,
         title='A pragmatic Docker Compose + Nginx + Gunicorn deployment checklist',
         excerpt='Not every Django app needs Kubernetes. The checklist I follow to put a small production service on a single VPS and still sleep at night.',
@@ -422,7 +422,7 @@ docker compose up -d
 Write that into a short script so deploys are the same every time. When traffic outgrows one server, this setup moves cleanly to a bigger machine or an orchestrator, because everything is already containerised and configured by environment.''',
     ),
     dict(
-        slug='what-i-look-for-when-reviewing-a-django-pull-request', category='Career', accent='#7a5c14',
+        slug='what-i-look-for-when-reviewing-a-django-pull-request', category='Career', accent='#d1477a',
         featured=False, days_ago=14,
         title='What I look for when I review a Django pull request',
         excerpt='A hiring-manager-friendly view of how I read someone else\'s Django code: correctness, data safety, queries, tests and whether the next person can understand it.',

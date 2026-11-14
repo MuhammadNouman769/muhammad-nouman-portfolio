@@ -104,7 +104,7 @@ class Banner(models.Model):
     """
     PLACEMENTS = [
         ('home', 'Home page (moving slider)'), ('about', 'About page'), ('projects', 'Projects page'),
-        ('blog', 'Blog page'), ('experience', 'Experience page'), ('skills', 'Skills page'),
+        ('blog', 'Blog page'), ('books', 'Books page'), ('experience', 'Experience page'), ('skills', 'Skills page'),
         ('services', 'Services page'), ('contact', 'Contact page'), ('privacy', 'Privacy page'),
     ]
     placement = models.CharField(max_length=20, choices=PLACEMENTS, default='home')

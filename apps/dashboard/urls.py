@@ -16,6 +16,10 @@ urlpatterns = [
     path('visitors/export.csv', views.visitors_export, name='visitors_export'),
     path('visitors/<int:pk>/', views.visitor_detail, name='visitor_detail'),
 
+    path('downloads/', views.book_downloads, name='book_downloads'),
+    path('downloads/export.csv', views.book_downloads_export, name='book_downloads_export'),
+    path('downloads/<int:pk>/', views.book_download_detail, name='book_download_detail'),
+
     path('messages/', views.messages_list, name='messages'),
     path('messages/read-all/', views.messages_mark_all, name='messages_mark_all'),
     path('messages/<int:pk>/', views.message_detail, name='message_detail'),

@@ -1,4 +1,4 @@
-<span class="bk-cover" style="--ac:{{ book.cover_accent }}">
-  {% if book.cover_image %}<img src="{{ book.cover_image.url }}" alt="Cover of {{ book.title }}" loading="lazy">
-  {% else %}<span class="bk-gen" aria-hidden="true"><small>{{ book.category|default:'Book' }}</small><b>{{ book.title }}</b><em>{{ site.owner_name }}</em></span>{% endif %}
+<span class="bk-cover" style="--ac:{{ book.cover_accent }}" aria-hidden="true">
+  {% if book.cover_image %}<img src="{{ book.cover_image.url }}" alt="" loading="lazy" onerror="this.remove()">{% endif %}
+  <span class="bk-gen"><i></i><em>{{ book.get_language_display }}</em><strong>{{ book.title }}</strong><small>{{ book.author|default:site.owner_name }}</small></span>
 </span>

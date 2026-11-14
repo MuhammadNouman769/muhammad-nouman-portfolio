@@ -32,7 +32,7 @@ class Post(models.Model):
     excerpt = models.CharField(max_length=220, help_text='Shown on cards and in Google results. One or two sentences.')
     body = models.TextField(help_text='Markdown: ## headings, - lists, ``` code blocks, **bold**, [links](https://…).')
     cover_image = models.ImageField(upload_to='blog/', blank=True, null=True)
-    cover_accent = models.CharField(max_length=7, default='#14532d', help_text='Hex colour used for the generated cover, e.g. #14532d.')
+    cover_accent = models.CharField(max_length=7, default='#3452e8', help_text='Hex colour used for the generated cover, e.g. #3452e8.')
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL, related_name='posts')
     tags = models.CharField(max_length=200, blank=True, help_text='Comma separated, e.g. Django, Celery, Redis.')
     read_minutes = models.PositiveSmallIntegerField(default=1, editable=False)

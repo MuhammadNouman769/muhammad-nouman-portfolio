@@ -1,50 +1,80 @@
 {% extends 'base.html' %}
-{% block title %}{{ book.title }} | Books | {{ site.owner_name }}{% endblock %}
-{% block meta_description %}{{ book.summary }}{% endblock %}
+{% load static %}
+{% block title %}{{ book.title }} (PDF book) | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}{{ book.meta }}{% endblock %}
+{% block og_type %}book{% endblock %}
+{% block og_title %}{{ book.title }}{% endblock %}
+{% block og_description %}{{ book.meta }}{% endblock %}
+{% block og_image %}{% if book.cover_image %}{{ SITE_URL }}{{ book.cover_image.url }}{% else %}{{ DEFAULT_OG_IMAGE }}{% endif %}{% endblock %}
+{% block robots %}{% if is_preview %}noindex{% else %}index, follow, max-image-preview:large{% endif %}{% endblock %}
+{% block body_class %}bk-green{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/books.css' %}?v=3">{% endblock %}
 {% block jsonld %}
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Book","name":"{{ book.title|escapejs }}","author":{"@id":"{{ SITE_URL }}/#person"},"datePublished":"{{ book.published_on|date:'Y-m-d' }}","inLanguage":"{{ book.language|escapejs }}","description":"{{ book.summary|escapejs }}"{% if book.pages %},"numberOfPages":{{ book.pages }}{% endif %}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+{"@type":"Book","name":"{{ book.title|escapejs }}","description":"{{ book.meta|escapejs }}","author":{% if book.author %}{"@type":"Person","name":"{{ book.author|escapejs }}"}{% else %}{"@id":"{{ SITE_URL }}/#person"}{% endif %},"datePublished":"{{ book.written_on|date:'Y-m-d' }}","inLanguage":"{{ book.language|escapejs }}","url":"{{ SITE_URL }}{{ book.get_absolute_url }}"{% if book.pages %},"numberOfPages":{{ book.pages }}{% endif %}{% if book.cover_image %},"image":"{{ SITE_URL }}{{ book.cover_image.url }}"{% endif %}},
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"{{ SITE_URL }}/"},{"@type":"ListItem","position":2,"name":"Books","item":"{{ SITE_URL }}/books/"},{"@type":"ListItem","position":3,"name":"{{ book.title|escapejs }}"}]}]}</script>
 {% endblock %}
 {% block content %}
-<section class="wrap bk-detail" id="top" data-sec="Book">
-  {% if is_preview %}<p class="bk-preview">Preview: this book is hidden from the public site.</p>{% endif %}
-  <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'books:index' %}">Books</a><span>/</span><span>{{ book.title }}</span></nav>
-  <div class="bk-d-grid">
-    <div class="bk-d-cover">{% include 'books/_cover.html' with book=book %}</div>
-    <div class="bk-d-body">
-      <span class="h-eyebrow">{{ book.category|default:'Book' }}</span>
-      <h1>{{ book.title }}</h1>
-      {% if book.subtitle %}<p class="bk-sub">{{ book.subtitle }}</p>{% endif %}
-      <p class="lede">{{ book.summary }}</p>
-      <div class="bk-actions bk-actions-lg">
-        {% if book.has_pdf %}
-        <a class="btn btn-solid" href="{{ book.pdf_file.url }}" target="_blank" rel="noopener">Read online</a>
-        <a class="btn btn-ghost" href="{% url 'books:download' book.slug %}">Download PDF{% if book.pdf_size %} ({{ book.pdf_size }}){% endif %}</a>
-        {% else %}<span class="bk-soon">PDF coming soon</span>{% endif %}
+<article class="book-page bk-theme" style="--ac:{{ book.cover_accent }}">
+  {% if is_preview %}<p class="preview-flag">Draft preview. Only you can see this page.</p>{% endif %}
+  <header class="wrap banner bk-head">
+    {% include 'partials/lamp.html' with cord=48 %}
+    <nav class="bk-crumb" aria-label="Breadcrumb"><a href="{% url 'books:index' %}">&larr; All books</a></nav>
+    <div class="bk-hero">
+      <div class="bk-hero-cover">{% include 'books/_cover.html' with book=book %}</div>
+      <div class="bk-hero-text">
+        <h1>{{ book.title }}</h1>
+        {% if book.subtitle %}<p class="bk-sub">{{ book.subtitle }}</p>{% endif %}
+        <p class="bk-by"><span class="by-av">{% include 'partials/logo.html' %}</span><span><small>Author</small><b>{{ book.author|default:site.owner_name }}</b></span></p>
+        <p class="lede">{{ book.summary }}</p>
+        <dl class="bk-facts">
+          <div><dt>Author</dt><dd>{{ book.author|default:site.owner_name }}</dd></div>
+          <div><dt>Written on</dt><dd>{{ book.written_on|date:"j F Y" }}</dd></div>
+          <div><dt>Language</dt><dd>{{ book.get_language_display }}</dd></div>
+          {% if book.pages %}<div><dt>Pages</dt><dd>{{ book.pages }}</dd></div>{% endif %}
+          {% if book.pdf_size %}<div><dt>File size</dt><dd>PDF &middot; {{ book.pdf_size }}</dd></div>{% endif %}
+          {% if book.download_count %}<div><dt>Downloads</dt><dd>{{ book.download_count }}</dd></div>{% endif %}
+        </dl>
+        <p class="row-actions">
+          {% if book.has_pdf %}<a class="btn btn-amber btn-lg" href="{{ book.get_read_url }}" rel="nofollow">Read online</a>
+          <a class="btn btn-line btn-lg" href="{{ book.get_download_url }}" rel="nofollow" download>Download PDF</a>
+          {% else %}<span class="bk-soon">PDF coming soon</span>{% endif %}
+          <a class="btn btn-ghost btn-lg" href="{% url 'books:index' %}">More books</a>
+        </p>
       </div>
-      <dl class="bk-facts">
-        <div><dt>Published</dt><dd>{{ book.published_on|date:"j F Y" }}</dd></div>
-        <div><dt>Language</dt><dd>{{ book.language }}</dd></div>
-        {% if book.pages %}<div><dt>Pages</dt><dd>{{ book.pages }}</dd></div>{% endif %}
-        {% if book.has_pdf %}<div><dt>Downloads</dt><dd>{{ book.downloads }}</dd></div>{% endif %}
-      </dl>
-      {% if book.paragraphs %}
-      <div class="bk-desc"><h2>About this book</h2>{% for p in book.paragraphs %}<p>{{ p }}</p>{% endfor %}</div>
+    </div>
+  </header>
+
+  <div class="wrap bk-grid">
+    <div class="bk-main">
+      {% if book.purpose_paragraphs %}
+      <section class="bk-sec" id="purpose"><h2>Purpose of this book</h2>{% for p in book.purpose_paragraphs %}<p>{{ p }}</p>{% endfor %}</section>
+      {% endif %}
+      {% if book.audience_list %}
+      <section class="bk-sec" id="audience"><h2>Who will benefit</h2><ul class="bk-list">{% for a in book.audience_list %}<li>{{ a }}</li>{% endfor %}</ul></section>
+      {% endif %}
+      {% if book.learn_list %}
+      <section class="bk-sec" id="learn"><h2>What you will learn</h2><ul class="bk-list bk-check">{% for l in book.learn_list %}<li>{{ l }}</li>{% endfor %}</ul></section>
+      {% endif %}
+      {% if book.description_html %}
+      <section class="bk-sec" id="about"><h2>About the book</h2><div class="prose">{{ book.description_html }}</div></section>
       {% endif %}
     </div>
+    <aside class="bk-side" aria-label="Download">
+      <div class="bk-box">
+        <b>{{ book.title }}</b>
+        <span>By {{ book.author|default:site.owner_name }}</span>
+        {% if book.has_pdf %}<a class="btn btn-amber" href="{{ book.get_read_url }}" rel="nofollow">Read online</a>
+        <a class="btn btn-line" href="{{ book.get_download_url }}" rel="nofollow" download>Download PDF{% if book.pdf_size %} ({{ book.pdf_size }}){% endif %}</a>{% else %}<span class="bk-soon">PDF coming soon</span>{% endif %}
+        <button class="btn btn-line btn-sm" type="button" data-copylink>Copy link</button>
+      </div>
+    </aside>
   </div>
-</section>
 
-{% if others %}
-<section class="wrap" data-sec="More books">
-  <div class="sec-head"><h2>More books</h2></div>
-  <div class="bk-grid bk-grid-sm">
-    {% for b in others %}
-    <article class="bk">
-      <a class="bk-link" href="{{ b.get_absolute_url }}" aria-label="{{ b.title }}">{% include 'books/_cover.html' with book=b %}</a>
-      <div class="bk-info"><span class="bk-meta">{{ b.category|default:'Book' }} · {{ b.published_on|date:"Y" }}</span><h3 class="bk-title"><a href="{{ b.get_absolute_url }}">{{ b.title }}</a></h3></div>
-    </article>
-    {% endfor %}
-  </div>
-</section>
-{% endif %}
+  {% if others %}
+  <section class="wrap block-sm"><h2 class="mb">More books</h2>
+    <div class="book-grid">{% for book in others %}{% include 'books/_card.html' with book=book %}{% endfor %}</div>
+  </section>
+  {% endif %}
+</article>
 {% endblock %}

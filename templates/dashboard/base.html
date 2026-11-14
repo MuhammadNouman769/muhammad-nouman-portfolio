@@ -1,5 +1,5 @@
 {% load static %}<!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="auto">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
@@ -49,6 +49,7 @@
       <p class="side-group">Insights</p>
       <a href="{% url 'dashboard:overview' %}" class="{% if active == 'overview' %}on{% endif %}"><svg class="ic"><use href="#i-home"/></svg>Overview</a>
       <a href="{% url 'dashboard:visitors' %}" class="{% if active == 'visitors' %}on{% endif %}"><svg class="ic"><use href="#i-users"/></svg>Visitors</a>
+      <a href="{% url 'dashboard:book_downloads' %}" class="{% if active == 'downloads' %}on{% endif %}"><svg class="ic"><use href="#i-dl"/></svg>Book downloads</a>
       <a href="{% url 'dashboard:messages' %}" class="{% if active == 'messages' %}on{% endif %}"><svg class="ic"><use href="#i-mail"/></svg>Messages{% if unread_count %}<b class="badge">{{ unread_count }}</b>{% endif %}</a>
       <a href="{% url 'dashboard:subscribers' %}" class="{% if active == 'subscribers' %}on{% endif %}"><svg class="ic"><use href="#i-users"/></svg>Subscribers</a>
       <p class="side-group">Money</p>

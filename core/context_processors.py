@@ -4,7 +4,6 @@ from django.conf import settings
 from django.templatetags.static import static
 
 from apps.blog.models import Category
-from apps.books.models import Book
 from apps.projects.models import Project
 from apps.services.models import Service
 from apps.siteconfig.models import Banner, SiteSettings
@@ -42,7 +41,6 @@ def site_meta(request):
         menu = {
             'nav_projects': list(Project.objects.filter(published=True, case_study=True).order_by('order_in_showcase', 'order', '-id')[:6]),
             'nav_categories': list(Category.objects.all()[:6]),
-            'nav_books': list(Book.objects.filter(published=True)[:6]),
             'nav_skills': list(SkillCategory.objects.all()[:7]),
             'nav_services': list(Service.objects.all()[:6]),
         }

@@ -1,0 +1,9 @@
+<a class="book-card" href="{{ book.get_absolute_url }}" style="--ac:{{ book.cover_accent }}">
+  {% include 'books/_cover.html' with book=book %}
+  <span class="book-body">
+    <span class="book-meta">{% if book.featured %}Featured &middot; {% endif %}{{ book.get_language_display }}{% if book.pages %} &middot; {{ book.pages }} pages{% endif %}</span>
+    <span class="book-title">{{ book.title }}</span>
+    <span class="book-sum">{{ book.summary }}</span>
+    <span class="book-foot"><span>{{ book.author|default:site.owner_name }} &middot; {{ book.written_on|date:"j M Y" }}</span>{% if book.has_pdf %}<b>PDF</b>{% endif %}</span>
+  </span>
+</a>

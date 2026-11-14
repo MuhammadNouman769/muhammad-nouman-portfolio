@@ -1,0 +1,45 @@
+{% extends 'dashboard/base.html' %}
+{% load dash_extras %}
+{% block title %}Book downloads{% endblock %}
+{% block heading %}<h1>Book downloads</h1><p class="muted">How many times each PDF was downloaded. Click a book for its full detail.</p>{% endblock %}
+{% block tools %}<a class="btn" href="{% url 'dashboard:book_downloads_export' %}?range={{ range_key }}"><svg class="ic"><use href="#i-dl"/></svg>Export CSV</a>{% endblock %}
+{% block content %}
+<form class="card filter-bar" method="get">
+  <select class="inp" name="range" aria-label="Date range">{% for k, v in ranges.items %}<option value="{{ k }}" {% if k == range_key %}selected{% endif %}>{{ v.0 }}</option>{% endfor %}</select>
+  <button class="btn btn-primary" type="submit">Apply</button>
+</form>
+
+<section class="kpis">
+  <article class="card kpi"><p class="kpi-label">Downloads, all time</p><p class="kpi-value">{{ total.all }}</p><p class="kpi-meta"><span class="muted">{{ books_count }} book{{ books_count|pluralize }}</span></p></article>
+  <article class="card kpi"><p class="kpi-label">Downloads, {{ range_label|lower }}</p><p class="kpi-value">{{ in_range }}</p><p class="kpi-meta"><span class="muted">Today {{ total.1 }} · 7 days {{ total.7 }} · 30 days {{ total.30 }}</span></p></article>
+  <article class="card kpi"><p class="kpi-label">Most downloaded ({{ range_label|lower }})</p><p class="kpi-value" style="font-size:1.25rem">{% if top %}{{ top.book.title }}{% else %}No downloads yet{% endif %}</p><p class="kpi-meta"><span class="muted">{% if top %}{{ top.n }} download{{ top.n|pluralize }}{% endif %}</span></p></article>
+</section>
+
+<div class="card flush">
+  <div class="card-head"><h2>Downloads per book</h2></div>
+  <div class="table-wrap"><table class="tbl">
+    <thead><tr><th>Book</th><th>Share</th><th class="num">{{ range_label }}</th><th class="num">All time</th><th>Last download</th></tr></thead>
+    <tbody>{% for r in rows %}
+      <tr class="click" data-href="{% url 'dashboard:book_download_detail' r.book.pk %}">
+        <td><a href="{% url 'dashboard:book_download_detail' r.book.pk %}"><b>{{ r.book.title }}</b></a><small>{% if not r.book.published %}<span class="pill warn">draft</span> {% endif %}{% if r.book.has_pdf %}PDF {{ r.book.pdf_size }}{% else %}No PDF uploaded{% endif %}</small></td>
+        <td style="min-width:160px"><span class="bar-track"><span class="bar-fill" style="width:{{ r.n|bar_pct:max_n }}%"></span></span></td>
+        <td class="num"><b>{{ r.n }}</b></td><td class="num">{{ r.total }}</td>
+        <td>{% if r.last %}<span title="{{ r.last }}">{{ r.last|ago }}</span>{% else %}<span class="muted">Never</span>{% endif %}</td></tr>
+    {% empty %}<tr><td colspan="5" class="empty">No books yet. Add one under Books.</td></tr>{% endfor %}</tbody>
+  </table></div>
+</div>
+
+<div class="card flush" style="margin-top:20px">
+  <div class="card-head"><h2>Latest downloads</h2></div>
+  <div class="table-wrap"><table class="tbl">
+    <thead><tr><th>When</th><th>Book</th><th>Location</th><th>Device</th><th>Came from</th></tr></thead>
+    <tbody>{% for d in recent %}
+      <tr><td title="{{ d.created_at }}">{{ d.created_at|ago }}</td>
+        <td><a href="{% url 'dashboard:book_download_detail' d.book.pk %}"><b>{{ d.book.title }}</b></a></td>
+        <td>{{ d.country|country }}<small>{{ d.ip|default:'Hidden' }}</small></td>
+        <td>{{ d.browser }}<small>{{ d.os }} · {{ d.device }}</small></td>
+        <td>{{ d.referrer|default:'Direct' }}</td></tr>
+    {% empty %}<tr><td colspan="5" class="empty">No downloads in this period yet.</td></tr>{% endfor %}</tbody>
+  </table></div>
+</div>
+{% endblock %}

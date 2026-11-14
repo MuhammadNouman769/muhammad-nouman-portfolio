@@ -14,8 +14,7 @@
         <a href="{% url 'projects:projects' %}" {% if request.resolver_match.url_name == 'projects' %}aria-current="page"{% endif %}>Projects</a>
         <div class="dd"><a href="{% url 'blog:index' %}" {% if ns == 'blog' %}aria-current="page"{% endif %} aria-haspopup="true">Blog <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
           <div class="dd-menu" role="menu"><a role="menuitem" href="{% url 'blog:index' %}">All articles</a>{% for c in nav_categories %}<a role="menuitem" href="{% url 'blog:index' %}?c={{ c.slug }}">{{ c.name }}</a>{% endfor %}<a role="menuitem" href="/blog/feed.xml">RSS feed</a></div></div>
-        <div class="dd"><a href="{% url 'books:index' %}" {% if ns == 'books' %}aria-current="page"{% endif %} aria-haspopup="true">Books <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
-          <div class="dd-menu" role="menu"><a role="menuitem" href="{% url 'books:index' %}">All books</a>{% for b in nav_books %}<a role="menuitem" href="{{ b.get_absolute_url }}">{{ b.title }}</a>{% endfor %}</div></div>
+        <a href="{% url 'books:index' %}" {% if ns == 'books' %}aria-current="page"{% endif %}>Books</a>
         <div class="dd"><a href="{% url 'about:about' %}" {% if ns == 'about' %}aria-current="page"{% endif %} aria-haspopup="true">About <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
           <div class="dd-menu" role="menu"><a role="menuitem" href="{% url 'about:about' %}#bio">My story</a><a role="menuitem" href="{% url 'about:about' %}#principles">How I like to work</a><a role="menuitem" href="{% url 'about:about' %}#education">Education</a>{% if site.resume %}<a role="menuitem" href="{{ site.resume.url }}" target="_blank" rel="noopener">Résumé (PDF)</a>{% endif %}</div></div>
         <div class="dd"><a href="{% url 'experience:experience' %}" {% if ns == 'experience' %}aria-current="page"{% endif %} aria-haspopup="true">Experience <svg class="chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
@@ -49,12 +48,12 @@
 <div class="sheet" id="more-sheet" role="dialog" aria-label="More pages" aria-modal="true" hidden>
   <span class="sheet-grip" aria-hidden="true"></span>
   <div class="sheet-grid">
+    <a href="{% url 'books:index' %}"><i>BK</i>Books</a>
     <a href="{% url 'about:about' %}"><i>01</i>About</a>
     <a href="{% url 'experience:experience' %}"><i>02</i>Experience</a>
     <a href="{% url 'skills:skills' %}"><i>03</i>Skills</a>
     <a href="{% url 'services:services' %}"><i>04</i>Services</a>
-    <a href="{% url 'books:index' %}"><i>05</i>Books</a>
-    <a href="{% url 'contact:contact' %}"><i>06</i>Contact</a>
+    <a href="{% url 'contact:contact' %}"><i>05</i>Contact</a>
     {% if site.resume %}<a href="{{ site.resume.url }}" target="_blank" rel="noopener"><i>PDF</i>Résumé</a>{% endif %}
     {% if site.github %}<a href="{{ site.github }}" target="_blank" rel="me noopener"><i>GH</i>GitHub</a>{% endif %}
     {% if site.linkedin %}<a href="{{ site.linkedin }}" target="_blank" rel="me noopener"><i>in</i>LinkedIn</a>{% endif %}

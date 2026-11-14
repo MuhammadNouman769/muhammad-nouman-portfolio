@@ -461,3 +461,59 @@ def subscribers(request):
         'total': Subscriber.objects.count(), 'active_count': Subscriber.objects.filter(active=True).exclude(source='demo').count(),
         'campaigns': Announcement.objects.all()[:8],
     })
+
+
+# ---------------------------------------------------------------- book downloads
+def _book_range(request):
+    from apps.books import stats as bstats
+    key = request.GET.get('range', '30')
+    if key not in bstats.RANGES:
+        key = '30'
+    return key, bstats.RANGES[key][1]
+
+
+@staff_required
+def book_downloads(request):
+    from apps.books import stats as bstats
+    from apps.books.models import BookDownload
+    key, days = _book_range(request)
+    rows = bstats.per_book(days)
+    total = bstats.totals()
+    top = next((r for r in rows if r['n']), None)
+    qs = bstats.qs_for(days).select_related('book')
+    return render_dash(request, 'dashboard/book_downloads.html', {
+        'active': 'downloads', 'range_key': key, 'ranges': bstats.RANGES, 'range_label': bstats.RANGES[key][0],
+        'rows': rows, 'total': total, 'top': top, 'in_range': qs.count(), 'max_n': rows[0]['n'] if rows else 0,
+        'recent': qs[:25], 'books_count': len(rows),
+    })
+
+
+@staff_required
+def book_download_detail(request, pk):
+    from apps.books import stats as bstats
+    from apps.books.models import Book
+    book = get_object_or_404(Book, pk=pk)
+    key, days = _book_range(request)
+    qs = bstats.qs_for(days, book)
+    page = Paginator(qs, 30).get_page(request.GET.get('page'))
+    return render_dash(request, 'dashboard/book_download_detail.html', {
+        'active': 'downloads', 'book': book, 'range_key': key, 'ranges': bstats.RANGES,
+        'range_label': bstats.RANGES[key][0], 'total': bstats.totals(book), 'in_range': qs.count(),
+        'daily': bstats.daily(book), 'breakdowns': bstats.breakdowns(qs), 'page': page,
+    })
+
+
+@staff_required
+def book_downloads_export(request):
+    from apps.books import stats as bstats
+    from apps.books.models import Book
+    _, days = _book_range(request)
+    book = Book.objects.filter(pk=request.GET.get('book') or 0).first()
+    resp = HttpResponse(content_type='text/csv; charset=utf-8')
+    resp['Content-Disposition'] = f'attachment; filename="book-downloads-{timezone.localdate()}.csv"'
+    w = csv.writer(resp)
+    w.writerow(['when', 'book', 'ip', 'country', 'device', 'browser', 'os', 'came_from'])
+    for d in bstats.qs_for(days, book).select_related('book').iterator():
+        w.writerow([_csv_safe(x) for x in (timezone.localtime(d.created_at).strftime('%Y-%m-%d %H:%M'), d.book.title,
+                                           d.ip, d.country, d.device, d.browser, d.os, d.referrer)])
+    return resp

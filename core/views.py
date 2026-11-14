@@ -14,6 +14,9 @@ def robots_txt(request):
         'User-agent: *',
         'Allow: /',
         f'Disallow: /{settings.DASHBOARD_URL}',
+        'Disallow: /books/*/download/',
+        'Disallow: /books/*/read/',
+        'Disallow: /books/*/file/',
         f'Disallow: /{settings.DJANGO_ADMIN_URL}',
         '',
         f'Sitemap: {settings.SITE_URL}/sitemap.xml',
@@ -27,7 +30,7 @@ STATIC_PAGES = [
     ('projects:case_studies', '0.9', 'weekly'),
     ('projects:projects', '0.9', 'weekly'),
     ('blog:index', '0.8', 'weekly'),
-    ('books:index', '0.7', 'weekly'),
+    ('books:index', '0.8', 'weekly'),
     ('experience:experience', '0.7', 'monthly'),
     ('skills:skills', '0.6', 'monthly'),
     ('services:services', '0.7', 'monthly'),
@@ -53,9 +56,10 @@ def sitemap_xml(request):
         img = f'<image:image><image:loc>{escape(base + post.cover_image.url)}</image:loc></image:image>' if post.cover_image else ''
         out.append(f'<url><loc>{escape(base + post.get_absolute_url())}</loc><lastmod>{post.updated_at:%Y-%m-%d}</lastmod>'
                    f'<changefreq>monthly</changefreq><priority>0.7</priority>{img}</url>')
-    for bk in Book.objects.filter(published=True):
-        out.append(f'<url><loc>{escape(base + bk.get_absolute_url())}</loc><lastmod>{bk.updated_at:%Y-%m-%d}</lastmod>'
-                   f'<changefreq>monthly</changefreq><priority>0.6</priority></url>')
+    for book in Book.objects.filter(published=True):
+        img = f'<image:image><image:loc>{escape(base + book.cover_image.url)}</image:loc></image:image>' if book.cover_image else ''
+        out.append(f'<url><loc>{escape(base + book.get_absolute_url())}</loc><lastmod>{book.updated_at:%Y-%m-%d}</lastmod>'
+                   f'<changefreq>monthly</changefreq><priority>0.7</priority>{img}</url>')
     out.append('</urlset>')
     return HttpResponse('\n'.join(out), content_type='application/xml; charset=utf-8')
 
