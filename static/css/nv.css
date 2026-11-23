@@ -183,7 +183,7 @@ input, textarea, select { border-radius: 10px; }
 .h-m { display: flex; flex-direction: column; gap: 12px; padding: 32px; border-radius: 24px; } .h-m h3 { margin: 0; font-size: 1.5rem; } .h-m p { margin: 0; line-height: 1.55; } .h-m ul { margin: 0 0 8px; padding-left: 18px; line-height: 1.8; } .h-m .btn { margin-top: auto; align-self: flex-start; }
 .h-m-no { font: 700 3rem/1 var(--font); letter-spacing: -.05em; opacity: .18; }
 .h-m1 { background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--accent); box-shadow: var(--shadow); }
-.h-m2 { background: linear-gradient(160deg, #0a2321, #0a2321); color: #f7f7f6; } .h-m2 .btn { background: #fff; color: #0a2321; }
+.h-m2 { background: linear-gradient(160deg, #0a2321, #0a2321); color: #f7f7f6; } .h-m2 .btn { background: #0ebab1; color: #0a2321; }
 .h-m3 { background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(245, 182, 66, .08) 14px 15px), var(--surface); border: 2px dashed #e2a93b; border-radius: 40px 8px 40px 8px; }
 
 /* 4 process: connected columns on dark band */
@@ -364,7 +364,7 @@ main > section.wrap, .wrap > .prose { margin-block: clamp(28px, 4vw, 56px); }
 /* HOME · engagement models: ticket / featured / ribbon */
 .h-m1 { border: 0; border-left: 0; border-radius: 6px; box-shadow: var(--shadow); background: radial-gradient(circle at 0 50%, var(--bg) 14px, transparent 15px) left / 51% 100% no-repeat, radial-gradient(circle at 100% 50%, var(--bg) 14px, transparent 15px) right / 51% 100% no-repeat, var(--surface); padding-block: 40px; }
 .h-m2 { transform: scale(1.04); border-radius: 30px; background: linear-gradient(150deg, #0ebab1, #0a2321 75%); box-shadow: 0 40px 70px -30px rgba(14, 186, 177, .8); position: relative; } .h-m2::after { content: "Popular"; position: absolute; right: 24px; top: 22px; padding: 4px 12px; border-radius: 999px; background: #f5b642; color: #2a1a00; font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-.h-m3 { position: relative; border: 2px solid var(--ink); border-radius: 0; background: var(--surface); box-shadow: 8px 8px 0 var(--accent); } .h-m3 .btn { background: var(--ink); color: var(--surface); }
+.h-m3 { position: relative; border: 2px solid var(--ink); border-radius: 0; background: var(--surface); box-shadow: 8px 8px 0 var(--accent); } .h-m3 .btn { background: #0ebab1; color: var(--surface); }
 @media (max-width: 800px) { .h-m2 { transform: none; } }
 
 /* HOME · process: four stacked cards, each its own colour edge */
