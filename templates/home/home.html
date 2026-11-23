@@ -4,11 +4,13 @@
 
 {# 1 ─ BANNER: dark room, pendant lamp, headline, hire modes #}
 <section class="hero hero-v4 h-banner" id="top" data-sec="Home">
+  <div class="hero-bg" aria-hidden="true"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><span class="grid"></span></div>
   <div class="wrap hero-grid banner">
     {% include 'partials/lamp.html' with cord=96 %}
     <div class="hero-copy">
       {% if site.available %}<p class="avail"><span class="pulse" aria-hidden="true"></span>{{ site.availability_text }}</p>{% endif %}
       <h1>{{ site.hero_heading }}</h1>
+      <p class="h-role" aria-live="off">I build <b data-rotate="Django backends|REST &amp; DRF APIs|Multi-vendor platforms|Production-ready systems">Django backends</b></p>
       <p class="lede">{{ site.hero_text }}</p>
       <ul class="modes" aria-label="Open to">
         {% if site.open_remote %}<li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>Remote</li>{% endif %}
@@ -34,6 +36,12 @@
       </div></div>
       <div class="h-card h-card-1"><i></i><b>{{ site.role_title }}</b><span>{% if site.company_name %}{{ site.company_name }}{% else %}Backend engineering{% endif %}</span></div>
       <div class="h-card h-card-2"><b>Django · DRF · PostgreSQL</b><span>Shipped to production</span></div>
+      <span class="orb o1" aria-hidden="true">Python</span>
+      <span class="orb o2" aria-hidden="true">Django</span>
+      <span class="orb o3" aria-hidden="true">REST API</span>
+      <span class="orb o4" aria-hidden="true">PostgreSQL</span>
+      <span class="orb o5" aria-hidden="true">Docker</span>
+      <span class="orb o6" aria-hidden="true">Redis</span>
     </div>
   </div>
   <a class="scroll-cue" href="#hire" aria-label="Scroll to next section"><span></span></a>
