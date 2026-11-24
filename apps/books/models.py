@@ -69,6 +69,26 @@ class Book(models.Model):
     def has_pdf(self):
         return bool(self.pdf_file)
 
+    # --- names the redesigned (Xvera) book templates use; they map onto the real fields ---
+    @property
+    def can_read(self):
+        return self.has_pdf
+
+    @property
+    def is_coming_soon(self):
+        return not self.has_pdf
+
+    @property
+    def published_on(self):
+        return self.written_on
+
+    @property
+    def category(self):
+        return self.get_language_display()
+
+    def get_status_display(self):
+        return 'Published' if self.published else 'Draft'
+
     @property
     def pdf_size(self):
         """Human readable size of the PDF, or empty when missing."""

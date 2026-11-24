@@ -1,0 +1,36 @@
+/* Public site polish. Loaded last; adds styling for books reader/detail extras, page banners and the home slider. */
+:where(a, button, input, select, textarea, summary):focus-visible { outline: 2px solid var(--accent, #0ebab1); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; scroll-behavior: auto !important; } }
+img { max-width: 100%; height: auto; }
+
+/* page banner picture (Dashboard > Banners) */
+.page-banner { margin: 8px 0 28px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 24px 50px -34px var(--ac, #0ebab1); aspect-ratio: 16 / 6; background: var(--surface); }
+.page-banner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* home slider: scroll-snap, no JS */
+.h-slides { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; scrollbar-width: thin; }
+.h-slide { position: relative; flex: 0 0 min(100%, 880px); scroll-snap-align: start; border-radius: 20px; overflow: hidden; aspect-ratio: 16 / 8; background: #0a2321; border: 1px solid var(--line); }
+.h-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.h-slide-copy { position: absolute; inset: auto 0 0 0; padding: 22px 24px; display: grid; gap: 8px; justify-items: start; color: #fff; background: linear-gradient(to top, rgba(6, 32, 30, .88), transparent); }
+.h-slide-copy h3, .h-slide-copy p { margin: 0; color: #fff; }
+@media (max-width: 640px) { .h-slide { flex-basis: 92%; aspect-ratio: 4 / 3; } .page-banner { aspect-ratio: 16 / 9; } }
+
+/* books */
+.bk-by-line { margin: 0 0 6px; color: var(--muted); font-size: .86rem; }
+.bk-d-body .bk-by-line { font-size: 1rem; margin-bottom: 14px; }
+.bk-sec { margin-top: 30px; }
+.bk-list { padding-left: 1.2em; display: grid; gap: 6px; }
+.bk-check { list-style: none; padding-left: 0; }
+.bk-check li { position: relative; padding-left: 1.6em; }
+.bk-check li::before { content: "✓"; position: absolute; left: 0; color: var(--accent, #0ebab1); font-weight: 800; }
+.bk-readpage { padding-top: 28px; padding-bottom: 40px; }
+.bk-readbar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
+.bk-readtitle h1 { margin: 4px 0; font-size: clamp(1.4rem, 3vw, 2rem); }
+.bk-readtitle a { font-size: .9rem; }
+.bk-readtitle span { color: var(--muted); font-size: .9rem; }
+.bk-readactions { display: flex; flex-wrap: wrap; gap: 10px; }
+.bk-reader { width: 100%; height: min(78vh, 900px); min-height: 420px; border: 1px solid var(--line-strong, var(--line)); border-radius: 14px; background: var(--surface); }
+.bk-readnote { margin: 12px 0 0; color: var(--muted); font-size: .88rem; }
+.bk-preview { margin: 0 0 16px; }
+.crumbs { display: flex; flex-wrap: wrap; gap: 8px; font-size: .88rem; color: var(--muted); }
+.crumbs a { color: inherit; }

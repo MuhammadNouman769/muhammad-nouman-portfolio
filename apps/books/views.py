@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.db.models import F
+from django.db.models import F, Q
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.clickjacking import xframe_options_sameorigin
@@ -21,10 +21,23 @@ def _visible(request):
 
 
 def index(request):
-    page = Paginator(Book.objects.filter(published=True), PER_PAGE).get_page(request.GET.get('page'))
+    base = Book.objects.filter(published=True)
+    # Category pills = the languages that actually have a published book.
+    present = set(base.values_list('language', flat=True))
+    categories = [{'slug': code, 'name': label} for code, label in Book.LANGUAGES if code in present]
+    active = request.GET.get('c', '')
+    if active not in present:
+        active = ''
+    q = request.GET.get('q', '').strip()[:80]
+    qs = base
+    if active:
+        qs = qs.filter(language=active)
+    if q:
+        qs = qs.filter(Q(title__icontains=q) | Q(summary__icontains=q) | Q(subtitle__icontains=q) | Q(author__icontains=q))
+    page = Paginator(qs, PER_PAGE).get_page(request.GET.get('page'))
     return render(request, 'books/index.html', {
-        'page': page, 'books': page.object_list,
-        'total': page.paginator.count,
+        'page': page, 'books': page.object_list, 'total': page.paginator.count,
+        'categories': categories if len(categories) > 1 else [], 'active_category': active, 'q': q,
     })
 
 

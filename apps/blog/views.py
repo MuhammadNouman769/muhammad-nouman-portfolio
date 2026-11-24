@@ -27,6 +27,7 @@ def index(request):
     return render(request, 'blog/index.html',
         {
           'page': page,
+          'posts': page.object_list,
           'posts_all': page.object_list,
           'featured': featured,
           'categories': categories,

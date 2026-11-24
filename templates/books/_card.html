@@ -1,8 +1,9 @@
 <article class="bk">
   <a class="bk-link" href="{{ book.get_absolute_url }}" aria-label="{{ book.title }}">{% include 'books/_cover.html' with book=book %}</a>
   <div class="bk-info">
-    <span class="bk-meta">{{ book.category|default:'Book' }} · {{ book.published_on|date:"j M Y" }}</span>
+    <span class="bk-meta">{{ book.category }} · {{ book.written_on|date:"j M Y" }}</span>
     <h2 class="bk-title"><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></h2>
+    <p class="bk-by-line">By {{ book.author|default:site.owner_name }}</p>
     <p class="bk-sum">{{ book.summary }}</p>
     <div class="bk-actions">
       <a class="btn btn-solid btn-sm" href="{{ book.get_absolute_url }}">Details</a>
