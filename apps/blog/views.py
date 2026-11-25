@@ -23,7 +23,7 @@ def index(request):
     posts = list(qs)
     featured = next((p for p in posts if p.featured), posts[0] if posts else None)
     ordered = ([featured] + [p for p in posts if p is not featured]) if featured else []
-    page = Paginator(ordered, 9).get_page(request.GET.get('page'))
+    page = Paginator(ordered, 8).get_page(request.GET.get('page'))
     return render(request, 'blog/index.html',
         {
           'page': page,

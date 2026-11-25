@@ -62,7 +62,7 @@ def _project_listing_context(request):
     else:
         tech_filter = ''
 
-    page_obj = Paginator(queryset, 12).get_page(request.GET.get('page'))
+    page_obj = Paginator(queryset, 9).get_page(request.GET.get('page'))
     pagination_pages = []
     for number in page_obj.paginator.get_elided_page_range(page_obj.number, on_each_side=1, on_ends=1): # type: ignore
         is_ellipsis = isinstance(number, str)

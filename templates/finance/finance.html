@@ -13,8 +13,9 @@
   <article class="fn-k fn-k-got">
     <div class="fn-ring" style="--p:{{ s.collected_pct }}"><i>{{ s.collected_pct }}%</i></div>
     <div><span>Received</span><b>Rs {{ s.received|floatformat:"0g" }}</b><small>already in your hands</small></div>
+    
   </article>
-  <article class="fn-k fn-k-due"><span>Remaining (bakaya)</span><b>Rs {{ s.pending|floatformat:"0g" }}</b><small>still to collect from clients</small></article>
+  <article class="fn-k fn-k-due"><span>Still remaining from clients (bakaya)</span><b>Rs {{ s.pending|floatformat:"0g" }}</b><small>still to collect from clients</small></article>
   <article class="fn-k fn-k-out"><span>Spent</span><b>Rs {{ s.spent|floatformat:"0g" }}</b><small>{{ s.spent_pct }}% of what you received</small></article>
   <article class="fn-k fn-k-bal{% if s.available < 0 %} is-neg{% endif %}" id="available"><span>Available in account</span><b>Rs {{ s.available|floatformat:"0g" }}</b><small>Received Rs {{ s.received|floatformat:"0g" }} &minus; Spent Rs {{ s.spent|floatformat:"0g" }}{% if s.available < 0 %} · spending is more than received{% endif %}</small></article>
 </section>

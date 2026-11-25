@@ -206,8 +206,8 @@ main > section.wrap, .wrap > .prose { margin-block: clamp(28px, 4vw, 56px); }
 
 /* about */
 .p-about { display: grid; grid-template-columns: minmax(240px, 380px) 1fr; gap: clamp(28px, 5vw, 72px); align-items: start; }
-.p-photo { position: relative; margin: 0; border-radius: 28px; overflow: hidden; box-shadow: var(--shadow); border: 8px solid var(--surface); } .p-photo img { display: block; width: 100%; height: auto; }
-.p-photo figcaption { position: absolute; left: 14px; right: 14px; bottom: 14px; display: grid; padding: 12px 16px; border-radius: 14px; background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(8px); } .p-photo figcaption span { color: var(--muted); font-size: .85rem; }
+.p-photo { position: relative; margin: 0; border-radius: 28px; overflow: hidden; box-shadow: var(--shadow); border: 3px solid #0ebab1; } .p-photo img { display: block; width: 100%; height: auto; }
+.p-photo figcaption { position: absolute; left: 14px; right: 14px; bottom: 14px; display: grid; padding: 12px 16px; border-radius: 14px!important; background: color-mix(in srgb, #0ebab1 92%, transparent); backdrop-filter: blur(8px); } .p-photo figcaption span { color: #000; font-size: .95rem; }
 .prose { line-height: 1.75; color: var(--ink-2); } .prose-lg { font-size: 1.12rem; } .prose h2, .prose h3 { color: var(--ink); margin: 1.6em 0 .5em; }
 .prose a { color: var(--accent); } .prose pre { padding: 16px 18px; border-radius: 12px; background: #0a2321; color: #f0f0ee; overflow-x: auto; } .prose code { font-size: .92em; } .prose blockquote { margin: 1.4em 0; padding: 4px 0 4px 20px; border-left: 4px solid var(--accent); color: var(--ink); }
 .p-pr { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
@@ -382,7 +382,7 @@ main > section.wrap, .wrap > .prose { margin-block: clamp(28px, 4vw, 56px); }
 /* ABOUT · principles: four unlike cards; education certificates */
 .p-pr { counter-reset: pr; } .p-pr li { counter-increment: pr; position: relative; padding-top: 58px; } .p-pr li::before { content: counter(pr); position: absolute; left: 24px; top: 20px; width: 30px; height: 30px; display: grid; place-items: center; font-weight: 800; background: var(--accent); color: #fff; }
 .p-pr li:nth-child(1)::before { border-radius: 50%; } .p-pr li:nth-child(2)::before { border-radius: 8px; background: #d9d9d9; color: #0a2321; } .p-pr li:nth-child(3)::before { border-radius: 0 50% 50% 50%; background: #e2a93b; } .p-pr li:nth-child(4)::before { border-radius: 50% 0 50% 50%; background: var(--accent-2); }
-.p-ledger li { grid-template-columns: 190px 1fr; padding: 22px 26px; margin-bottom: 14px; border: 0; border-radius: 6px; background: var(--surface); outline: 2px solid var(--line-strong); outline-offset: -8px; box-shadow: var(--shadow); } .p-ledger time { align-self: center; }
+.p-ledger li { grid-template-columns: 190px 1fr; padding: 22px 26px; margin-bottom: 14px; border: 0; border-radius: 6px; background: var(--surface); outline: 2px solid var(--line-strong); outline-offset: 0px; box-shadow: var(--shadow); } .p-ledger time { align-self: center; }
 
 /* SKILLS: four rotating card types */
 .p-skill.sk-a, .p-skill.sk-b { box-shadow: none; }
