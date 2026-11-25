@@ -5,7 +5,7 @@
   --font: "Outfit", "DM Sans", system-ui, sans-serif; }
 .side { background: linear-gradient(180deg, #0a2321, #0a2321); }
 .side-nav a.on { background: rgba(14, 186, 177, .16); color: #d9d9d9; box-shadow: inset 3px 0 0 #0ebab1; }
-.card { border-radius: 20px; box-shadow: 0 18px 40px -30px rgba(47, 47, 47, .35); }
+.card { border-radius: 0px!important; box-shadow: 0 18px 40px -30px rgba(47, 47, 47, .35); }
 .btn-primary { background: linear-gradient(135deg, #0ebab1, #0ebab1); border-color: transparent; color: #fff; }
 /* each KPI row card is different */
 .kpis .kpi:nth-child(1) { background: linear-gradient(135deg, #0ebab1, #0ebab1); color: #fff; border: 0; } .kpis .kpi:nth-child(1) * { color: #fff; }
@@ -29,7 +29,7 @@
 .fn-months { display: flex; align-items: flex-end; gap: 14px; height: 190px; } .fn-m { flex: 1; display: grid; gap: 6px; text-align: center; height: 100%; grid-template-rows: 1fr auto; } .fn-m small { color: var(--muted); }
 .fn-bars { display: flex; align-items: flex-end; justify-content: center; gap: 5px; } .fn-bars i { width: 42%; min-height: 3px; border-radius: 8px 8px 2px 2px; } .fn-bars .in { background: var(--s1); } .fn-bars .out { background: var(--s2); }
 .fn-deals { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-.fn-deal { display: grid; gap: 12px; padding: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 18px; border-top: 5px solid var(--s1); }
+.fn-deal { display: grid; gap: 12px; padding: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 0px; border-top: 5px solid var(--s1); }
 .fn-deal.st-partial { border-top-color: var(--s2); } .fn-deal.st-pending { border-top-color: #e0476c; }
 .fn-deal header { display: flex; justify-content: space-between; gap: 10px; } .fn-deal h3 { font-size: 1.05rem; } .fn-deal header p, .fn-note, .fn-due { color: var(--muted); font-size: .85rem; }
 .fn-prog { height: 10px; border-radius: 99px; background: var(--panel-2); overflow: hidden; } .fn-prog i { display: block; height: 100%; background: linear-gradient(90deg, #0ebab1, #d9d9d9); }

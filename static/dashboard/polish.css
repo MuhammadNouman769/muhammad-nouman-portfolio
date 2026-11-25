@@ -1,7 +1,7 @@
 /* Dashboard polish layer. Loaded last, so it only refines what dash.css / fx.css / nv-dash.css set.
    Goals: one consistent card language, readable contrast, steady tables, clear focus, good touch targets. */
 
-:root { --pl-radius: 18px; --pl-ring: color-mix(in srgb, var(--primary) 70%, #fff); }
+:root { --pl-radius: 0px; --pl-ring: color-mix(in srgb, var(--primary) 70%, #fff); }
 
 /* ---------- focus + motion ---------- */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 2px solid var(--pl-ring); outline-offset: 2px; border-radius: 8px; }
