@@ -10,7 +10,8 @@ from apps.analytics.utils import anonymize_ip, client_ip, country_and_city, pars
 
 from .models import Book, BookDownload
 
-PER_PAGE = 12
+PER_PAGE = 10
+
 
 
 def _visible(request):
