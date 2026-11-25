@@ -86,7 +86,7 @@ RESOURCES = {r.key: r for r in [
     Resource(
         key='books', model=Book, form=f.BookForm, label='Book', plural='Books', icon='book',
         blurb='PDF books shown on the Books page. Upload the PDF and cover, write the purpose and who it helps. Newest first; featured books come first.',
-        columns=[('Book', lambda o: o.title), ('Written', lambda o: f'{o.written_on:%d %b %Y}'),
+        columns=[('Book', lambda o: o.title), ('Written', lambda o: o.written_on.strftime('%d %b %Y') if o.written_on else 'Not specified'),
                  ('Language', lambda o: o.get_language_display()),
                  ('PDF', lambda o: o.pdf_size or 'No PDF'), ('Downloads', lambda o: str(o.download_count))],
         fieldsets=[

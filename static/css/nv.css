@@ -561,7 +561,7 @@ main > section.wrap, .wrap > .prose { margin-block: clamp(28px, 4vw, 56px); }
 .project-card-tags .project-card-more-tags { color: var(--ac, var(--accent)); }
 .project-card-link { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 13px; border-top: 1px solid var(--line); color: var(--ac, var(--accent)); font-size: .84rem; font-weight: 750; text-decoration: none; }
 .project-card-arrow { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid color-mix(in srgb, var(--ac, var(--accent)) 30%, var(--line)); border-radius: 50%; font-size: 1rem; transition: color .2s, background .2s, transform .2s; }
-.project-card:hover .project-card-arrow { transform: rotate(45deg); background: var(--ac, var(--accent)); color: #fff; }
+.project-card:hover .project-card-arrow { transform: rotate(45deg); background: var(--ac, var(--accent)); color: #fff!important; }
 .project-empty { grid-column: 1 / -1; }
 .project-pagination { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin: 34px 0 12px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
 .pagination-summary { color: var(--muted); font-size: .9rem; font-weight: 600; white-space: nowrap; }
