@@ -44,7 +44,7 @@ html { scroll-padding-top: calc(var(--nav-total, 130px) + 14px); }
 .ft-cta-copy > p:last-child { margin: 14px 0 0; max-width: 34em; color: #000000; line-height: 1.55; }
 .ft-cta-act { display: grid; gap: 12px; justify-items: stretch; }
 .ft-cta-act .btn { justify-content: center; }
-.ft-mail { text-align: center; color: #f4f4f3; font-weight: 600; padding: 6px; border-bottom: 1px dashed rgba(255,255,255,.3); justify-self: center; }
+.ft-mail { text-align: center; color: #f4f4f3!important; font-weight: 600!important; padding: 6px; border-bottom: 3px dashed rgba(0, 0, 0, 0.3); justify-self: center; }
 .ft-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(0, 1fr)) minmax(0, 1.2fr); gap: clamp(24px, 4vw, 56px); padding: clamp(34px, 5vw, 64px) 0 clamp(26px, 4vw, 44px); }
 .ft-brand { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; font-size: 1.3rem; font-weight: 650; letter-spacing: -.02em; color: #fff; }
 .ft-brand .logo { width: 40px; height: 40px; }

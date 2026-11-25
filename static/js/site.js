@@ -4,20 +4,6 @@
   var root = document.documentElement;
   root.classList.add('js');
 
-  /* ---- theme toggle ---- */
-  var themeBtn = document.getElementById('theme-toggle');
-  function isDark() {
-    var t = root.getAttribute('data-theme');
-    return t !== 'light';
-  }
-  if (themeBtn) {
-    themeBtn.addEventListener('click', function () {
-      var next = isDark() ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('theme', next); } catch (e) {}
-    });
-  }
-
   /* ---- mobile menu ---- */
   var burger = document.getElementById('nav-toggle');
   var links = document.getElementById('nav-links');

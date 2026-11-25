@@ -104,3 +104,8 @@
 .fn-kpis .fn-k-bal > small { font-size: .95rem; opacity: .85; }
 .fn-k-got > div:last-child b { font-size: 1.35rem; white-space: nowrap; }
 @media (max-width: 560px) { .fn-kpis .fn-k-bal { grid-template-columns: 1fr; } }
+
+/* single light theme: darker secondary text so it stays readable on every panel */
+:root { --muted: #55554f; --ink-2: #2f3a38; }
+.delta, .delta.up { color: #0b6b55; } .delta.down { color: #a11d33; }
+.muted, .kpi-label, .kpi-meta { color: var(--muted) !important; }

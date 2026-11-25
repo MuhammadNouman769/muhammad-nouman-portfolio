@@ -6,14 +6,7 @@
   var root = document.documentElement;
   function csrf() { var m = document.cookie.match(/csrftoken=([^;]+)/); return m ? m[1] : (($('input[name=csrfmiddlewaretoken]') || {}).value || ''); }
 
-  /* theme + mobile menu */
-  var tb = $('#dash-theme');
-  if (tb) tb.addEventListener('click', function () {
-    var dark = root.getAttribute('data-theme') === 'dark' || (root.getAttribute('data-theme') === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-    var next = dark ? 'light' : 'dark'; root.setAttribute('data-theme', next);
-    try { localStorage.setItem('dash-theme', next); } catch (e) {}
-    drawAll();
-  });
+  /* mobile menu */
   var mb = $('#menu-btn'), side = $('#side');
   if (mb) mb.addEventListener('click', function () { side.classList.toggle('open'); });
   document.addEventListener('click', function (e) { if (side && side.classList.contains('open') && !side.contains(e.target) && e.target !== mb && !mb.contains(e.target)) side.classList.remove('open'); });

@@ -34,3 +34,77 @@ img { max-width: 100%; height: auto; }
 .bk-preview { margin: 0 0 16px; }
 .crumbs { display: flex; flex-wrap: wrap; gap: 8px; font-size: .88rem; color: var(--muted); }
 .crumbs a { color: inherit; }
+
+/* =====================================================================
+   ONE THEME, ALWAYS READABLE  (light "Xvera" look: paper + ink + teal)
+   Rules below fix text/background pairs that fell below WCAG AA (4.5:1)
+   and guarantee that hover/focus states never lose contrast.
+   Palette:  ink #0a2321 · teal #0ebab1 (fills only) · teal-dark #06635e (teal TEXT on light)
+   ===================================================================== */
+:root { --muted: #4a625f; --pl-teal-text: #06635e; --pl-ink: #0a2321; }
+:root { --ink-2: #334947; }
+
+/* text that sits on a TEAL fill is always ink, never white (white on #0ebab1 is only 2.4:1) */
+html body .btn-solid, html body .btn-amber, html body .btn-primary { color: var(--pl-ink); }
+html body .btn-solid:hover, html body .btn-amber:hover, html body .btn-primary:hover,
+html body .btn-solid:focus-visible, html body .btn-amber:focus-visible { background: var(--pl-ink); color: #fff; border-color: var(--pl-ink); }
+html body .nav-hire { color: #fff !important; }
+html body .p-skill.sk-b, html body .p-skill.sk-b h2, html body .p-skill.sk-b h2 span, html body .p-skill.sk-b .tokens li, html body .p-skill.sk-b p { color: var(--pl-ink); }
+html body ol.flow li, html body ol.flow li b, html body ol.flow li span, html body ol.flow li i { color: var(--pl-ink); }
+html body .mk-flow span.on, html body span.on { color: var(--pl-ink); }
+html body .h-m3 .btn-solid { background: var(--pl-ink); color: #fff; border-color: var(--pl-ink); }
+html body .h-m3 .btn-solid:hover { background: #fff; color: var(--pl-ink); border-color: #fff; }
+
+/* teal / blue / amber / green TEXT on light surfaces -> dark teal (>= 6:1) */
+html body .h-services > li > i, html body .h-m-no, html body .p-skill.sk-a h2 span,
+html body .project-card-link, html body .project-card-link span, html body .project-card-stat,
+html body .cs-metrics .metric b, html body .metric b, html body .s-live, html body .project-card-stat.status-live { color: var(--pl-teal-text); }
+html body .project-card-more-tags { color: var(--muted); }
+html body .copied { background: #0a5d44; color: #fff; }
+
+/* case-study hero: was white text on a white (reverted) background -> same ink banner as other page heads */
+html body .cs-hero { background: var(--pl-ink); color: #fff; border: 0; border-bottom: 3px solid #0ebab1; }
+html body .cs-hero h1, html body .cs-hero .lede, html body .cs-hero p, html body .cs-hero dd, html body .cs-hero dt { color: #fff; }
+html body .cs-hero dt, html body .cs-hero .case-kind { color: rgba(255, 255, 255, .78); }
+html body .cs-hero a { color: #7ef6eb; }
+
+/* services cards: one clear card style (white, ink text, teal top rule); no more per-card colour roulette */
+html body .p-svc li, html body .p-svc li:nth-child(n) { background: #fff; color: var(--pl-ink); border: 1px solid #d7e3e1; border-top: 4px solid #0ebab1; border-radius: 0; box-shadow: none; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+html body .p-svc li h2, html body .p-svc li:nth-child(n) h2 { color: var(--pl-ink); }
+html body .p-svc li p, html body .p-svc li:nth-child(n) p { color: #334947; }
+html body .p-svc li i, html body .p-svc li:nth-child(n) i { color: #7ccfca; }
+html body .p-svc li:hover { transform: translateY(-3px); border-color: #0ebab1; box-shadow: 0 18px 36px rgba(10, 35, 33, .12); }
+html body .p-svc li:hover h2 { color: var(--pl-ink); } html body .p-svc li:hover p { color: #334947; }
+
+/* links + headings never change to an unreadable colour on hover/focus */
+html body a:hover, html body a:focus-visible { text-decoration-color: #0ebab1; }
+html body :where(.prose, .rte-content, .bk-desc) a:hover { color: var(--pl-teal-text); }
+html body h1:hover, html body h2:hover, html body h3:hover, html body h4:hover { color: inherit; }
+html body .card:hover, html body .bk:hover, html body .post:hover, html body .project-card:hover { color: inherit; }
+
+/* round 2 */
+html body .p-svc li i, html body .p-svc li:nth-child(n) i { color: #2a9d97; }
+html body .flow li, html body .flow li:nth-child(n) { background: #0ebab1; color: var(--pl-ink); }
+html body .flow li *, html body .flow li:nth-child(n) * { color: var(--pl-ink) !important; }
+html body .h-steps li b { color: #0ebab1; -webkit-text-stroke: 0; }
+html body .project-card-body .project-card-stat, html body .project-card-body .project-card-stat * { color: var(--pl-teal-text) !important; }
+html body .project-card-tags li.project-card-more-tags, html body .project-card-tags li.project-card-more-tags * { color: var(--muted) !important; }
+html body .project-card-body .project-card-link, html body .project-card-body .project-card-link * { color: var(--pl-teal-text) !important; }
+html body .cs-hero .case-kind span, html body .cs-hero [class^="s-"] { color: #7ef6eb !important; }
+
+/* round 3 */
+html body .h-steps li b, html body .h-steps li:nth-child(n) b { color: #0ebab1 !important; -webkit-text-stroke: 0 !important; }
+html body .project-card-body [class*="project-card-st"], html body .project-card-body [class*="project-card-st"] * { color: var(--pl-teal-text) !important; }
+html body .pill, html body a.pill { color: var(--pl-ink); }
+html body .pill:hover, html body a.pill:hover, html body .pill.on, html body a.pill.on { background: var(--pl-ink); color: #fff; border-color: var(--pl-ink); }
+
+/* skills cards: same single card style as services (no dark / teal / dashed roulette) */
+html body .p-skill, html body .p-skill:nth-child(n), html body .p-skill.sk-a, html body .p-skill.sk-b { background: #fff; color: var(--pl-ink); border: 1px solid #d7e3e1; border-top: 4px solid #0ebab1; border-radius: 0; box-shadow: none; }
+html body .p-skill h2, html body .p-skill:nth-child(n) h2 { color: var(--pl-ink); }
+html body .p-skill h2 span, html body .p-skill:nth-child(n) h2 span { background: #dff4f2; color: var(--pl-teal-text); }
+html body .p-skill .tokens li, html body .p-skill:nth-child(n) .tokens li { background: #f4f8f7; border: 1px solid #d7e3e1; color: var(--pl-ink); }
+html body .p-skill .tokens li:hover { background: #0ebab1; border-color: #0ebab1; color: var(--pl-ink); }
+html body .p-skill p { color: #334947; }
+html body .p-skill .tokens li::before { background: #0ebab1; }
+html body .p-skill .tokens li:nth-child(3n+2)::before { background: #f5b642; }
+html body .p-skill .tokens li:nth-child(3n+3)::before { background: #0ebab1; }
