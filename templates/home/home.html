@@ -46,6 +46,24 @@
   </div>
   <a class="scroll-cue" href="#hire" aria-label="Scroll to next section"><span></span></a>
 </section>
+{% if home_banners %}
+<section class="h-sec h-slides-sec" id="highlights" data-sec="Highlights" aria-label="Highlights">
+  <div class="wrap">
+    <div class="h-slides" tabindex="0">
+      {% for b in home_banners %}
+      <article class="h-slide" style="--ac:{{ b.accent }}">
+        <img src="{{ b.image.url }}" alt="{{ b.title|default:'Highlight' }}" loading="lazy" decoding="async">
+        {% if b.title or b.text or b.button_url %}<div class="h-slide-copy">
+          {% if b.title %}<h3>{{ b.title }}</h3>{% endif %}{% if b.text %}<p>{{ b.text }}</p>{% endif %}
+          {% if b.button_url %}<a class="btn btn-solid btn-sm" href="{{ b.button_url }}">{{ b.button_text|default:'Open' }}</a>{% endif %}
+        </div>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 
 {# 2 ─ TECH MARQUEE #}
 {% if ticker %}

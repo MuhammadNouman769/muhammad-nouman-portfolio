@@ -1,0 +1,2 @@
+{# Page banner picture uploaded under Dashboard > Banners. Renders nothing when there is none. #}
+{% if page_banner %}<div class="wrap"><figure class="bn-photo page-banner" style="--ac:{{ page_banner.accent }}"><img src="{{ page_banner.image.url }}" alt="{{ page_banner.title|default:'Banner' }}" loading="lazy" decoding="async"></figure></div>{% endif %}

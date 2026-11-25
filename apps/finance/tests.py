@@ -55,3 +55,31 @@ class FinanceReportTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, reverse('dashboard:finance_report_pdf'))
         self.assertContains(response, 'Download PDF report')
+
+
+class AvailableBalanceTests(TestCase):
+    def setUp(self):
+        self.staff = get_user_model().objects.create_user(username='fin2', password='Secure-test-password-2026', is_staff=True)
+        self.client.force_login(self.staff)
+
+    def test_available_is_received_minus_spent(self):
+        from . import stats
+        Income.objects.create(title='A', client='X', source='direct', total_amount=100000, received=60000)
+        Income.objects.create(title='B', client='Y', source='direct', total_amount=50000, received=10000)
+        Expense.objects.create(title='Hosting', category='hosting', amount=12000)
+        s = stats.summary()
+        self.assertEqual(s['available'], 58000)
+        self.assertEqual(s['pending'], 80000)
+        r = self.client.get(reverse('dashboard:finance'))
+        self.assertContains(r, 'Available in account')
+        self.assertContains(r, 'Rs 58,000')
+        self.assertContains(self.client.get(reverse('dashboard:overview')), 'Available in account')
+
+    def test_negative_balance_is_flagged(self):
+        Expense.objects.create(title='Laptop', category='hosting', amount=5000)
+        r = self.client.get(reverse('dashboard:finance'))
+        self.assertContains(r, 'is-neg')
+        self.assertContains(r, 'spending is more than received')
+
+    def test_empty_state_is_zero(self):
+        self.assertContains(self.client.get(reverse('dashboard:finance')), 'Rs 0')

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Read online: {{ book.title }} | {{ site.owner_name }}{% endblock %}
+{% block meta_description %}{{ book.meta }}{% endblock %}
+{% block robots %}noindex, follow{% endblock %}
+{% block canonical %}{{ SITE_URL }}{{ book.get_absolute_url }}{% endblock %}
+{% block content %}
+<section class="wrap bk-readpage" data-sec="Reader" style="--ac:{{ book.cover_accent }}">
+  {% if is_preview %}<p class="bk-preview">Draft preview. Only you can see this page.</p>{% endif %}
+  <div class="bk-readbar">
+    <div class="bk-readtitle">
+      <a href="{{ book.get_absolute_url }}">&larr; Book details</a>
+      <h1>{{ book.title }}</h1>
+      <span>By {{ book.author|default:site.owner_name }}</span>
+    </div>
+    <div class="bk-readactions">
+      <a class="btn btn-ghost btn-sm" href="{{ book.get_file_url }}" target="_blank" rel="noopener nofollow">Open in new tab</a>
+      <a class="btn btn-solid btn-sm" href="{{ book.get_download_url }}" rel="nofollow" download>Download PDF{% if book.pdf_size %} ({{ book.pdf_size }}){% endif %}</a>
+    </div>
+  </div>
+  <iframe class="bk-reader" src="{{ book.get_file_url }}#view=FitH" title="{{ book.title }} (PDF)" loading="lazy"></iframe>
+  <p class="bk-readnote">PDF not showing on your phone? Use <a href="{{ book.get_file_url }}" target="_blank" rel="noopener nofollow">Open in new tab</a> or download it.</p>
+</section>
+{% endblock %}

@@ -200,7 +200,6 @@ input:focus, select:focus, textarea:focus, .inp:focus { border-color: var(--xv-t
 /* ---------- FOOTER: ink, teal top rule (xveralabs) ---------- */
 .ft { margin-top: 0; background: var(--xv-ink); color: rgba(255, 255, 255, .78); border-top: 3px solid var(--xv-teal); }
 .ft a { color: rgba(255, 255, 255, .78); }
-.ft a:hover { color: var(--xv-teal); }
 .ft-cta { margin: -46px 0 56px; padding: 30px 36px; background: var(--xv-teal); color: var(--xv-ink); border: 0; align-items: center; }
 .ft-cta h2 { color: var(--xv-ink); font-size: clamp(22px, 2.6vw, 30px); }
 .ft-cta p, .ft-cta .ft-kicker { color: var(--xv-ink); }

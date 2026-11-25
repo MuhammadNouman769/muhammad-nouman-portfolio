@@ -135,7 +135,7 @@ def finance_report_pdf(request):
         ('Received', summary['received']),
         ('Outstanding', summary['pending']),
         ('Total expenses', summary['spent']),
-        ('Net cash flow', summary['net']),
+        ('Available in account (received − spent)', summary['available']),
     ]
     summary_table = Table([
         [cell(label, 'ReportKpiLabel') for label, _ in kpis],

@@ -117,20 +117,20 @@ class BookPublicTests(TestCase):
         self.assertContains(r, 'Public Book')
         self.assertNotContains(r, 'Draft Book')
         self.assertContains(r, 'href="/books/"')                 # header link
-        self.assertContains(r, 'data-lamp')
+        self.assertContains(r, 'bk-grid')
 
-    def test_pagination_nine_per_page(self):
-        for i in range(11):
+    def test_pagination_twelve_per_page(self):
+        for i in range(14):
             make(f'Filler {i:02d}', written_on=date(2024, 1, 1 + i))
         p1 = self.client.get(reverse('books:index'))
-        self.assertEqual(len(p1.context['books']), 9)
-        self.assertContains(p1, 'aria-label="Books pages"')
+        self.assertEqual(len(p1.context['books']), 12)
+        self.assertContains(p1, 'aria-label="Book pages"')
         p2 = self.client.get(reverse('books:index') + '?page=2')
-        self.assertEqual(len(p2.context['books']), 3)           # 12 published in total
+        self.assertEqual(len(p2.context['books']), 3)           # 15 published in total
         self.assertEqual(self.client.get(reverse('books:index') + '?page=999').status_code, 200)
 
-    def test_no_pagination_for_nine_or_fewer(self):
-        self.assertNotContains(self.client.get(reverse('books:index')), 'Books pages')
+    def test_no_pagination_for_twelve_or_fewer(self):
+        self.assertNotContains(self.client.get(reverse('books:index')), 'Book pages')
 
     def test_detail_sections(self):
         r = self.client.get(self.book.get_absolute_url())
@@ -161,16 +161,20 @@ class BookPublicTests(TestCase):
         draft = Book.objects.get(title='Draft Book')
         self.assertEqual(self.client.get(draft.get_download_url()).status_code, 404)
 
-    def test_theme_applied_on_list_and_detail(self):
-        self.assertContains(self.client.get(reverse('books:index')), 'bk-theme bk-band')
-        self.assertContains(self.client.get(self.book.get_absolute_url()), 'book-page bk-theme')
-        css = open('static/css/books.css').read()
-        for v in ('--bk-bg', '--bk-accent', '[data-theme="dark"] .bk-theme'):
-            self.assertIn(v, css)
+    def test_redesigned_list_and_detail_markup(self):
+        self.assertContains(self.client.get(reverse('books:index')), 'class="bk-grid"')
+        r = self.client.get(self.book.get_absolute_url())
+        self.assertContains(r, 'bk-d-grid')
+        self.assertContains(r, 'Read online')
+        self.assertContains(r, self.book.get_read_url())
 
-    def test_no_hover_rules_on_cards(self):
-        css = open('static/css/books.css').read()
-        self.assertNotIn('translateY', css)
+    def test_index_search_and_language_filter(self):
+        make('Urdu Guide', language='ur')
+        r = self.client.get(reverse('books:index') + '?q=Urdu')
+        self.assertEqual([b.title for b in r.context['books']], ['Urdu Guide'])
+        r = self.client.get(reverse('books:index') + '?c=ur')
+        self.assertEqual([b.title for b in r.context['books']], ['Urdu Guide'])
+        self.assertEqual(self.client.get(reverse('books:index') + '?c=zz').status_code, 200)   # unknown filter is ignored
 
     def test_sitemap_and_robots(self):
         sm = self.client.get('/sitemap.xml').content.decode()
@@ -192,8 +196,8 @@ class SeedBooksTests(TestCase):
         first = Book.objects.get(slug='dummy-django-interview-prep')
         self.assertTrue(first.pdf_file.name.endswith('.pdf'))
         r = self.client.get(reverse('books:index'))
-        self.assertEqual(len(r.context['books']), 9)             # 13 books -> 9 + 4 on page 2
-        self.assertEqual(len(self.client.get(reverse('books:index') + '?page=2').context['books']), 4)
+        self.assertEqual(len(r.context['books']), 12)            # 13 books -> 12 + 1 on page 2
+        self.assertEqual(len(self.client.get(reverse('books:index') + '?page=2').context['books']), 1)
         dl = self.client.get(first.get_download_url())
         self.assertTrue(b''.join(dl.streaming_content).startswith(b'%PDF-'))
         call_command('seed_books', '--remove', verbosity=0)
@@ -339,51 +343,3 @@ class ReadOnlineAndAuthorTests(TestCase):
         old.refresh_from_db(); keep.refresh_from_db()
         self.assertEqual((old.cover_accent, keep.cover_accent), ('#1f7a5a', '#a1b2c3'))
         self.assertEqual(Book._meta.get_field('cover_accent').default, '#1f7a5a')
-
-
-class GreenThemeTests(TestCase):
-    def setUp(self):
-        self.book = make('Green Book')
-
-    def test_every_books_page_uses_green_class(self):
-        for url in (reverse('books:index'), self.book.get_absolute_url()):
-            self.assertContains(self.client.get(url), '<body class="bk-green">')
-        pdf = SimpleUploadedFile('g.pdf', PDF)
-        with override_settings(MEDIA_ROOT=TMP):
-            b = make('Has Pdf', pdf_file=pdf)
-            self.assertContains(self.client.get(b.get_read_url()), '<body class="bk-green">')
-
-    def test_books_css_has_no_blue_or_purple(self):
-        import re
-        css = open('static/css/books.css').read()
-        for h in re.findall(r'#([0-9a-fA-F]{6})\b', css):
-            r, g, b = (int(h[i:i + 2], 16) for i in (0, 2, 4))
-            self.assertFalse(b > g + 10 and b > r + 10, f'#{h} looks blue/purple')      # blue channel must not lead
-            self.assertFalse(b > g + 10 and r > g + 10, f'#{h} looks purple/pink')
-        words = css.lower().replace('blue/purple', '').replace('blue or purple', '')
-        for word in ('blue', 'violet', 'purple', 'indigo'):
-            self.assertNotIn(word, words)
-
-    def test_green_overrides_present(self):
-        css = open('static/css/books.css').read()
-        for needle in (':root:has(body.bk-green)', '[data-theme="dark"]:has(body.bk-green)', '#shE stop', '#nlg stop', '#rbTeal stop', '.bk-green .ft ', '.bk-green .bot-panel header', '.bk-green .dd-menu '):
-            self.assertIn(needle, css)
-        self.assertNotIn('ph-blog', open('templates/books/index.html').read())
-
-    def test_seed_colours_and_default_are_greens(self):
-        from apps.books.management.commands.seed_books import DUMMY
-        for row in DUMMY:
-            h = row[7].lstrip('#')
-            r, g, b = (int(h[i:i + 2], 16) for i in (0, 2, 4))
-            self.assertTrue(g > b and g >= r - 5, f'{row[7]} is not green')
-        self.assertEqual(Book._meta.get_field('cover_accent').default, '#1f7a5a')
-
-
-class FourPerRowTests(TestCase):
-    def test_four_columns_on_desktop_and_fewer_on_small_screens(self):
-        css = open('static/css/books.css').read()
-        self.assertIn('.book-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))', css)
-        self.assertIn('max-width: 1100px) { .book-grid { grid-template-columns: repeat(3', css)
-        self.assertIn('max-width: 820px) { .book-grid { grid-template-columns: repeat(2', css)
-        self.assertIn('max-width: 560px) { .book-grid { grid-template-columns: minmax(0, 1fr)', css)
-        self.assertIn('#books.wrap { --wrap: 1240px; }', css)

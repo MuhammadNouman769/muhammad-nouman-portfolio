@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="{% static 'dashboard/fx.css' %}">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&family=DM+Sans:wght@400;500;700&display=swap">
   <link rel="stylesheet" href="{% static 'dashboard/nv-dash.css' %}">
+  <link rel="stylesheet" href="{% static 'dashboard/polish.css' %}?v=1">
 </head>
 <body>
 <div id="nprog" aria-hidden="true"></div>
@@ -51,6 +52,7 @@
       <a href="{% url 'dashboard:visitors' %}" class="{% if active == 'visitors' %}on{% endif %}"><svg class="ic"><use href="#i-users"/></svg>Visitors</a>
       <a href="{% url 'dashboard:messages' %}" class="{% if active == 'messages' %}on{% endif %}"><svg class="ic"><use href="#i-mail"/></svg>Messages{% if unread_count %}<b class="badge">{{ unread_count }}</b>{% endif %}</a>
       <a href="{% url 'dashboard:subscribers' %}" class="{% if active == 'subscribers' %}on{% endif %}"><svg class="ic"><use href="#i-users"/></svg>Subscribers</a>
+      <a href="{% url 'dashboard:book_downloads' %}" class="{% if active == 'downloads' %}on{% endif %}"><svg class="ic"><use href="#i-dl"/></svg>Book downloads</a>
       <p class="side-group">Money</p>
       <a href="{% url 'dashboard:finance' %}" class="{% if active == 'finance' %}on{% endif %}"><svg class="ic"><use href="#i-wallet"/></svg>Income &amp; expenses</a>
       <p class="side-group">Content</p>

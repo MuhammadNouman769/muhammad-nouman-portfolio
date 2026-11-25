@@ -27,7 +27,6 @@ class PublicSiteTests(TestCase):
         ):
             r = self.client.get(reverse(name), HTTP_USER_AGENT=BROWSER)
             self.assertEqual(r.status_code, 200, name)
-            self.assertContains(r, 'data-lamp')            # every banner carries the lamp
 
     def test_project_detail_and_drafts(self):
         self.assertContains(self.client.get(self.p.get_absolute_url()), 'Test Platform')

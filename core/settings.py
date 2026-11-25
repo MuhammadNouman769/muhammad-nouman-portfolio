@@ -181,7 +181,7 @@ STORAGES = {
     'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
     'staticfiles': {
         'BACKEND': (
-            'whitenoise.storage.CompressedManifestStaticFilesStorage'
+            'core.storage.ForgivingManifestStorage'
             if (_HAS_WHITENOISE and not DEBUG and _HAS_MANIFEST)
             else 'django.contrib.staticfiles.storage.StaticFilesStorage'
         )
@@ -257,7 +257,12 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {'plain': {'format': '%(asctime)s %(levelname)s %(name)s: %(message)s'}},
-    'handlers': {'console': {'class': 'logging.StreamHandler', 'formatter': 'plain'}},
+    'handlers': {
+        'console': {'class': 'logging.StreamHandler', 'formatter': 'plain'},
+        # errors.log keeps the last ~2 MB of 500 tracebacks so "The error has been logged" is actually true.
+        'errors': {'class': 'logging.handlers.RotatingFileHandler', 'formatter': 'plain', 'level': 'ERROR',
+                   'filename': str(BASE_DIR / 'errors.log'), 'maxBytes': 1_000_000, 'backupCount': 2, 'delay': True},
+    },
     'root': {'handlers': ['console'], 'level': 'INFO'},
-    'loggers': {'django.request': {'handlers': ['console'], 'level': 'WARNING', 'propagate': False}},
+    'loggers': {'django.request': {'handlers': ['console', 'errors'], 'level': 'WARNING', 'propagate': False}},
 }

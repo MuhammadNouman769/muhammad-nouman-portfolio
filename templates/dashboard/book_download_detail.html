@@ -1,0 +1,43 @@
+{% extends 'dashboard/base.html' %}
+{% load dash_extras %}
+{% block title %}{{ book.title }}: downloads{% endblock %}
+{% block heading %}<h1>{{ book.title }}</h1><p class="muted"><a href="{% url 'dashboard:book_downloads' %}">&larr; All book downloads</a> · written {{ book.written_on|date:"j M Y" }} · {{ book.get_language_display }}{% if book.pages %} · {{ book.pages }} pages{% endif %}</p>{% endblock %}
+{% block tools %}<a class="btn" href="{% url 'dashboard:book_downloads_export' %}?book={{ book.pk }}&range={{ range_key }}"><svg class="ic"><use href="#i-dl"/></svg>Export CSV</a>
+<a class="btn" href="{% url 'dashboard:resource_edit' 'books' book.pk %}">Edit book</a>{% if book.published %}<a class="btn" href="{{ book.get_absolute_url }}" target="_blank" rel="noopener">View on site</a>{% endif %}{% endblock %}
+{% block content %}
+<form class="card filter-bar" method="get">
+  <select class="inp" name="range" aria-label="Date range">{% for k, v in ranges.items %}<option value="{{ k }}" {% if k == range_key %}selected{% endif %}>{{ v.0 }}</option>{% endfor %}</select>
+  <button class="btn btn-primary" type="submit">Apply</button>
+</form>
+<section class="kpis">
+  <article class="card kpi"><p class="kpi-label">All time</p><p class="kpi-value">{{ total.all }}</p></article>
+  <article class="card kpi"><p class="kpi-label">Today</p><p class="kpi-value">{{ total.1 }}</p></article>
+  <article class="card kpi"><p class="kpi-label">Last 7 days</p><p class="kpi-value">{{ total.7 }}</p></article>
+  <article class="card kpi"><p class="kpi-label">Last 30 days</p><p class="kpi-value">{{ total.30 }}</p></article>
+</section>
+<section class="grid g-2">
+  <article class="card"><div class="card-head"><h2>Last 14 days</h2></div>{% include 'dashboard/_barlist.html' with items=daily %}</article>
+  <article class="card"><div class="card-head"><h2>Who downloads ({{ range_label|lower }})</h2></div>
+    <h3 class="sub">Countries</h3>{% include 'dashboard/_barlist.html' with items=breakdowns.countries tone='t2' %}
+    <h3 class="sub">Devices</h3>{% include 'dashboard/_barlist.html' with items=breakdowns.devices %}
+    <h3 class="sub">Came from</h3>{% include 'dashboard/_barlist.html' with items=breakdowns.referrers tone='t2' %}
+  </article>
+</section>
+<div class="card flush" style="margin-top:20px">
+  <div class="card-head"><h2>Every download ({{ range_label|lower }}): {{ in_range }}</h2></div>
+  <div class="table-wrap"><table class="tbl">
+    <thead><tr><th>When</th><th>Location</th><th>Device</th><th>Came from</th></tr></thead>
+    <tbody>{% for d in page %}
+      <tr><td>{{ d.created_at|date:"j M Y, H:i" }}<small>{{ d.created_at|ago }}</small></td>
+        <td>{{ d.country|country }}<small>{{ d.ip|default:'Hidden' }}</small></td>
+        <td>{{ d.browser }}<small>{{ d.os }} · {{ d.device }}</small></td>
+        <td>{{ d.referrer|default:'Direct' }}</td></tr>
+    {% empty %}<tr><td colspan="4" class="empty">No downloads of this book in this period.</td></tr>{% endfor %}</tbody>
+  </table></div>
+</div>
+{% if page.paginator.num_pages > 1 %}<nav class="pager" aria-label="Pages">
+  {% if page.has_previous %}<a class="btn" href="?range={{ range_key }}&page={{ page.previous_page_number }}">Previous</a>{% endif %}
+  <span class="muted">Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a class="btn" href="?range={{ range_key }}&page={{ page.next_page_number }}">Next</a>{% endif %}
+</nav>{% endif %}
+{% endblock %}

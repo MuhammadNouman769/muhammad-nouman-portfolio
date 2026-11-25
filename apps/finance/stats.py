@@ -17,7 +17,7 @@ def summary():
     pending = max(total - got, Decimal(0))
     return {
         'total': total, 'received': got, 'pending': pending, 'spent': spent,
-        'net': got - spent, 'collected_pct': int(got / total * 100) if total else 0,
+        'net': got - spent, 'available': got - spent, 'spent_pct': min(100, int(spent / got * 100)) if got else (100 if spent else 0), 'collected_pct': int(got / total * 100) if total else 0,
         'deals': Income.objects.count(), 'open_deals': Income.objects.filter(received__lt=F('total_amount')).count(),
     }
 
