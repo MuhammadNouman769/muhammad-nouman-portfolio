@@ -24,7 +24,7 @@
 
   <div class="bk-grid">
     {% for book in books %}{% include 'books/_card.html' with book=book %}
-    {% empty %}<p class="empty">{% if q or active_category %}No books match your filter.{% else %}No books yet.{% endif %}</p>{% endfor %}
+    {% empty %}<p class="empty">{% if q or active_category %}No books match your filter.{% else %}Coming soon.{% endif %}</p>{% endfor %}
   </div>
 
   {% if page.paginator.num_pages > 1 %}
